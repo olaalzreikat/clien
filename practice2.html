@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript ITS302 Master Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --accent: #7fff6e;
+    --accent2: #ff6e7f;
+    --accent3: #6eb8ff;
+    --accent4: #ffe66e;
+    --text: #e8e8f0;
+    --muted: #666680;
+    --border: #2a2a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(127,255,110,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(127,255,110,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .logo {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .score-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .score-badge span {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---- PROGRESS ---- */
+  .progress-wrap {
+    margin-bottom: 32px;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* ---- DOMAIN TAG ---- */
+  .domain-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-bottom: 18px;
+    font-weight: 700;
+  }
+  .d1 { background: rgba(127,255,110,0.12); color: var(--accent); border: 1px solid rgba(127,255,110,0.3); }
+  .d2 { background: rgba(110,184,255,0.12); color: var(--accent3); border: 1px solid rgba(110,184,255,0.3); }
+  .d3 { background: rgba(255,110,127,0.12); color: var(--accent2); border: 1px solid rgba(255,110,127,0.3); }
+  .d4 { background: rgba(255,230,110,0.12); color: var(--accent4); border: 1px solid rgba(255,230,110,0.3); }
+  .d5 { background: rgba(200,110,255,0.12); color: #c86eff; border: 1px solid rgba(200,110,255,0.3); }
+
+  /* ---- QUESTION CARD ---- */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 20px;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .q-text {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+  .q-code {
+    font-family: 'Space Mono', monospace;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--accent3);
+    margin: -12px 0 22px;
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* ---- OPTIONS ---- */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: left;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--accent);
+    background: rgba(127,255,110,0.05);
+    transform: translateX(4px);
+  }
+  .option .opt-letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: all 0.18s;
+  }
+  .option:hover:not(.disabled) .opt-letter {
+    background: var(--accent);
+    color: #000;
+  }
+  .option.correct {
+    border-color: var(--accent);
+    background: rgba(127,255,110,0.1);
+  }
+  .option.correct .opt-letter { background: var(--accent); color: #000; }
+  .option.wrong {
+    border-color: var(--accent2);
+    background: rgba(255,110,127,0.08);
+    color: var(--muted);
+  }
+  .option.wrong .opt-letter { background: var(--accent2); color: #000; }
+  .option.disabled { cursor: default; }
+
+  /* ---- FEEDBACK ---- */
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; animation: fadeIn 0.25s ease; }
+  .feedback.ok {
+    background: rgba(127,255,110,0.08);
+    border: 1px solid rgba(127,255,110,0.25);
+    color: var(--accent);
+  }
+  .feedback.bad {
+    background: rgba(255,110,127,0.08);
+    border: 1px solid rgba(255,110,127,0.25);
+    color: var(--accent2);
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---- NAV ---- */
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+  }
+  .btn {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: none;
+  }
+  .btn.show { display: block; }
+  .btn-next {
+    background: var(--accent);
+    color: #000;
+  }
+  .btn-next:hover { background: #aaff9e; transform: translateY(-1px); }
+  .btn-finish {
+    background: var(--accent3);
+    color: #000;
+  }
+  .btn-finish:hover { background: #9dd4ff; transform: translateY(-1px); }
+
+  /* ---- RESULTS ---- */
+  #results {
+    display: none;
+    animation: slideIn 0.4s ease;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 0;
+    text-align: center;
+  }
+  #results.show { display: flex; }
+  .result-ring {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 6px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-ring::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 6px solid transparent;
+  }
+  .result-score {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .result-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+  .result-grade {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .result-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 36px;
+    max-width: 420px;
+  }
+
+  /* Domain breakdown */
+  .breakdown {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .breakdown h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .bd-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .bd-label {
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    width: 85px;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+  .bd-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bd-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+  }
+  .bd-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    width: 38px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .btn-restart {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 14px 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    transition: all 0.18s;
+  }
+  .btn-restart:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* ---- SPLASH ---- */
+  #splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 40px 20px;
+    animation: slideIn 0.5s ease;
+  }
+  .splash-title {
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .splash-sub {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+  .splash-stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+  .stat-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .domain-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .btn-start {
+    background: var(--accent);
+    color: #000;
+    padding: 16px 48px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-start:hover { background: #aaff9e; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(127,255,110,0.25); }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">ITS302 · JavaScript</div>
+    <div class="score-badge" id="header-score" style="display:none">Score: <span id="live-score">0</span> / <span id="live-total">0</span></div>
+  </header>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="splash-title">JavaScript<br>Master Quiz</div>
+    <div class="splash-sub">Full coverage of all domains from your study guides. Every topic, every concept — put to the test.</div>
+    <div class="splash-stats">
+      <div class="stat-box"><div class="stat-num">60</div><div class="stat-desc">Questions</div></div>
+      <div class="stat-box"><div class="stat-num">5</div><div class="stat-desc">Domains</div></div>
+    </div>
+    <div class="domain-pills">
+      <span class="pill d1">Domain 1 · Operators &amp; Syntax</span>
+      <span class="pill d2">Domain 2 · Variables &amp; Data Types</span>
+      <span class="pill d3">Domain 3 · Decisions &amp; Loops</span>
+      <span class="pill d4">Domain 4 · DOM</span>
+      <span class="pill d5">Domain 5 · Forms &amp; Validation</span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">START QUIZ</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" style="display:none">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="q-counter">Question 1 of 60</span>
+        <span id="q-domain-info"></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="q-card" id="q-card">
+      <div class="domain-tag" id="domain-tag"></div>
+      <div class="q-number" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <code class="q-code" id="q-code" style="display:none"></code>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">NEXT →</button>
+      <button class="btn btn-finish" id="btn-finish" onclick="showResults()">SEE RESULTS →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="result-ring" id="result-ring">
+      <div class="result-score" id="result-score"></div>
+      <div class="result-label">SCORE</div>
+    </div>
+    <div class="result-grade" id="result-grade"></div>
+    <div class="result-sub" id="result-sub"></div>
+    <div class="breakdown">
+      <h3>Domain Breakdown</h3>
+      <div id="bd-rows"></div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">↺ &nbsp; RETAKE QUIZ</button>
+  </div>
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  // ===== DOMAIN 1: OPERATORS, METHODS & KEYWORDS =====
+  { domain: 1, q: "What does the single = sign do in JavaScript?", opts: ["Compares two values", "Assigns a value to a variable", "Checks strict equality", "Divides two numbers"], ans: 1, exp: "= is the assignment operator. It SETS a variable to a value. Use == or === to compare." },
+  { domain: 1, q: "Where does JavaScript code go when using an external script file?", opts: ["Inside <script> tags in the .js file", "In a separate .js file with no <script> tags", "Directly in the <body> tag", "Inside <noscript> tags"], ans: 1, exp: "External .js files contain pure JavaScript only — NO <script> tags. The <script src='file.js'> tag goes in the HTML file." },
+  { domain: 1, q: "What does the modulus operator % return?", opts: ["The result of division", "The decimal portion of a number", "The remainder after division", "The square root of a number"], ans: 2, exp: "% returns the REMAINDER. For example: 10 % 3 = 1 (because 3 goes into 10 three times with 1 left over)." },
+  { domain: 1, q: "What is camel case?", opts: ["All lowercase letters", "Starts with uppercase, rest lowercase", "Starts lowercase, each new word capitalized", "All uppercase letters"], ans: 2, exp: "Camel case starts with a LOWERCASE letter, then capitalizes each new word. Example: getElementById (not GetElementById)." },
+  { domain: 1, q: "What happens when the 'finally' block runs?", opts: ["Only if an error occurs", "Only if no error occurs", "Always, regardless of whether try or catch ran", "Only when the function returns a value"], ans: 2, exp: "The finally block ALWAYS runs no matter what — whether the try succeeded or the catch handled an error." },
+  { domain: 1, q: "What does parseInt('7.9') return?", opts: ["8", "7.9", "7", "NaN"], ans: 2, exp: "parseInt CUTS OFF the decimal — it does NOT round. So '7.9' becomes 7, not 8." },
+  { domain: 1, q: "Which symbol is used for multiplication in JavaScript?", opts: ["x", "×", "*", "·"], ans: 2, exp: "JavaScript uses * (asterisk) for multiplication — NOT the letter x." },
+  { domain: 1, q: "What does the debugger keyword do?", opts: ["Deletes errors from the code", "Slows down code execution", "Pauses code execution for inspection", "Runs code in a sandbox"], ans: 2, exp: "The debugger keyword PAUSES execution at that line so you can inspect variable values and run code step-by-step." },
+  { domain: 1, q: "Which of these is a reserved keyword in JavaScript?", opts: ["forBack", "stepOne", "function", "myVariable"], ans: 2, exp: "'function' is a reserved JavaScript keyword and cannot be used as a variable name. forBack and stepOne are made-up names." },
+  { domain: 1, q: "What do the three dialog box types return?", opts: ["alert=string, prompt=string, confirm=boolean", "alert=nothing, prompt=string, confirm=boolean", "alert=boolean, prompt=number, confirm=string", "All return strings"], ans: 1, exp: "alert() shows a message (no return). prompt() returns the user's text input. confirm() returns true (OK) or false (Cancel)." },
+  { domain: 1, q: "When does the content inside <noscript> tags display?", opts: ["Always", "When JavaScript has an error", "When the browser does NOT support JavaScript", "When the script file is external"], ans: 2, exp: "<noscript> content is shown ONLY when the browser does not support JavaScript. If JS works, the script runs instead." },
+  { domain: 1, q: "What does .toFixed(2) do to a number?", code: "var total = 35.6789;\ntotal.toFixed(2);", opts: ["Rounds to 2 significant digits", "Formats to exactly 2 decimal places", "Converts to integer with 2 digits", "Removes decimals completely"], ans: 1, exp: ".toFixed(2) formats a number to exactly 2 decimal places — returns '35.68'. Used for currency display." },
+  { domain: 1, q: "What does x++ do to the variable x?", opts: ["Multiplies x by itself", "Subtracts 1 from x", "Adds 1 to x", "Doubles x"], ans: 2, exp: "++ is the increment operator — it adds exactly 1 to the variable. x-- decrements (subtracts 1)." },
+
+  // ===== DOMAIN 2: VARIABLES, DATA TYPES & FUNCTIONS =====
+  { domain: 2, q: "How are ALL numbers stored internally in JavaScript?", opts: ["As integers", "As strings", "As floating point decimals", "As binary values"], ans: 2, exp: "All JavaScript numbers are stored as FLOATING POINT DECIMALS internally — even whole numbers like 5 are stored as 5.0." },
+  { domain: 2, q: "What is the difference between null and undefined?", opts: ["They are identical", "null = declared but no value; undefined = intentionally empty", "null = intentionally empty; undefined = declared but no value assigned", "undefined is for objects; null is for strings"], ans: 2, exp: "null = you CHOSE to empty it intentionally. undefined = you declared the variable but FORGOT to assign a value." },
+  { domain: 2, q: "What does typeof checkOutExists return if it holds 'false'?", opts: ["'null'", "'boolean'", "'undefined'", "'false'"], ans: 1, exp: "typeof returns 'boolean' because the variable holds a true/false value. The quotes are important — it returns a string." },
+  { domain: 2, q: "What is an 'implicit global' variable?", opts: ["A variable declared with const", "A variable declared with let inside a function", "A variable created without the var keyword inside a function", "A variable declared outside all functions"], ans: 2, exp: "If you use x = 5 inside a function WITHOUT the var keyword, it automatically becomes a global variable — this is bad practice!" },
+  { domain: 2, q: "Where must 'use strict' be placed inside a function?", opts: ["After the return statement", "After the try block", "Before the try block, at the top of the function body", "At the bottom of the function"], ans: 2, exp: "'use strict' must be at the VERY TOP of the function body, BEFORE the try block." },
+  { domain: 2, q: "Which of these are valid ways to start a variable name?", opts: ["A number (1name)", "A reserved keyword (var function)", "A letter, $ dollar sign, or _ underscore", "Only lowercase letters"], ans: 2, exp: "Variable names CAN start with a letter, $, or _. They CANNOT start with a number or use reserved keywords." },
+  { domain: 2, q: "What does Math.ceil(4.1) return?", opts: ["4", "4.1", "5", "4.5"], ans: 2, exp: "Math.ceil() rounds UP to the nearest integer (ceiling). 4.1 → 5." },
+  { domain: 2, q: "What does Math.floor(4.9) return?", opts: ["5", "4.9", "4", "5.0"], ans: 2, exp: "Math.floor() rounds DOWN to the nearest integer (floor). 4.9 → 4." },
+  { domain: 2, q: "How do you get a random whole number between 0 and 1 inclusive using Math methods?", code: "var videoNumber = Math.floor(Math.random() * 2);", opts: ["This gives 0 or 1", "This gives 0 to 2", "This gives 0.0 to 1.0", "This gives 1 or 2"], ans: 0, exp: "Math.random() → 0 to 0.999... Multiply by 2 → 0 to 1.999... Math.floor() → 0 or 1. So yes: this yields 0 or 1." },
+  { domain: 2, q: "What does .indexOf('Tuning Lever') return if the item is NOT found in an array?", opts: ["0", "null", "-1", "undefined"], ans: 2, exp: "indexOf returns the position (0 or greater) if found, and -1 if the item is NOT found in the array." },
+  { domain: 2, q: "Which array method adds an item to the BEGINNING of an array?", opts: ["push()", "pop()", "shift()", "unshift()"], ans: 3, exp: "unshift() adds to the FRONT. push() adds to the END. shift() removes from the FRONT. pop() removes from the END." },
+  { domain: 2, q: "What index is the FIRST item in a JavaScript array?", opts: ["1", "-1", "0", "Depends on the array"], ans: 2, exp: "Arrays are ZERO-BASED — the first element is always at index 0, not 1." },
+  { domain: 2, q: "What does 'instantiation' mean?", opts: ["Declaring a variable", "Creating a new object instance using the new keyword", "Converting a string to a number", "Sorting an array"], ans: 1, exp: "Instantiation = creating a new OBJECT instance. Example: var d = new Date() creates a new Date object." },
+  { domain: 2, q: "What does .getMonth() return for January?", opts: ["1", "0", "January", "01"], ans: 1, exp: "The Date object uses ZERO-BASED months. January = 0, February = 1, ..., December = 11." },
+  { domain: 2, q: "What is the purpose of a function in JavaScript?", opts: ["To store multiple values in one container", "To compare two values", "To write REUSABLE code — define once, call many times", "To format numbers with decimals"], ans: 2, exp: "Functions = REUSABLE CODE. You write the logic once and call it by name whenever needed." },
+  { domain: 2, q: "What is the difference between a PROPERTY and a METHOD of an object?", opts: ["Properties are functions; methods are values", "Properties describe (characteristics); methods perform actions", "They are the same thing", "Methods describe; properties perform actions"], ans: 1, exp: "Properties are characteristics (nouns/adjectives) like innerHTML or onclick. Methods are actions (verbs) like .sort() or .pop()." },
+  { domain: 2, q: "What does Number.isInteger(discount) check?", opts: ["Whether discount is a string", "Whether discount is null", "Whether discount is a whole integer number", "Whether discount has been declared"], ans: 2, exp: "Number.isInteger() checks if the value is a whole integer. The variable goes INSIDE the parentheses: Number.isInteger(discount)." },
+
+  // ===== DOMAIN 3: DECISIONS & LOOPS =====
+  { domain: 3, q: "What is the difference between == and ===?", opts: ["No difference", "== checks value only; === checks both value AND type", "== checks type; === checks value only", "=== only works with strings"], ans: 1, exp: "== is equality (value only). === is STRICT equality (value AND type). So false == 0 is true, but false === 0 is false." },
+  { domain: 3, q: "What does the ! operator do?", opts: ["Checks if two values are not equal", "Negates / flips a Boolean value", "Multiplies by -1", "Creates a new variable"], ans: 1, exp: "! is the NOT operator — it flips a Boolean. !true → false, !false → true. Especially useful for Boolean flags." },
+  { domain: 3, q: "If a condition in an if statement is FALSE, what happens to the code inside the curly braces?", opts: ["It runs once then stops", "It runs with an error", "It never runs", "It runs with a warning"], ans: 2, exp: "If the condition is FALSE, the block inside {} is completely SKIPPED — it never runs at all." },
+  { domain: 3, q: "What is the correct order for an if-else chain?", opts: ["else → else if → if", "else if → if → else", "if → else if → else", "Any order is fine"], ans: 2, exp: "The correct order is always: if → else if (as many as needed) → else (one fallback at the end)." },
+  { domain: 3, q: "What is a common error when using switch statements?", opts: ["Using a default case", "Forgetting the break keyword", "Using too many cases", "Not having a variable"], ans: 1, exp: "Forgetting the 'break' keyword causes fall-through — the code continues executing into the next case unintentionally." },
+  { domain: 3, q: "What type of loop is a 'for loop'?", opts: ["A conditional loop", "A loop that runs a SET number of times", "A loop that always runs at least once", "A loop for objects only"], ans: 1, exp: "A for loop runs a SET number of times — it is NOT a conditional loop. The number of iterations is pre-determined." },
+  { domain: 3, q: "What is unique about a do...while loop?", opts: ["It never runs if the condition is false", "It runs EXACTLY twice", "It always runs AT LEAST ONCE, then checks the condition", "It only works with arrays"], ans: 2, exp: "do...while runs the code block FIRST, then checks the condition. So it always executes at least once, even if the condition is false." },
+  { domain: 3, q: "What does the 'continue' keyword do inside a loop?", opts: ["Exits the loop immediately", "Skips ONE iteration and continues to the next", "Restarts the loop from the beginning", "Pauses the loop"], ans: 1, exp: "continue SKIPS the current iteration and moves to the next one. break exits the loop entirely." },
+  { domain: 3, q: "What does the 'break' keyword do in a loop?", opts: ["Pauses the loop temporarily", "Skips one iteration", "Exits the entire loop immediately", "Resets the counter to 0"], ans: 2, exp: "break EXITS the loop immediately when encountered. The code after the loop continues to run." },
+  { domain: 3, q: "In a while loop, when does the code body run?", opts: ["Always at least once", "Only when the condition is TRUE", "Only when the condition is FALSE", "Exactly 10 times"], ans: 1, exp: "A while loop checks the condition FIRST. The body runs only when the condition is TRUE. If condition starts false, the body never runs." },
+  { domain: 3, q: "What does the && operator require?", opts: ["At least one condition to be true", "Both conditions to be true", "Neither condition to be true", "One condition to be false"], ans: 1, exp: "&& is the AND operator — BOTH conditions must be true for the expression to be true." },
+  { domain: 3, q: "Which symbol checks if a value is 'greater than or equal to'?", opts: [">", "=>", ">=", "!<"], ans: 2, exp: ">= means greater than OR equal to. => is an arrow function syntax, not a comparison operator." },
+  { domain: 3, q: "In operator precedence, what is evaluated before equality checks?", opts: ["The || operator", "The && operator", "The unary ! operator", "The = operator"], ans: 2, exp: "The unary ! (NOT) has higher precedence and is evaluated BEFORE equality/comparison checks. Logical && and || have LOWER precedence than comparison operators." },
+
+  // ===== DOMAIN 4: DOM =====
+  { domain: 4, q: "What does document.getElementById() return?", opts: ["A collection of all matching elements", "The first matching element only", "A single element (or null if not found)", "An array of elements"], ans: 2, exp: "getElementById returns ONE single element. All the 'getElementsBy...' methods (plural) return collections." },
+  { domain: 4, q: "What is the difference between innerText and innerHTML?", opts: ["innerText includes hidden text; innerHTML does not", "innerText = plain text; innerHTML = HTML with tags parsed", "innerHTML = plain text; innerText = HTML with tags parsed", "They are identical"], ans: 1, exp: "innerText = plain text content only. innerHTML = HTML content with tags parsed and rendered." },
+  { domain: 4, q: "What does textContent include that innerText does NOT?", opts: ["Bold and italic tags", "Text from elements with display:none (hidden)", "JavaScript code", "Attribute values"], ans: 1, exp: "textContent includes text from elements with display:none. innerText only shows what is VISUALLY rendered on screen." },
+  { domain: 4, q: "What happens if you call document.write() AFTER the page has finished loading?", opts: ["Nothing changes", "It appends content to the end", "It OVERWRITES the entire page content", "It creates a new tab"], ans: 2, exp: "document.write() called AFTER page load OVERWRITES all existing page content. It is safe only during the initial page load." },
+  { domain: 4, q: "What does outerHTML do to an element?", opts: ["Changes only the text inside it", "Replaces the ENTIRE element including its tags", "Adds HTML after the element", "Hides the element"], ans: 1, exp: "outerHTML REPLACES the entire element (including its own opening/closing tags). innerHTML only changes the content inside." },
+  { domain: 4, q: "What does the appendChild() method do?", opts: ["Inserts before the first child", "Removes the last child", "Adds an element as the LAST child of the parent", "Creates a new element in memory"], ans: 2, exp: "appendChild() adds the element as the LAST child of the parent. Use insertBefore() to add at a specific position." },
+  { domain: 4, q: "What does createElement() do immediately after it's called?", opts: ["Adds the element to the DOM right away", "Creates the element in memory only — NOT yet in the DOM", "Replaces an existing element", "Removes an old element"], ans: 1, exp: "createElement() creates the element in MEMORY ONLY. You must then use appendChild() or insertBefore() to add it to the actual DOM." },
+  { domain: 4, q: "What is the difference between event bubbling and capturing?", opts: ["Bubbling goes downward; capturing goes upward", "They are the same thing with different names", "Bubbling goes upward (child → parent); capturing goes downward (parent → child)", "Bubbling only works for click events"], ans: 2, exp: "Bubbling: events travel UPWARD from child to parent (default). Capturing: events travel DOWNWARD from parent to child (set 3rd param to true)." },
+  { domain: 4, q: "In addEventListener, what does passing 'true' as the third argument do?", opts: ["Enables bubbling", "Adds the event permanently", "Enables capturing (downward propagation)", "Makes the event fire twice"], ans: 2, exp: "Third parameter true = CAPTURING (downward). false or omitting it = BUBBLING (upward, default)." },
+  { domain: 4, q: "How do you stop event bubbling?", opts: ["event.preventDefault()", "event.stopDefault()", "event.stopPropagation()", "return false"], ans: 2, exp: "event.stopPropagation() stops the event from bubbling up to parent elements." },
+  { domain: 4, q: "What event fires when a user clicks AWAY from an input field?", opts: ["onfocus", "onchange", "onclick", "onblur"], ans: 3, exp: "onblur fires when an element LOSES focus (user clicks away). onfocus fires when it GAINS focus." },
+  { domain: 4, q: "What property identifies WHICH key was pressed in onkeydown?", opts: ["event.key", "event.keyName", "event.code", "event.which"], ans: 2, exp: "event.code identifies the specific key pressed in onkeydown and onkeyup events. onkeypress is deprecated — don't use it." },
+  { domain: 4, q: "What does event.preventDefault() do?", opts: ["Stops event propagation", "Stops the DEFAULT browser behavior (e.g., link navigation)", "Deletes the event listener", "Prevents the function from running"], ans: 1, exp: "preventDefault() stops the default browser behavior — like stopping a link from navigating to a URL. Only works if event.cancellable is true." },
+  { domain: 4, q: "What does document.documentElement return?", opts: ["The <body> element", "The <head> element", "The root <html> element", "The document title"], ans: 2, exp: "document.documentElement returns the root <html> element — the very top of the DOM tree." },
+
+  // ===== DOMAIN 5: FORMS & INPUT VALIDATION =====
+  { domain: 5, q: "How do you access all forms on a page?", opts: ["document.getAllForms()", "document.formList", "document.forms", "document.querySelectorAll('form')"], ans: 2, exp: "document.forms is the built-in collection that holds all form elements on the page. Access by index or by name." },
+  { domain: 5, q: "How do you read the value of an input field named 'firstName' in a form named 'customerForm'?", opts: ["document.forms['customerForm'].firstName", "document.forms['customerForm']['firstName'].value", "document.getForm('customerForm').getInput('firstName')", "forms.customerForm.firstName.get()"], ans: 1, exp: "The correct path is: document.forms['formName']['fieldName'].value" },
+  { domain: 5, q: "For a <select multiple> element, how do you get all selected values?", opts: ["Just read .value — it returns all selected items", "Use .getSelected() method", "Loop through options and check the .selected property of each", "Use .values() array method"], ans: 2, exp: "For multi-select, you MUST loop through all options and check each option's .selected property. .value alone only works for single-select." },
+  { domain: 5, q: "What does localeCompare() return when two strings are EQUAL?", opts: ["1", "-1", "true", "0"], ans: 3, exp: "localeCompare returns 0 = equal, -1 = argument comes after calling string, 1 = argument comes before calling string." },
+  { domain: 5, q: "What does isNaN('hello') return?", opts: ["false", "true", "NaN", "undefined"], ans: 1, exp: "isNaN returns TRUE for 'hello' because it CANNOT be converted to a number." },
+  { domain: 5, q: "What does isNaN('42') return?", opts: ["true", "false", "NaN", "42"], ans: 1, exp: "isNaN returns FALSE for '42' — it's a numeric string that CAN be converted to the number 42." },
+  { domain: 5, q: "What does isNaN(true) return?", opts: ["true", "false", "NaN", "1"], ans: 1, exp: "isNaN(true) returns FALSE — booleans convert to numbers (true → 1, false → 0), which are valid numbers." },
+  { domain: 5, q: "What is the default HTTP method if a form's method attribute is omitted?", opts: ["POST", "PUT", "GET", "SEND"], ans: 2, exp: "If the method attribute is missing, the form defaults to GET." },
+  { domain: 5, q: "What is the key difference between GET and POST methods?", opts: ["GET is faster; POST is slower", "GET sends data in the URL; POST sends data in the request body", "POST sends data in the URL; GET sends in the body", "GET is more secure; POST is less secure"], ans: 1, exp: "GET appends data to the URL as parameters (?key=value) — visible in the address bar. POST sends data in the HTTP request body — hidden from the URL." },
+  { domain: 5, q: "What does target='_blank' do on a form?", opts: ["Submits to the same tab", "Opens the response in a parent frame", "Opens the response in a NEW tab or window", "Clears the form fields"], ans: 2, exp: "_blank opens the server response in a new tab or window. _self (default) opens in the same tab." },
+  { domain: 5, q: "In the onsubmit attribute, what does returning FALSE do?", opts: ["Allows the form to submit", "Clears all form fields", "BLOCKS the form from submitting", "Reloads the page"], ans: 2, exp: "return false in onsubmit BLOCKS form submission. return true ALLOWS it. This is used to validate before sending." },
+  { domain: 5, q: "Why must you use 'return validateForm()' and not just 'validateForm()' in onsubmit?", opts: ["validateForm() doesn't work without return", "Without 'return', the false value is ignored and the form submits anyway", "It's just a style preference", "Both work exactly the same way"], ans: 1, exp: "Without 'return', the false returned by validateForm() is IGNORED by the browser and the form submits regardless." },
+  { domain: 5, q: "How do you make string validation case-insensitive?", opts: ["Use the strict === operator", "Normalize both strings with toLowerCase() before comparing", "Use localeCompare with the 'ci' flag", "isNaN() handles case sensitivity"], ans: 1, exp: "Always normalize with toLowerCase() or toUpperCase() before comparing. That way 'Paris' and 'paris' both become 'paris' and match correctly." },
+  { domain: 5, q: "What does localeCompare('apple').localeCompare('banana') return?", code: "'apple'.localeCompare('banana')", opts: ["0", "1", "-1", "false"], ans: 2, exp: "Returns -1 because 'banana' comes AFTER 'apple' alphabetically. The argument comes after the caller → return -1." },
+];
+
+let currentIdx = 0;
+let score = 0;
+let answered = false;
+const domainScores = {1:{c:0,t:0}, 2:{c:0,t:0}, 3:{c:0,t:0}, 4:{c:0,t:0}, 5:{c:0,t:0}};
+const domainNames = {1:'Domain 1 · Operators & Syntax', 2:'Domain 2 · Variables & Data Types', 3:'Domain 3 · Decisions & Loops', 4:'Domain 4 · DOM', 5:'Domain 5 · Forms & Validation'};
+const domainColors = {1:'#7fff6e', 2:'#6eb8ff', 3:'#ff6e7f', 4:'#ffe66e', 5:'#c86eff'};
+
+function startQuiz() {
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('header-score').style.display = 'block';
+  document.getElementById('live-total').textContent = ALL_QUESTIONS.length;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = ALL_QUESTIONS[currentIdx];
+  const total = ALL_QUESTIONS.length;
+
+  document.getElementById('q-counter').textContent = `Question ${currentIdx+1} of ${total}`;
+  document.getElementById('prog-fill').style.width = `${(currentIdx/total)*100}%`;
+
+  const dtag = document.getElementById('domain-tag');
+  dtag.textContent = domainNames[q.domain];
+  dtag.className = `domain-tag d${q.domain}`;
+
+  document.getElementById('q-num').textContent = `Q${currentIdx+1}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const codeEl = document.getElementById('q-code');
+  if (q.code) { codeEl.style.display = 'block'; codeEl.textContent = q.code; }
+  else { codeEl.style.display = 'none'; }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optsEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+
+  document.getElementById('btn-next').className = 'btn btn-next';
+  document.getElementById('btn-finish').className = 'btn btn-finish';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = ALL_QUESTIONS[currentIdx];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  domainScores[q.domain].t++;
+
+  const fb = document.getElementById('feedback');
+  if (idx === q.ans) {
+    opts[idx].classList.add('correct');
+    score++;
+    domainScores[q.domain].c++;
+    fb.textContent = '✓ Correct! ' + q.exp;
+    fb.className = 'feedback ok show';
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.ans].classList.add('correct');
+    fb.textContent = '✗ Not quite. ' + q.exp;
+    fb.className = 'feedback bad show';
+  }
+
+  document.getElementById('live-score').textContent = score;
+
+  if (currentIdx < ALL_QUESTIONS.length - 1) {
+    document.getElementById('btn-next').className = 'btn btn-next show';
+  } else {
+    document.getElementById('btn-finish').className = 'btn btn-finish show';
+  }
+}
+
+function nextQuestion() {
+  currentIdx++;
+  renderQuestion();
+}
+
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('results');
+  res.classList.add('show');
+
+  const total = ALL_QUESTIONS.length;
+  const pct = Math.round((score/total)*100);
+
+  const ring = document.getElementById('result-ring');
+  const scoreEl = document.getElementById('result-score');
+  scoreEl.textContent = `${score}/${total}`;
+
+  let grade, sub, ringColor;
+  if (pct >= 90) { grade = '🏆 Excellent!'; sub = "Outstanding work — you've mastered all five domains."; ringColor = '#7fff6e'; }
+  else if (pct >= 75) { grade = '🎯 Strong Pass'; sub = "Solid understanding across the board. Review any missed topics."; ringColor = '#6eb8ff'; }
+  else if (pct >= 60) { grade = '📚 Almost There'; sub = "Good foundation — focus on the domains where you dropped points."; ringColor = '#ffe66e'; }
+  else { grade = '💪 Keep Studying'; sub = "Review each domain's study guide and try again — you've got this!"; ringColor = '#ff6e7f'; }
+
+  ring.style.border = `6px solid ${ringColor}`;
+  scoreEl.style.color = ringColor;
+  document.getElementById('result-grade').textContent = grade;
+  document.getElementById('result-sub').textContent = sub;
+
+  const bdRows = document.getElementById('bd-rows');
+  bdRows.innerHTML = '';
+  for (let d = 1; d <= 5; d++) {
+    const ds = domainScores[d];
+    const dpct = ds.t > 0 ? Math.round((ds.c/ds.t)*100) : 0;
+    const label = `D${d}`;
+    const color = domainColors[d];
+    bdRows.innerHTML += `
+      <div class="bd-row">
+        <div class="bd-label">${label}</div>
+        <div class="bd-track"><div class="bd-fill" style="width:${dpct}%;background:${color}"></div></div>
+        <div class="bd-pct" style="color:${color}">${dpct}%</div>
+      </div>`;
+  }
+}
+
+function restartQuiz() {
+  currentIdx = 0;
+  score = 0;
+  answered = false;
+  for (let d = 1; d <= 5; d++) { domainScores[d] = {c:0, t:0}; }
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('live-score').textContent = 0;
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITS302 Master Trainer — All Topics</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f0f1a;--paper:#f7f4ef;--paper2:#ede9e2;--paper3:#e2dcd3;
+  --border:#d4cec5;--accent:#b5341c;--blue:#1d4ed8;--green:#166534;
+  --gold:#92680a;--muted:#6b6560;--code:#12121f;--ctext:#e2e8f0;
+  --purple:#6d28d9;--teal:#0f766e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+.app{display:flex;min-height:100vh;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:252px;flex-shrink:0;background:var(--ink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.07);}
+.sb-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.28);text-transform:uppercase;margin-bottom:4px;}
+.sb-title{font-family:'Fraunces',serif;font-size:20px;font-weight:300;color:#fff;line-height:1.2;}
+.sb-title em{font-style:italic;color:#fbbf24;}
+.sb-section{padding:10px 8px 3px;}
+.sb-label{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.2);padding:0 7px;margin-bottom:4px;}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,0.42);transition:all .14s;margin-bottom:1px;user-select:none;}
+.sb-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8);}
+.sb-item.active{background:rgba(255,255,255,0.1);color:#fff;}
+.sb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sb-stats{margin-top:auto;padding:12px 16px;border-top:1px solid rgba(255,255,255,0.07);font-size:11px;}
+.sb-stat{display:flex;justify-content:space-between;margin-bottom:3px;color:rgba(255,255,255,0.28);}
+.sb-stat span{color:#fbbf24;font-family:'IBM Plex Mono',monospace;font-weight:600;}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-x:hidden;min-width:0;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── HOME ── */
+.home-hero{padding:44px 52px 32px;border-bottom:2px solid var(--border);background:linear-gradient(135deg,var(--paper) 50%,var(--paper2));}
+.hero-kicker{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:11px;}
+.hero-h1{font-family:'Fraunces',serif;font-size:clamp(28px,3.5vw,50px);font-weight:300;line-height:1.1;margin-bottom:13px;}
+.hero-h1 em{font-style:italic;font-weight:400;color:var(--accent);}
+.hero-sub{font-size:14px;color:var(--muted);max-width:520px;line-height:1.75;margin-bottom:22px;}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--paper2);color:var(--muted);}
+.pill-dot{width:7px;height:7px;border-radius:50%;}
+.domain-grid{padding:28px 52px;display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:12px;}
+.dc{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:17px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.dc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.dc:hover{background:var(--paper2);transform:translateY(-2px);box-shadow:0 4px 18px rgba(0,0,0,0.09);}
+.dc-num{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-bottom:5px;}
+.dc-title{font-size:14px;font-weight:700;margin-bottom:5px;}
+.dc-tag{font-size:11px;color:var(--muted);line-height:1.55;}
+.dc-btns{display:flex;gap:7px;margin-top:10px;padding-top:9px;border-top:1px solid var(--border);}
+.dc-btn{font-size:11px;font-weight:700;padding:5px 11px;border-radius:4px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .14s;}
+.dc-btn-r{background:rgba(145,104,10,0.12);color:var(--gold);}
+.dc-btn-r:hover{background:rgba(145,104,10,0.2);}
+.dc-btn-d{background:var(--ink);color:#fff;}
+.dc-btn-d:hover{background:#1e1e30;}
+
+/* ── DOMAIN PAGE ── */
+.pg-header{padding:22px 52px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(247,244,239,0.96);backdrop-filter:blur(8px);z-index:10;}
+.pg-back{font-size:12px;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-bottom:7px;transition:color .13s;}
+.pg-back:hover{color:var(--ink);}
+.pg-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px;}
+.pg-h1{font-family:'Fraunces',serif;font-size:28px;font-weight:300;}
+.tab-row{display:flex;border-bottom:2px solid var(--border);padding:0 52px;background:var(--paper);}
+.tab{padding:10px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .14s;user-select:none;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.content{padding:28px 52px;}
+
+/* ── CONCEPTS ── */
+.concept{border:1px solid var(--border);border-radius:9px;margin-bottom:16px;overflow:hidden;}
+.c-head{padding:12px 17px;background:var(--paper2);border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
+.c-head:hover{background:var(--paper3);}
+.c-htitle{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.c-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:1px;font-weight:600;text-transform:uppercase;flex-shrink:0;}
+.c-arrow{font-size:14px;color:var(--muted);font-family:'IBM Plex Mono',monospace;flex-shrink:0;margin-left:10px;}
+.c-body{padding:18px;display:none;}
+.c-body.open{display:block;}
+.prose{font-size:13.5px;line-height:1.8;color:var(--muted);margin-bottom:11px;}
+.prose strong{color:var(--ink);}
+.code-box{background:var(--code);border-radius:7px;overflow:hidden;margin-bottom:10px;}
+.code-top{background:rgba(255,255,255,0.04);padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:rgba(255,255,255,0.3);letter-spacing:1.5px;text-transform:uppercase;}
+.code-pre{padding:13px 15px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:var(--ctext);overflow-x:auto;white-space:pre;}
+.callout{border-radius:6px;padding:10px 14px;font-size:13px;line-height:1.65;margin-bottom:10px;}
+.callout-w{background:rgba(181,52,28,0.07);border-left:3px solid var(--accent);}
+.callout-e{background:rgba(29,78,216,0.07);border-left:3px solid var(--blue);}
+.callout-t{background:rgba(22,101,52,0.07);border-left:3px solid var(--green);}
+.ctable{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:10px;}
+.ctable th{background:var(--ink);color:var(--paper);padding:7px 12px;text-align:left;font-size:9.5px;letter-spacing:.5px;font-family:'IBM Plex Mono',monospace;}
+.ctable td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.ctable tr:last-child td{border-bottom:none;}
+.ctable tr:nth-child(even) td{background:var(--paper2);}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.section-hed{font-family:'Fraunces',serif;font-size:18px;font-weight:300;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* ── DRILLS ── */
+.drill-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.drill-score{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
+.drill-score strong{color:var(--ink);}
+.prog-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:22px;}
+.prog-fill{height:100%;background:var(--ink);border-radius:3px;transition:width .4s ease;}
+.qcard{background:var(--paper);border:1px solid var(--border);border-radius:10px;overflow:hidden;animation:qin .2s ease;}
+@keyframes qin{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
+.qcard-top{padding:17px 20px 0;}
+.qmeta{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.qtype{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:3px;font-weight:600;}
+.qprompt{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:11px;}
+.qcode{background:var(--code);border-radius:6px;padding:12px 14px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.85;color:var(--ctext);white-space:pre-wrap;word-break:break-word;}
+.choices{display:flex;flex-direction:column;gap:6px;padding:13px 20px;}
+.choice{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;border-radius:7px;border:1px solid var(--border);background:var(--paper2);cursor:pointer;transition:all .14s;font-size:13.5px;line-height:1.5;text-align:left;font-family:'DM Sans',sans-serif;color:var(--ink);width:100%;}
+.choice:hover:not(.locked){background:var(--paper3);border-color:var(--muted);}
+.cltr{width:22px;height:22px;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px;transition:all .14s;}
+.choice.correct{border-color:var(--green);background:rgba(22,101,52,0.07);}
+.choice.correct .cltr{background:var(--green);color:#fff;}
+.choice.wrong{border-color:var(--accent);background:rgba(181,52,28,0.06);}
+.choice.wrong .cltr{background:var(--accent);color:#fff;}
+.choice.locked{cursor:default;}
+.expbox{margin:0 20px 13px;border-radius:7px;padding:12px 14px;display:none;font-size:13px;line-height:1.7;}
+.expbox.show{display:block;}
+.expbox.ok{background:rgba(22,101,52,0.08);border:1px solid rgba(22,101,52,0.2);}
+.expbox.bad{background:rgba(181,52,28,0.07);border:1px solid rgba(181,52,28,0.17);}
+.exp-head{font-weight:700;font-size:13px;margin-bottom:3px;}
+.exp-head.ok{color:var(--green);}
+.exp-head.bad{color:var(--accent);}
+.drill-nav{display:flex;align-items:center;justify-content:space-between;margin-top:13px;}
+.btn-prev{padding:8px 17px;border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--paper2);color:var(--muted);transition:all .14s;}
+.btn-prev:hover{color:var(--ink);}
+.btn-next{padding:8px 17px;border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;border:none;background:var(--ink);color:#fff;transition:all .14s;}
+.btn-next:hover{background:#1e1e30;}
+.nav-center{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+.result-box{background:var(--ink);color:#fff;border-radius:10px;padding:26px;text-align:center;margin-bottom:16px;}
+.result-score{font-family:'Fraunces',serif;font-size:48px;font-weight:300;line-height:1;}
+.result-grade{font-size:17px;font-weight:700;margin:6px 0;}
+.result-msg{font-size:13px;color:rgba(255,255,255,0.45);}
+.btn-retake{margin-top:14px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.18);border-radius:6px;padding:9px 24px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .14s;}
+.btn-retake:hover{background:rgba(255,255,255,0.17);}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-eyebrow">ITS302 · Full Trainer</div>
+    <div class="sb-title">Master<br><em>Exam Prep</em></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Home</div>
+    <div class="sb-item active" onclick="goHome()" id="nav-home"><span class="sb-dot" style="background:rgba(255,255,255,0.3)"></span> Overview</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Modules</div>
+    <div class="sb-item" onclick="goDomain(0)"><span class="sb-dot" style="background:#fbbf24"></span> DOM Deep Dive</div>
+    <div class="sb-item" onclick="goDomain(1)"><span class="sb-dot" style="background:#60c8f5"></span> innerHTML &amp; Output</div>
+    <div class="sb-item" onclick="goDomain(2)"><span class="sb-dot" style="background:#86efac"></span> All Loop Types</div>
+    <div class="sb-item" onclick="goDomain(3)"><span class="sb-dot" style="background:#f9a8d4"></span> Events &amp; Keyboard</div>
+    <div class="sb-item" onclick="goDomain(4)"><span class="sb-dot" style="background:#c4b5fd"></span> Strings &amp; Numbers</div>
+    <div class="sb-item" onclick="goDomain(5)"><span class="sb-dot" style="background:#fdba74"></span> Arrays Advanced</div>
+    <div class="sb-item" onclick="goDomain(6)"><span class="sb-dot" style="background:#67e8f9"></span> Forms Advanced</div>
+    <div class="sb-item" onclick="goDomain(7)"><span class="sb-dot" style="background:#d9f99d"></span> try/catch &amp; Errors</div>
+  </div>
+  <div class="sb-stats">
+    <div class="sb-stat">Answered <span id="s-ans">0</span></div>
+    <div class="sb-stat">Correct <span id="s-cor">0</span></div>
+    <div class="sb-stat">Accuracy <span id="s-pct">—</span></div>
+  </div>
+</nav>
+
+<main class="main">
+<div class="page active" id="pg-home">
+  <div class="home-hero">
+    <div class="hero-kicker">ITS302 · Master Trainer · All 82 Practice Problems</div>
+    <h1 class="hero-h1">Everything you need.<br><em>All new topics added.</em></h1>
+    <p class="hero-sub">Rebuilt from all 82 of your practice problems. Deep focus on DOM hierarchy (window vs document), innerHTML vs textContent vs value, every loop type (for/while/do-while/for-in), new keyboard events, string methods, and more. Modules 1 and 2 are the ones you said were hardest — they go deepest.</p>
+    <div class="pill-row">
+      <div class="pill"><span class="pill-dot" style="background:#fbbf24"></span>DOM Hierarchy</div>
+      <div class="pill"><span class="pill-dot" style="background:#60c8f5"></span>innerHTML &amp; output methods</div>
+      <div class="pill"><span class="pill-dot" style="background:#86efac"></span>for / while / do-while / for-in</div>
+      <div class="pill"><span class="pill-dot" style="background:#f9a8d4"></span>Events &amp; keyboard</div>
+      <div class="pill"><span class="pill-dot" style="background:#c4b5fd"></span>parseInt / parseFloat / NaN</div>
+      <div class="pill"><span class="pill-dot" style="background:#fdba74"></span>Array.find / multidimensional</div>
+    </div>
+  </div>
+  <div class="domain-grid" id="domain-grid"></div>
+</div>
+
+<div class="page" id="pg-domain">
+  <div class="pg-header">
+    <div class="pg-back" onclick="goHome()">← All Modules</div>
+    <div class="pg-tag" id="d-tag"></div>
+    <div class="pg-h1" id="d-title"></div>
+  </div>
+  <div class="tab-row">
+    <div class="tab active" onclick="setTab('concepts')" id="tab-concepts">📖 Study</div>
+    <div class="tab" onclick="setTab('drills')" id="tab-drills">⚡ Drills</div>
+  </div>
+  <div class="content">
+    <div id="concepts-panel"></div>
+    <div id="drills-panel" style="display:none"></div>
+  </div>
+</div>
+</main>
+</div>
+
+<script>
+var DOMAINS = [];
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 0 — DOM DEEP DIVE (window vs document — hardest topic)
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[0] = {
+  color:'#fbbf24', tag:'Module 1', title:'DOM Deep Dive',
+  topics:'window vs document · body/head/forms · innerHTML vs element property · screen.width/height · addEventListener · createTextNode · appendChild',
+  concepts:[
+    {
+      badge:'THE DOM TREE', bg:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      title:'What IS the DOM? The full hierarchy you must know',
+      prose:'The DOM (Document Object Model) is a tree. At the very top is <strong>window</strong> — the entire browser. Inside window lives <strong>document</strong> — the webpage. Inside document live all the HTML elements. Think of it as: window is the house, document is the room, elements are the furniture.',
+      code:[
+        'window',
+        '  └── document',
+        '        ├── head',
+        '        │     └── title, meta, link...',
+        '        └── body',
+        '              ├── forms[0], forms[1]...',
+        '              ├── getElementById("myDiv")',
+        '              ├── getElementsByTagName("p")',
+        '              └── getElementsByClassName("hero")',
+        '',
+        '// window = browser-level:',
+        'window.innerWidth     // browser viewport width',
+        'window.innerHeight    // browser viewport height',
+        'window.alert()        // browser popup',
+        'window.open()         // open new tab/window',
+        'window.close()        // close window',
+        '',
+        '// screen = monitor hardware (different from window!):',
+        'screen.width          // actual monitor width',
+        'screen.height         // actual monitor height',
+        '',
+        '// document = webpage content:',
+        'document.getElementById("id")',
+        'document.getElementsByTagName("p")[0]',
+        'document.getElementsByClassName("class")',
+        'document.forms[0].elements',
+        'document.write("html")',
+        'document.body',
+        'document.createElement("p")',
+        'document.createTextNode("text")'
+      ],
+      table:{
+        headers:['Object','Belongs to','Key items'],
+        rows:[
+          ['window','Browser','innerWidth, innerHeight, alert(), open(), close()'],
+          ['screen','Monitor hardware','screen.width, screen.height (NOT window!)'],
+          ['document','Webpage','getElementById, forms, body, createElement, write'],
+          ['element','An HTML element','innerHTML, textContent, value, setAttribute, appendChild'],
+          ['forms','document','document.forms[0] — NOT window.forms'],
+          ['body','document','document.body — NOT window.body']
+        ]
+      },
+      tip:'EXAM TRAP: "forms is part of window" — FALSE. "open/close are part of document" — FALSE. "innerHTML is a document property" — FALSE (it belongs to individual ELEMENTS).',
+      tipType:'exam'
+    },
+    {
+      badge:'SELECTING ELEMENTS', bg:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      title:'getElementById vs getElementsByTagName vs getElementsByClassName',
+      prose:'Three selectors, three different use cases. The exam tests which one to use and how to access a specific item from the collection.',
+      code:[
+        '// ONE element by id — returns that element directly:',
+        'var div = document.getElementById("myDiv");',
+        '',
+        '// ALL elements by tag — returns array-like collection:',
+        'var allP = document.getElementsByTagName("p");',
+        'var firstP = document.getElementsByTagName("p")[0];  // first p',
+        '',
+        '// ALL elements by class — returns array-like collection:',
+        'var heroes = document.getElementsByClassName("hero");',
+        '',
+        '// Apply class to first paragraph:',
+        'document.getElementsByTagName("p")[0].setAttribute("class", "altPara");',
+        '',
+        '// Get count of productList class usage:',
+        'var classList = document.getElementsByClassName("productList");',
+        'document.getElementById("productListOutput").innerHTML =',
+        '  "The class is used " + classList.length + " times.";',
+        '',
+        '// Get all elements of first form:',
+        'document.forms[0].elements'
+      ]
+    },
+    {
+      badge:'CREATING ELEMENTS', bg:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      title:'createElement → createTextNode → appendChild — the 3-step pattern',
+      prose:'To dynamically add a new element to the page, you need three steps: create the element, create the text inside it, then connect them and attach to the page.',
+      code:[
+        '// Add a paragraph "A new song has been added":',
+        'function addSongMsg() {',
+        '  var songP    = document.createElement("p");         // step 1: make the element',
+        '  var songText = document.createTextNode("A new song has been added.");  // step 2: make the text',
+        '  songP.appendChild(songText);                         // step 3a: put text inside p',
+        '  document.getElementById("songlist").appendChild(songP); // step 3b: put p on page',
+        '}',
+        '',
+        '// DO NOT confuse:',
+        '// createElement   — makes a tag element like <p> or <li>',
+        '// createTextNode  — makes text content (no tags)',
+        '// appendChild     — connects a child to its parent'
+      ],
+      tip:'EXAM: "Which three methods create a new paragraph on the page?" — createElement, createTextNode, appendChild. setAttribute is wrong — that sets attributes, not text content.',
+      tipType:'exam'
+    },
+    {
+      badge:'addEventListener', bg:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      title:'addEventListener — the JS-only alternative to onclick in HTML',
+      prose:'Instead of putting onclick= in the HTML, you can attach an event listener from JavaScript. This keeps your HTML clean.',
+      code:[
+        '// In HTML, you can write:',
+        '<button onclick="getCurrentDate()">Get Date</button>',
+        '',
+        '// OR in JavaScript, using addEventListener:',
+        'document.getElementById("getDate").addEventListener("click", getCurrentDate);',
+        '//                                                 ^event    ^function (no parentheses!)',
+        '',
+        '// Notice: getCurrentDate not getCurrentDate() — no () means "use this function",',
+        '// () would mean "call it right now immediately"'
+      ]
+    },
+    {
+      badge:'SCREEN vs WINDOW', bg:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      title:'screen.width vs window.innerWidth — two different things',
+      prose:'This is a new topic from your problems. screen is the physical monitor. window is the browser viewport. They are different.',
+      code:[
+        '// Browser viewport size (changes when you resize the window):',
+        'window.innerWidth      // visible browser area width',
+        'window.innerHeight     // visible browser area height',
+        '',
+        '// Monitor screen size (the physical display, never changes):',
+        'screen.width           // full monitor width',
+        'screen.height          // full monitor height',
+        '',
+        '// Function to display screen size:',
+        'function screenSize() {',
+        '  var pixelWidth  = screen.width;    // NOT window.width',
+        '  var pixelHeight = screen.height;   // NOT window.height',
+        '}'
+      ],
+      tip:'EXAM TRAP: screen.width and screen.height are PROPERTIES not methods — no parentheses. screen.width() would be wrong.',
+      tipType:'warn'
+    }
+  ],
+  drills:[
+    {
+      type:'WHY', tc:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      q:'Which three DOM facts are TRUE? (Choose the one answer that correctly identifies all true statements)',
+      code:'// A) innerHeight is a Window property\n// B) body is a Document object\n// C) innerHTML is a Document property\n// D) forms is a Window object\n// E) screen.width is a window method',
+      choices:['A and C are true; B and D are false','A and B are true; C, D, and E are false','B and D are true; A and C are false','All five are true'],
+      answer:1,
+      exp:'A is TRUE: innerHeight belongs to window. B is TRUE: body is part of the document object. C is FALSE: innerHTML belongs to individual HTML elements, not to document itself. D is FALSE: forms is document.forms, NOT window. E is FALSE: screen.width is a PROPERTY (no parentheses), and it belongs to screen not window.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Display screen width and height when a button is clicked. Which object and properties are correct?',
+      code:'function screenSize() {\n  var pixelWidth  = _______;\n  var pixelHeight = _______;\n}',
+      choices:['window.width and window.height','window.innerWidth and window.innerHeight','screen.width and screen.height','document.width and document.height'],
+      answer:2,
+      exp:'screen.width and screen.height give the physical monitor dimensions. window.innerWidth/innerHeight give the BROWSER VIEWPORT size (which changes when you resize the window). The practice problem specifically asks for screen dimensions, which means screen.width and screen.height. Also note: these are properties, not methods — no parentheses.'
+    },
+    {
+      type:'SPOT THE BUG', tc:'rgba(181,52,28,0.1)', fc:'#8a0000',
+      q:'This code should count how many times the "productList" class is used. What is wrong?',
+      code:'function getClasses() {\n  var classList = document.getElementsByClassName("productList");\n  document.getElementById("productListOutput").innerHTML\n    += "The class is used " + productList.length + " times.";\n}',
+      choices:['getElementsByClassName should be getElementById','productList.length should be classList.length — classList is the variable holding the collection','innerHTML should be value','The function has no return statement'],
+      answer:1,
+      exp:'The collection is stored in a variable called classList (not productList). Using productList.length would throw a ReferenceError because productList is not defined anywhere. The correct variable name is classList.length. This is a case-sensitivity / variable naming trap.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Put the 3 steps in order to add a new paragraph to the page. Which sequence is correct?',
+      code:'function addSongMsg() {\n  // Step A: var songP    = document.______("p");\n  // Step B: var songText = document.______("A new song has been added.");\n  // Step C: songP.______(songText);\n  // Step D: document.getElementById("songlist").______(songP);\n}',
+      choices:['createTextNode, createElement, appendChild, appendChild','createElement, createTextNode, appendChild, appendChild','createElement, setAttribute, appendChild, appendChild','createTextNode, appendChild, createElement, appendChild'],
+      answer:1,
+      exp:'Order: (A) createElement("p") creates the p tag element. (B) createTextNode("...") creates the text content. (C) songP.appendChild(songText) puts the text inside the p. (D) getElementById("songlist").appendChild(songP) puts the finished p onto the actual page. createElement then createTextNode, then two appendChilds.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Attach a click event to a button using addEventListener. The button id is "getDate" and the function is getCurrentDate. What fills the blank?',
+      code:'document.getElementById("getDate")._______("click", getCurrentDate);',
+      choices:['onclick','addEventListener','attachEvent','on'],
+      answer:1,
+      exp:'addEventListener is the method that attaches an event handler in JavaScript. Note: the function name getCurrentDate has NO parentheses — with () it would execute immediately rather than being registered as a handler. The first argument "click" is the event type string.'
+    },
+    {
+      type:'TRACE', tc:'rgba(251,191,36,0.14)', fc:'#6b4c00',
+      q:'document.getElementsByTagName("p")[0].setAttribute("class", "altPara") — what does index [0] refer to?',
+      code:'// The page has this HTML:\n// <p>First paragraph</p>\n// <p>Second paragraph</p>\n// <p>Third paragraph</p>\n\ndocument.getElementsByTagName("p")[0].setAttribute("class", "altPara");',
+      choices:['The last paragraph','The second paragraph','The first paragraph — arrays/collections are zero-indexed','It applies to all three paragraphs'],
+      answer:2,
+      exp:'getElementsByTagName returns a NodeList (array-like). Like all JavaScript arrays, it is zero-indexed: [0] = first item, [1] = second, [2] = third. So [0] selects only the FIRST paragraph. The setAttribute then applies class="altPara" to just that first paragraph.'
+    },
+    {
+      type:'WHY', tc:'rgba(22,101,52,0.1)', fc:'#0a4020',
+      q:'External scripts vs inline scripts — which statement is FALSE?',
+      code:'// A) External scripts increase code security for websites.\n// B) If a variable is declared in both inline and external scripts,\n//    the inline always takes precedence.\n// C) External scripts do not need script tags within them.',
+      choices:['A is false — external scripts have no security benefit','B is false — inline does not always take precedence; load order decides','C is false — external scripts need script tags','All three are true'],
+      answer:1,
+      exp:'B is FALSE: inline scripts do NOT always take precedence. Order of execution determines which runs last — if an external script in the head runs before an inline script at the bottom of the page, the inline one wins just because it ran later. A is TRUE: external scripts improve security because someone viewing source only sees a file reference, not the actual code. C is TRUE: external .js files contain only JavaScript — no script tags inside them.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 1 — innerHTML & OUTPUT METHODS
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[1] = {
+  color:'#60c8f5', tag:'Module 2', title:'innerHTML & Output Methods',
+  topics:'innerHTML = vs += · textContent · value · document.write · innerHTML is NOT a document property · reading from lists',
+  concepts:[
+    {
+      badge:'4 OUTPUT METHODS', bg:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      title:'innerHTML, textContent, value, and document.write — when to use each',
+      prose:'This is one of the most tested topics. Each method reads or writes different content. Getting them mixed up is the #1 mistake.',
+      table:{
+        headers:['Property/Method','Works on','Reads/Writes','Parses HTML?'],
+        rows:[
+          ['.innerHTML','Any element','HTML content between tags','YES — renders tags'],
+          ['.textContent','Any element','Plain text, no HTML','NO — treats tags as text'],
+          ['.value','Form inputs (input, select, textarea)','What the user typed/selected','N/A'],
+          ['document.write()','Document stream','Best for new documents','YES']
+        ]
+      },
+      code:[
+        '// SETTING content with innerHTML (HTML is rendered):',
+        'document.getElementById("output").innerHTML = "<b>Hello</b>";',
+        '// Result: Hello appears BOLD',
+        '',
+        '// APPENDING with += (adds to existing content):',
+        'document.getElementById("output").innerHTML += " World";',
+        '',
+        '// READING list content with textContent:',
+        'document.getElementById("listItems").innerHTML =',
+        '  document.getElementById("items").textContent;',
+        '// textContent gets raw text from <ul> (strips the li tags)',
+        '',
+        '// READING a form field value:',
+        'var city = document.getElementById("city").value;',
+        '// .value — NOT .innerHTML — for form inputs',
+        '',
+        '// WRITING to a form field:',
+        'document.getElementById("state").value = "UT";'
+      ],
+      tip:'EXAM: innerHTML is NOT a property of the document object — it belongs to individual ELEMENTS. document.innerHTML does not exist.',
+      tipType:'exam'
+    },
+    {
+      badge:'= vs +=', bg:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      title:'innerHTML = (REPLACE) vs innerHTML += (APPEND) — critical difference',
+      prose:'This trap trips people up constantly in loop questions. If you use = inside a loop, each iteration wipes out the previous one and you only see the last item. You must use += to build up output.',
+      code:[
+        '// WRONG — = inside a loop replaces on every iteration:',
+        'for (var i = 0; i < locations.length; i++) {',
+        '  document.getElementById("list").innerHTML = locations[i]; // BUG',
+        '}',
+        '// Only "West" (last item) shows — previous items erased!',
+        '',
+        '// CORRECT — += appends each item:',
+        'for (var i = 0; i < locations.length; i++) {',
+        '  document.getElementById("list").innerHTML += locations[i] + "<br />";',
+        '}',
+        '// All items show: HQ, Central, West',
+        '',
+        '// Also correct — build string first, then set once:',
+        'var storeList = "";',
+        'for (var i = 0; i < stores.length; i++) {',
+        '  storeList += stores[i] + "<br />";',
+        '}',
+        'document.getElementById("list").innerHTML = storeList;'
+      ],
+      tip:'When using a loop to build a list, ALWAYS use += on innerHTML, NEVER =. The = operator throws away everything built in previous iterations.',
+      tipType:'warn'
+    },
+    {
+      badge:'innerHTML vs textContent', bg:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      title:'Reading list content — innerHTML vs textContent, and what they return',
+      prose:'From your practice problems: given a <ul> with three <li> items, getting .textContent returns the plain text of all items combined. Getting .innerHTML returns the full HTML with the li tags included.',
+      code:[
+        '// Given this HTML:',
+        '// <ul id="items">',
+        '//   <li>Cup</li>',
+        '//   <li>Plate</li>',
+        '//   <li>Saucer</li>',
+        '// </ul>',
+        '',
+        '// textContent strips tags — returns just the text:',
+        'document.getElementById("items").textContent',
+        '// Returns: "CupPlateSaucer" (all text merged)',
+        '',
+        '// innerHTML includes the li tags:',
+        'document.getElementById("items").innerHTML',
+        '// Returns: "<li>Cup</li><li>Plate</li><li>Saucer</li>"',
+        '',
+        '// Exam question: display list items in another element:',
+        'document.getElementById("listItems").innerHTML =',
+        '  document.getElementById("items").textContent;'
+      ]
+    }
+  ],
+  drills:[
+    {
+      type:'WHY', tc:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      q:'Which statement about innerHTML and document.write is FALSE?',
+      code:'// A) innerHTML must be used within a document.write statement\n// B) document.write is best used for writing HTML to a new document\n// C) innerHTML looks at text between opening and closing tag of an element',
+      choices:['A is false — innerHTML works independently and does NOT need document.write','B is false — document.write is for existing pages','C is false — innerHTML reads the tag attributes','All three are true'],
+      answer:0,
+      exp:'A is FALSE: innerHTML has nothing to do with document.write. You use innerHTML directly: element.innerHTML = "content". They are completely independent methods. B is TRUE: document.write is best suited for writing HTML to a new/blank document. C is TRUE: innerHTML reads the HTML content between an element\'s opening and closing tags.'
+    },
+    {
+      type:'SPOT THE BUG', tc:'rgba(181,52,28,0.1)', fc:'#8a0000',
+      q:'This loop should display all three locations but only shows "West". Why?',
+      code:'var locations = ["HQ", "Central", "West"];\nfor (var i = 0; i < locations.length; i++) {\n  document.getElementById("locations").innerHTML = locations[i];\n}',
+      choices:['The loop condition should use <= not <','innerHTML = replaces the content on every iteration — should be +=','locations[i] should be locations[i+1]','The for loop needs a break statement'],
+      answer:1,
+      exp:'innerHTML = (single equals) REPLACES the existing content. On iteration 0 it shows "HQ", on iteration 1 it replaces that with "Central", on iteration 2 it replaces again with "West". Only "West" remains. Fix: use innerHTML += locations[i] to APPEND each item instead of replacing.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Write the correct code to populate a form field "state" with "UT" when the user enters "Orem" for location. Which property fills the blank?',
+      code:'function fillState(location) {\n  var state = document.getElementById("state");\n  if (location == "Orem") {\n    state._______ = "UT";\n  }\n}',
+      choices:['innerHTML','textContent','value','text'],
+      answer:2,
+      exp:'.value is the property for reading and WRITING the contents of form fields (input, select, textarea). .innerHTML and .textContent are for reading/writing the HTML or text between element tags — they do not work for setting what appears in a form field input. Setting element.value = "UT" puts "UT" into the form field.'
+    },
+    {
+      type:'TRACE', tc:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      q:'A <ul id="items"> has three li items: Cup, Plate, Saucer. What does getElementById("items").textContent return?',
+      code:'// HTML:\n// <ul id="items"><li>Cup</li><li>Plate</li><li>Saucer</li></ul>\n\nvar result = document.getElementById("items").textContent;\nconsole.log(result);',
+      choices:['<li>Cup</li><li>Plate</li><li>Saucer</li>','Cup, Plate, Saucer (comma-separated)','CupPlateSaucer (text stripped of tags)','undefined'],
+      answer:2,
+      exp:'textContent reads ALL text nodes inside an element, stripping all HTML tags. It does NOT add separators between items — the three texts just run together: "CupPlateSaucer". If you want the HTML tags included, you would use innerHTML instead, which would return "<li>Cup</li><li>Plate</li><li>Saucer</li>".'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'A loop should append each store name + a br tag to an element. What operator fills the blank?',
+      code:'var stores = ["Raleigh", "Charlotte", "Columbia"];\nfor (i = 0; i < stores.length; i++) {\n  storeList _______ stores[i] + "<br />";\n}',
+      choices:['=','+=','+','=='],
+      answer:1,
+      exp:'+= appends to the variable storeList. = would replace it each time. The practice problem says += stands for "add this to itself" — it is shorthand for storeList = storeList + stores[i] + "<br />". After the loop, storeList contains all three names each followed by a line break.'
+    },
+    {
+      type:'WHY', tc:'rgba(22,101,52,0.1)', fc:'#0a4020',
+      q:'Which property is correct to READ what a user typed into a text input?',
+      code:'// User typed "Phoenix" into:\n// <input type="text" id="city" />\n\nvar city = document.getElementById("city")._______;',
+      choices:['innerHTML — reads the content between tags','textContent — reads the plain text','value — reads the current value of form inputs','getAttribute("text") — reads the text attribute'],
+      answer:2,
+      exp:'.value is the correct property for form inputs. Form inputs are self-closing tags (<input />) — they have no content between opening and closing tags, so .innerHTML and .textContent would return empty or undefined. The browser stores what the user typed in the .value property.'
+    },
+    {
+      type:'TRACE', tc:'rgba(96,200,245,0.14)', fc:'#0a3a5a',
+      q:'ids.find(checkId) where ids=[2,22,24,26,28] and checkId returns id>20. What displays in innerHTML?',
+      code:'var ids = [2, 22, 24, 26, 28];\ndocument.getElementById("result").innerHTML = ids.find(checkId);\n\nfunction checkId(id) {\n  return id > 20;\n}',
+      choices:['22 24 26 28 (all matches)','4 (count of matches)','22 (first match only)','1 (index of first match)'],
+      answer:2,
+      exp:'Array.find() returns the FIRST element that satisfies the condition and stops. It does NOT return all matches (that would be .filter()). The first id > 20 in [2,22,24,26,28] is 22. So innerHTML becomes 22. If no match existed, find() would return undefined.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 2 — ALL LOOP TYPES (for / while / do-while / for-in)
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[2] = {
+  color:'#86efac', tag:'Module 3', title:'All Loop Types',
+  topics:'for vs while vs do-while — when to use each · break vs continue · for-in for objects · if inside a loop · zero-based day counts',
+  concepts:[
+    {
+      badge:'LOOP DECISION GUIDE', bg:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      title:'Choosing the RIGHT loop — the most important skill',
+      prose:'The exam asks you to pick the correct loop for a scenario. Here is the decision framework.',
+      table:{
+        headers:['Loop type','When to use it','Runs if condition never true?'],
+        rows:[
+          ['for','You KNOW the exact number of iterations (array length, 7 days, etc.)','No — skipped if start >= end'],
+          ['while','Condition-based, may run 0 or many times, do not know how many upfront','NO — checks first, may not run at all'],
+          ['do...while','Must run AT LEAST ONCE, then check condition','YES — always runs once, then checks'],
+          ['for...in','Loop over ALL PROPERTIES of an OBJECT (not arrays)','No — nothing if object is empty']
+        ]
+      },
+      code:[
+        '// Use FOR when you know the count:',
+        'for (var i = 0; i < 7; i++) {              // exactly 7 iterations',
+        '  // do something each day',
+        '}',
+        '',
+        '// Use WHILE when condition-based, may not run:',
+        'while (programDate < programEndDate) {     // might never run if dates equal',
+        '  innerHTML += programDate;',
+        '  programDate.setDate(programDate.getDate() + 7);',
+        '}',
+        '',
+        '// Use DO...WHILE when must run at least once:',
+        'do {',
+        '  innerHTML += programDate;               // start date ALWAYS shows',
+        '  programDate.setDate(programDate.getDate() + 7);',
+        '} while (programDate < programEndDate);',
+        '',
+        '// Use FOR...IN for object properties:',
+        'for (var key in car2) {',
+        '  output += car2[key] + " ";              // access value by key variable',
+        '}'
+      ],
+      tip:'EXAM QUESTION: "A loop must run at least once even if the condition is never true. Which loop?" — ALWAYS do...while.',
+      tipType:'exam'
+    },
+    {
+      badge:'FOR LOOP ANATOMY', bg:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      title:'for loop — the three parts and zero-based counting trap',
+      prose:'A for loop has three parts. The exam tests whether you understand the zero-based trap: arrays and day counters start at 0, not 1.',
+      code:[
+        'for (initialization; condition; increment) {',
+        '  // body',
+        '}',
+        '',
+        '// Array loop (most common):',
+        'for (var i = 0; i < array.length; i++) {',
+        '  // i goes 0, 1, 2, ... length-1',
+        '}',
+        '',
+        '// ZERO-BASED TRAP — "5th day" in loop = i == 4:',
+        'var disc = 0.1;',
+        'for (var i = 0; i < 7; i++) {',
+        '  if (i == 4) {            // i==4 is the FIFTH iteration (0,1,2,3,4)',
+        '    disc = 0.2;             // double the discount on day 5',
+        '  }',
+        '}',
+        '// Why i==4? Because the loop starts at 0.',
+        '// Day 1 = i=0, Day 2 = i=1, Day 3 = i=2, Day 4 = i=3, Day 5 = i=4',
+        '',
+        '// const in a for loop header:',
+        'const stores = ["A","B","C"];',
+        'for (i=0; i < stores.length; i++) { ... }',
+        '// const stores = [...] means stores cannot be REDEFINED (no stores = [...] again)',
+        '// But you CAN still push() or change items inside it'
+      ]
+    },
+    {
+      badge:'BREAK vs CONTINUE', bg:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      title:'break vs continue — stop completely vs skip one iteration',
+      prose:'Both appear inside loops. break exits the entire loop. continue skips the REST of the current iteration and jumps to the next one.',
+      code:[
+        '// BREAK — exits the loop completely:',
+        'do {',
+        '  sessionStartDate.setDate(sessionStartDate.getDate() + 7);',
+        '  if (sessionStartDate.getDate() == sessionBreakDate.getDate()) {',
+        '    break;           // stop all further sessions',
+        '  }',
+        '  schedule.innerHTML += sessionStartDate.toLocaleDateString();',
+        '} while (sessionStartDate < sessionEndDate);',
+        '',
+        '// CONTINUE — skips this one iteration, loop keeps going:',
+        'do {',
+        '  sessionStartDate.setDate(sessionStartDate.getDate() + 7);',
+        '  if (sessionStartDate.getDate() == sessionBreakDate.getDate()) {',
+        '    continue;        // skip this date, keep scheduling others',
+        '  }',
+        '  schedule.innerHTML += sessionStartDate.toLocaleDateString();',
+        '} while (sessionStartDate < sessionEndDate);'
+      ],
+      table:{
+        headers:['Keyword','Effect','Loop continues?'],
+        rows:[
+          ['break','Exits the loop immediately','NO — done'],
+          ['continue','Skips rest of current iteration','YES — jumps to next iteration'],
+          ['return','Exits the entire function','NO — function ends'],
+          ['break in switch','Only exits the switch statement','YES — code after switch runs']
+        ]
+      }
+    },
+    {
+      badge:'DO...WHILE PATTERN', bg:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      title:'do...while — the "start date always shows" pattern from your exam',
+      prose:'Your practice problems have this exact scenario: training sessions every 7 days, the start date must always appear. The start date can equal the end date and it still must show — that means you need do...while.',
+      code:[
+        '// SCENARIO: Fitness program start = end, start must ALWAYS show',
+        '',
+        '// while (checks FIRST) — start date might NOT show:',
+        'while (programDate <= programEndDate) {',
+        '  innerHTML += programDate;',
+        '  programDate.setDate(programDate.getDate() + 1);',
+        '}',
+        '// If start == end: <= is true, runs once. OK here.',
+        '// If start > end: never runs — start date lost!',
+        '',
+        '// do...while (runs FIRST, checks AFTER) — start ALWAYS shows:',
+        'do {',
+        '  document.getElementById("programList").innerHTML',
+        '    += "<li>" + programDate + "</li>";',
+        '  programDate.setDate(programDate.getDate() + 1);',
+        '} while (programDate <= programEndDate);',
+        '',
+        '// The do...while loop structure:',
+        '// do {           <- Line 1',
+        '// ...body...     <- Line 2',
+        '// ...advance...  <- Line 3',
+        '// }              <- Line 4',
+        '// while(cond)    <- Line 5 (condition checked AFTER body)'
+      ]
+    }
+  ],
+  drills:[
+    {
+      type:'WHY', tc:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      q:'A loop needs to run a block of code while a condition is true, but should NOT run at all if the condition is false from the start. Which loop is correct?',
+      choices:['for...in — condition-based loop','do...while — always runs at least once','while — checks condition before running, may skip entirely','for — runs a set number of times'],
+      answer:2,
+      exp:'while checks the condition BEFORE executing the body. If the condition is false on the very first check, the body never runs at all. do...while is wrong here because it always runs the body once before checking. for runs a preset number of times. for...in is for object properties. The keyword "should not run at all if condition never true" points to while.'
+    },
+    {
+      type:'WHY', tc:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      q:'A fitness program start date must ALWAYS show in the schedule, even if it equals the end date. Which loop guarantees this?',
+      choices:['while (programDate <= programEndDate)','while (programDate < programEndDate)','do { ... } while (programDate <= programEndDate)','for (var i = 0; i < 7; i++)'],
+      answer:2,
+      exp:'do...while runs the body FIRST then checks the condition. This guarantees the start date always executes and displays. while would check the condition first — if start equals end (a common edge case), <= would run once but < would skip entirely. The exam specifically says "start date should always display" — that is the do...while clue.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Seven-day discount loop. On the 5th day (i==?), discount doubles. What condition checks for the 5th day?',
+      code:'var disc = .1;\nfor (var i = 0; i < 7; i++) {\n  if (i == ___) {\n    disc = .2;\n  }\n}',
+      choices:['5 — the 5th day is i=5','1 — first special day','4 — loops are zero-based, day 5 is index 4','0 — first iteration'],
+      answer:2,
+      exp:'The loop starts at i=0. Day 1 = i=0, Day 2 = i=1, Day 3 = i=2, Day 4 = i=3, Day 5 = i=4. So i==4 is the condition. This is the zero-based language trap. The exam explanation says exactly this: "the day being checked is actually day 4, as JavaScript is a zero-based language."'
+    },
+    {
+      type:'SPOT THE BUG', tc:'rgba(181,52,28,0.1)', fc:'#8a0000',
+      q:'Sessions happen every 7 days. If the date matches the break date, the session should be SKIPPED (not ended). What keyword replaces the blank?',
+      code:'do {\n  sessionStartDate.setDate(sessionStartDate.getDate() + 7);\n  if (sessionStartDate.getDate() == sessionBreakDate.getDate()) {\n    _______;\n  }\n  schedule.innerHTML += sessionStartDate.toLocaleDateString();\n} while (sessionStartDate < sessionEndDate);',
+      choices:['break — stop the loop','return — exit the function','continue — skip this iteration, keep the loop going','stop — halt this session'],
+      answer:2,
+      exp:'continue skips the REST of the current iteration (the innerHTML line) and immediately jumps to the while condition check for the next cycle. break would end the entire loop — no more sessions after the break date. The scenario says sessions should CONTINUE but skip just the break date.'
+    },
+    {
+      type:'TRACE', tc:'rgba(134,239,172,0.14)', fc:'#0a4020',
+      q:'const stores = ["Raleigh","Charlotte","Columbia"]; — which TWO statements about this code are true?',
+      code:'const stores = ["Raleigh", "Charlotte", "Columbia"];\nfor (i=0; i < stores.length; i++) {\n  storeList += stores[i] + "<br />";\n}',
+      choices:['stores cannot be redefined + the body line should be indented','stores cannot be redefined + use static instead of const','for loop header needs indenting + stores cannot have br tags','const makes stores read-only + arrays need () not []'],
+      answer:0,
+      exp:'Two true facts: (1) const means the stores variable cannot be REDEFINED (you cannot write stores = [...] later). You can still change contents with push() etc. (2) The line inside the loop body should be indented for readability. The false options: "static" is not a JavaScript keyword for this. "for loop should be indented" is wrong — only the body needs indentation.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Loop through all properties of car2 object. What fills the two blanks?',
+      code:'var carOutput = "";\nfor (var __ in car2) {\n  carOutput += car2[__] + " ";\n}',
+      choices:['key, key','property, property','i, i — same variable works for both','Any of the above — variable name does not matter, but must be consistent'],
+      answer:3,
+      exp:'In a for...in loop, the variable (commonly i, key, or prop) holds each property NAME as a string. The same variable name must be used in both places: for (var i in car2) { car2[i] } is identical to for (var key in car2) { car2[key] }. What matters is that both blanks use the SAME variable name.'
+    },
+    {
+      type:'WHY', tc:'rgba(22,101,52,0.1)', fc:'#0a4020',
+      q:'for and for...in loops both "run a set number of times" per the exam. What specifically does for...in loop over?',
+      choices:['Array items by index number','The characters in a string','The PROPERTIES (keys) of an object','A number range from start to end'],
+      answer:2,
+      exp:'for...in iterates over the enumerable PROPERTIES (keys) of an object. For example, if car = {color:"blue", type:"SUV"}, for (var k in car) gives k = "color" then k = "type". It is NOT for arrays (use regular for), NOT for strings, NOT for number ranges. The important distinction: for counts iterations, for...in iterates keys.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 3 — EVENTS & KEYBOARD
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[3] = {
+  color:'#f9a8d4', tag:'Module 4', title:'Events & Keyboard',
+  topics:'onKeyUp vs onKeyDown vs onKeyPress · onFocus/onBlur/onChange · event matching · onload on body · onmouseover/onmouseout',
+  concepts:[
+    {
+      badge:'KEYBOARD EVENTS', bg:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      title:'onKeyDown, onKeyUp, onKeyPress — the three keyboard events and their differences',
+      prose:'Your new practice problems add keyboard events. These are distinct. The exam tests which one fires when.',
+      table:{
+        headers:['Event','When it fires','Typical use'],
+        rows:[
+          ['onkeydown','ANY key is pressed down (before character appears)','Detect any keypress including Shift, Ctrl, arrows'],
+          ['onkeyup','A key is released','Run code AFTER user finishes pressing a key'],
+          ['onkeypress','A character-producing key is pressed','Only fires for keys that produce a character (not Shift alone)']
+        ]
+      },
+      code:[
+        '// Fire when key is RELEASED:',
+        '<input type="text" id="updateField" onkeyup="displayMessage()">',
+        '',
+        '// Fire when ANY key is pressed (including Shift, Ctrl):',
+        '<input type="text" onkeydown="keyMessage();">',
+        '',
+        '// Fire when a CHARACTER-producing key is pressed:',
+        '// onkeypress (maps to onKeyPress in HTML)',
+        '',
+        '// All events match:',
+        '// onFocus  → user selects (clicks into) an input field',
+        '// onBlur   → user leaves an input field',
+        '// onChange → user updates a value in a form field',
+        '// onKeyPress → a character-producing key is selected'
+      ]
+    },
+    {
+      badge:'FULL EVENT REFERENCE', bg:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      title:'Every event on your exam — complete matching table',
+      prose:'Your practice problems include a drag-and-drop matching question. Memorize this table.',
+      table:{
+        headers:['Event','Fires when...','Goes on'],
+        rows:[
+          ['onload','Page finishes loading','body tag'],
+          ['onclick','User clicks element','button, img, any'],
+          ['onmouseover','Mouse enters element','img, div'],
+          ['onmouseout','Mouse leaves element','img, div'],
+          ['onfocus','Input field is selected/clicked','input'],
+          ['onblur','User LEAVES an input field','input'],
+          ['onchange','Value in a field is UPDATED','input, select'],
+          ['onkeypress','Character-producing key pressed','input'],
+          ['onkeydown','Any key pressed (fires first)','input, document'],
+          ['onkeyup','Key released (fires last)','input']
+        ]
+      }
+    }
+  ],
+  drills:[
+    {
+      type:'FILL THE GAP', tc:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      q:'Fire displayMessage() when a key on the keyboard is RELEASED in the input. Which event?',
+      code:'<input type="text" id="updateField" _______="displayMessage()">',
+      choices:['onkeydown','onkeypress','onkeyup','onrelease'],
+      answer:2,
+      exp:'onkeyup fires when the key is RELEASED — after the character has been entered. onkeydown fires when the key is first pressed down. onkeypress fires when a character-producing key is pressed (before release). onrelease does not exist. The scenario says "released" which maps exactly to onkeyup.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      q:'Fire keyMessage() when ANY key is pressed (including Shift, Ctrl). Which event?',
+      code:'<input type="text" _______="keyMessage();">',
+      choices:['onkeyup','onkeydown','onkeypress','onkeyany'],
+      answer:1,
+      exp:'onkeydown fires when ANY key is pressed, including modifier keys (Shift, Ctrl, Alt, arrow keys). onkeypress only fires for character-producing keys — it would miss Shift or Ctrl alone. onkeyup fires on release. The scenario says "any key on the keyboard" which is the clue for onkeydown.'
+    },
+    {
+      type:'TRACE', tc:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      q:'Match: onFocus, onBlur, onChange, onKeyPress — what does each one do?',
+      choices:[
+        'onFocus=leaves input; onBlur=enters input; onChange=key pressed; onKeyPress=value changes',
+        'onFocus=enters input; onBlur=leaves input; onChange=value updated; onKeyPress=character key pressed',
+        'onFocus=page loads; onBlur=page unloads; onChange=mouse moves; onKeyPress=button clicked',
+        'All four fire on button click'
+      ],
+      answer:1,
+      exp:'onFocus: user selects (clicks into) an input field. onBlur: user LEAVES the field (opposite of focus). onChange: value in the field is updated/changed by the user. onKeyPress: a character-producing key is pressed inside the field. Remember: blur = opposite of focus (like a camera going out of focus when you look away).'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Show a welcome alert when the page OPENS. Which tag and attribute is correct?',
+      code:"<_____ _____=\"alert('Welcome!')\">",
+      choices:['head onload','body onopen','body onload','html onstart'],
+      answer:2,
+      exp:'onload fires when the page finishes loading. It goes on the BODY tag — not head, not html. "onopen" does not exist as an HTML event. So the complete answer is: <body onload="alert(\'Welcome!\')">. This is a common exam question — remember it is body + onload, not head + onload.'
+    },
+    {
+      type:'WHY', tc:'rgba(22,101,52,0.1)', fc:'#0a4020',
+      q:'A developer wants to show a message and then run another function after a 3-second delay on page load. Which TWO can pause code execution to test variable validity?',
+      choices:['pause and stop','debugger and add a breakpoint in DevTools','console.log and alert','return and break'],
+      answer:1,
+      exp:'The "debugger" keyword in JavaScript code pauses execution at that line when browser DevTools is open. Setting a breakpoint in DevTools does the same thing visually. Both allow you to inspect variable values at that moment. "pause" and "stop" are not JavaScript keywords. console.log shows values but does not pause execution.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(249,168,212,0.14)', fc:'#6b0040',
+      q:'A button with id="getDate" should call getCurrentDate when clicked — using addEventListener. Fill the blank:',
+      code:'document.getElementById("getDate").addEventListener(_______, getCurrentDate);',
+      choices:['"onclick"','"click"','click','onClick'],
+      answer:1,
+      exp:'addEventListener takes a string event name as the first argument: "click" (not "onclick"). The HTML attribute is onclick= but the addEventListener event name is just "click" — no "on" prefix. Common event strings: "click", "mouseover", "mouseout", "keydown", "keyup", "change", "focus", "blur".'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 4 — STRINGS & NUMBERS
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[4] = {
+  color:'#c4b5fd', tag:'Module 5', title:'Strings & Numbers',
+  topics:'parseInt / parseFloat / NaN · toFixed · Number.isInteger · toUpperCase for comparisons · localeCompare · null vs undefined · assignment operators',
+  concepts:[
+    {
+      badge:'PARSING NUMBERS', bg:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      title:'parseInt, parseFloat, NaN, and toFixed — with all their edge cases',
+      prose:'From your practice problem image 42: the exam gives you four parsing functions and asks what they return.',
+      code:[
+        'parseInt("22 23")        // 22  (stops at the space)',
+        'parseFloat("25.99 is the price")  // 25.99  (stops at first non-numeric)',
+        'parseInt("The cat is 10")         // NaN  (starts with letters!)',
+        '',
+        '// Rule: parseInt/parseFloat START from the beginning.',
+        '// If the string STARTS with non-numeric → NaN',
+        '// If it starts with a number → stops at first non-numeric char',
+        '',
+        '// toFixed — format a number to N decimal places:',
+        'var rate = 5.99;',
+        'rate.toFixed(1)  // "6.0" (rounds to 1 decimal)',
+        'rate.toFixed(2)  // "5.99" (no change — already 2 decimals)',
+        '',
+        '// The practice problem answer: 22 25.99 NaN 6.0',
+        '// parseInt("22 23") = 22',
+        '// parseFloat("25.99 is the price") = 25.99',
+        '// parseInt("The cat is 10") = NaN',
+        '// rate.toFixed(1) = 6.0 (5.99 rounds to 6.0 with 1 decimal)'
+      ],
+      tip:'EXAM TRAP: parseInt("22 23") = 22 NOT 2223 — it stops at the space. parseFloat("25.99 is the price") = 25.99 — stops at the space. parseInt("The cat is 10") = NaN — starts with a letter.',
+      tipType:'exam'
+    },
+    {
+      badge:'NUMBER.ISINTEGER', bg:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      title:'Number.isInteger() — what is and is not an integer',
+      prose:'From image 66: your exam asks whether specific values are integers.',
+      code:[
+        'var productID = "3545";    // string — has quotes',
+        'var productPrice = 19.99; // decimal number',
+        'var inStock = 12;         // whole number',
+        '',
+        'Number.isInteger(productID)    // false — it is a string, not a number at all',
+        'Number.isInteger(productPrice) // false — 19.99 is a decimal (float)',
+        'Number.isInteger(inStock)      // true  — 12 is a whole number',
+        '',
+        '// Tricky:',
+        'Number.isInteger(20.0)  // true — no fractional part',
+        'Number.isInteger(20.5)  // false — has fractional part'
+      ]
+    },
+    {
+      badge:'STRING METHODS', bg:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      title:'toUpperCase for comparisons, localeCompare, null vs undefined',
+      prose:'Two important string topics from your new images.',
+      code:[
+        '// toUpperCase for case-insensitive comparison:',
+        'function checkCity(city) {',
+        '  city = city.toUpperCase();  // normalize input',
+        '  if (city == "BOISE" || city == "MERIDIAN" || city == "NAMPA") {',
+        '    document.getElementById("cityResults").innerHTML = "Idaho location";',
+        '  }',
+        '}',
+        '// User types "boise", "Boise", or "BOISE" — all work!',
+        '',
+        '// localeCompare — alphabetical comparison:',
+        'str1.localeCompare(str2)  // returns: -1 (str1 < str2), 0 (equal), 1 (str1 > str2)',
+        '',
+        '// null vs undefined:',
+        'var x = null;       // variable EXISTS but is EMPTY (still a string type if was string)',
+        'var y;              // variable EXISTS but has no value AND no type = undefined',
+        '// null = empties a variable but KEEPS its data type',
+        '// undefined = removes both value AND type',
+        '',
+        '// Assignment operators (x = 20):',
+        'x %= 5    // x = x % 5 = 20 % 5 = 0 (NOT 1)',
+        'x *= 5    // x = x * 5 = 20 * 5 = 100',
+        'x /= 5    // x = x / 5 = 20 / 5 = 4'
+      ],
+      tip:'EXAM: "x %= 5 makes x = 1" is FALSE. 20 % 5 = 0 because 20 divides evenly by 5. x *= 5 = 100 is TRUE. x /= 5 = 4 is TRUE.',
+      tipType:'exam'
+    }
+  ],
+  drills:[
+    {
+      type:'TRACE', tc:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      q:'What is the output of this code?',
+      code:'var rate = 5.99;\ndocument.getElementById("results").innerHTML =\n  parseInt("22 23") + " " +\n  parseFloat(" 25.99 is the price") + " " +\n  parseInt(" The cat is 10") + " " +\n  rate.toFixed(1);',
+      choices:['22 25.99 NaN 6.0','22 25.99 NaN 5.99','22 23 25.99 10 5.99','22 23 25.99 NaN 6.0'],
+      answer:0,
+      exp:'parseInt("22 23") stops at the space → 22. parseFloat("25.99 is the price") starts with a space but parseFloat skips leading whitespace, then reads 25.99 before the space → 25.99. parseInt("The cat is 10") starts with "T" (a letter) → NaN (cannot start with non-numeric). rate.toFixed(1): 5.99 rounded to 1 decimal → 6.0. Combined: "22 25.99 NaN 6.0".'
+    },
+    {
+      type:'TRACE', tc:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      q:'productID="3545", productPrice=19.99, inStock=12. Which Number.isInteger() calls return true?',
+      code:'var productID = "3545";\nvar productPrice = 19.99;\nvar inStock = 12;\n\n// A) Number.isInteger(productID)\n// B) Number.isInteger(productPrice)\n// C) Number.isInteger(inStock)',
+      choices:['All three return true','A and B return true; C is false','Only C returns true — 12 is a whole number','Only A returns true — 3545 is a whole number with no decimal'],
+      answer:2,
+      exp:'A: productID = "3545" is a STRING (has quotes). Number.isInteger of a string = false. B: 19.99 has a decimal → not an integer → false. C: 12 is a whole number with no fractional part → true. The quotes around "3545" are the trap — it looks like an integer but it is a string type.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'User might type "boise", "BOISE", or "Boise". Normalize before comparing. Which method converts to uppercase?',
+      code:'function checkCity(city) {\n  city = city._______();\n  if (city == "BOISE" || city == "MERIDIAN" || city == "NAMPA") {\n    document.getElementById("cityResults").innerHTML = "Idaho location";\n  }\n}',
+      choices:['toUpperCase()','capitalize()','upper()','convertCase()'],
+      answer:0,
+      exp:'toUpperCase() converts all characters in a string to uppercase. toLowerCase() does the opposite. After city = city.toUpperCase(), whether the user typed "boise", "Boise", or "BOISE", the comparison against "BOISE" will always work. capitalize() and upper() are not standard JavaScript string methods.'
+    },
+    {
+      type:'TRACE', tc:'rgba(196,181,253,0.14)', fc:'#3b0078',
+      q:'var x = 20. Which assignment operator statements are TRUE?',
+      code:'var x = 20;\n// A) x %= 5 makes x = 1\n// B) x *= 5 makes x = 100\n// C) x /= 5 makes x = 4',
+      choices:['All three are true','A is false (20%5=0); B and C are true','B is false; A and C are true','C is false; A and B are true'],
+      answer:1,
+      exp:'A is FALSE: x %= 5 means x = x % 5 = 20 % 5. Since 20 ÷ 5 = 4 with remainder 0, x = 0 (not 1). B is TRUE: x *= 5 = 20 * 5 = 100. C is TRUE: x /= 5 = 20 / 5 = 4. The modulus trap: 20 % 5 = 0 because 20 divides EVENLY by 5.'
+    },
+    {
+      type:'WHY', tc:'rgba(22,101,52,0.1)', fc:'#0a4020',
+      q:'Set str1 to empty while keeping its data type as string. Which assignment is correct?',
+      code:'str1 = "hi";\n// Make str1 empty but keep it a string type:\nstr1 = _______;',
+      choices:['undefined — removes value and type','0 — zero is empty','null — empties the variable, keeps the type','"" — empty string'],
+      answer:2,
+      exp:'null empties a variable but preserves its data type — str1 stays typed as string. undefined removes both the value AND the type. "" (empty string) is also valid but the exam question specifically asks about keeping the type, which points to null. The practice problem explanation states: "null empties the variable. undefined removes both the value and the type."'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Compare two strings alphabetically, returning -1, 0, or 1. Which method?',
+      code:'document.getElementById("compareStrings").innerHTML = str1._______(str2);',
+      choices:['compare()','localeCompare()','alphabetize()','sortCompare()'],
+      answer:1,
+      exp:'localeCompare() compares two strings alphabetically (locale-aware). Returns -1 if str1 comes before str2 alphabetically, 0 if equal, 1 if str1 comes after. For "hi".localeCompare("there"): h comes before t, so result is -1. This is the standard string comparison method on your exam.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 5 — ARRAYS ADVANCED
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[5] = {
+  color:'#fdba74', tag:'Module 6', title:'Arrays Advanced',
+  topics:'Array.find vs filter · multidimensional arrays · value vs reference · const arrays · Array.find returns first match',
+  concepts:[
+    {
+      badge:'ARRAY.FIND', bg:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      title:'Array.find() — returns the FIRST match, not all matches',
+      prose:'Array.find() takes a function and returns the FIRST element that satisfies it. If nothing matches, it returns undefined. Your exam tests whether you know it returns the value, not the index or count.',
+      code:[
+        'var ids = [2, 22, 24, 26, 28];',
+        '',
+        'function checkId(id) { return id > 20; }',
+        '',
+        '// find() — returns FIRST element where condition is true:',
+        'ids.find(checkId)   // returns 22 (first id > 20)',
+        '',
+        '// NOT 4 (that would be the count)',
+        '// NOT 1 (that would be the index of 22)',
+        '// NOT [22,24,26,28] (that would be .filter())',
+        '',
+        '// .filter() returns ALL matches:',
+        'ids.filter(checkId)  // returns [22, 24, 26, 28]',
+        '',
+        '// If no match:',
+        'ids.find(id => id > 100)  // undefined'
+      ]
+    },
+    {
+      badge:'VALUE vs REFERENCE', bg:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      title:'Numbers/strings copy by VALUE, arrays/objects copy by REFERENCE',
+      prose:'From image 55: this is a classic trap. When you do var hat2 = hat1 (both numbers), changing hat1 later does NOT change hat2. But when you do var store2 = store1 (arrays), they point to the SAME array — changing one changes both.',
+      code:[
+        '// NUMBERS copy by VALUE — independent:',
+        'var hat1 = 20;',
+        'var hat2 = hat1;    // hat2 gets a COPY of the value',
+        'hat1 = 30;',
+        'console.log(hat2);  // still 20 — changing hat1 did NOT affect hat2',
+        '',
+        '// ARRAYS copy by REFERENCE — shared:',
+        'var store1 = ["coat1"];',
+        'var store2 = store1;  // store2 points to the SAME array',
+        'store1.push("coat2");',
+        'console.log(store2);  // ["coat1", "coat2"] — both updated!',
+        '',
+        '// Why? Numbers live in their own memory slots.',
+        '// Arrays/objects store a REFERENCE (pointer) to the same location.'
+      ]
+    },
+    {
+      badge:'MULTIDIMENSIONAL ARRAYS', bg:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      title:'2D arrays — questionnaire[row][column] syntax',
+      prose:'From image 74: a 2x2 multidimensional array. Access is [row][column], both zero-based.',
+      code:[
+        '// Create a 2x2 array:',
+        'var questionnaire = [',
+        '  ["Bob", "Smith"],    // row 0',
+        '  ["Alice", "Jones"]   // row 1',
+        '];',
+        '',
+        '// Assign "Bob" to first row, first column:',
+        'questionnaire[0][0] = "Bob";',
+        '//           row col',
+        '',
+        '// Both dimensions are ZERO-BASED:',
+        '// questionnaire[0][0] = "Bob"   (row 0, col 0)',
+        '// questionnaire[0][1] = "Smith" (row 0, col 1)',
+        '// questionnaire[1][0] = "Alice" (row 1, col 0)',
+        '',
+        '// WRONG options:',
+        '// questionnaire[0,0] — comma notation does NOT work',
+        '// questionnaire[1][1] — that is row 1, col 1 (second row, second column)'
+      ],
+      tip:'EXAM: "First row, first column" = [0][0]. Two separate square brackets, NOT [0,0] with a comma.',
+      tipType:'exam'
+    }
+  ],
+  drills:[
+    {
+      type:'TRACE', tc:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      q:'ids.find(checkId) where ids=[2,22,24,26,28] and checkId returns id>20. What is displayed in innerHTML?',
+      code:'var ids = [2, 22, 24, 26, 28];\ndocument.getElementById("result").innerHTML = ids.find(checkId);\nfunction checkId(id) { return id > 20; }',
+      choices:['22 24 26 28','4','22','1'],
+      answer:2,
+      exp:'Array.find() returns the FIRST element satisfying the condition. The first id > 20 is 22. It stops there — does not return all matches (that is filter). Not 4 (that would be the count of matches). Not 1 (that would be indexOf). Just 22.'
+    },
+    {
+      type:'WHY', tc:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      q:'var hat1=20; var hat2=hat1; then hat1=30; What is hat2?',
+      code:'var hat1 = 20;\nvar hat2 = hat1;\nhat1 = 30;\nconsole.log(hat2);',
+      choices:['30 — hat2 follows hat1','20 — numbers copy by value, hat2 got its own copy','undefined — hat2 loses its value when hat1 changes','Error — cannot assign variable to variable'],
+      answer:1,
+      exp:'Numbers (and strings) are primitive types — they copy BY VALUE. var hat2 = hat1 gives hat2 its OWN copy of 20 in its own memory slot. When hat1 later changes to 30, hat2 is unaffected. This is different from arrays: var store2 = store1 would make them point to the SAME array.'
+    },
+    {
+      type:'TRACE', tc:'rgba(253,186,116,0.14)', fc:'#6b2c00',
+      q:'var store1=["coat1"]; var store2=store1; store1.push("coat2"). What does store2 contain?',
+      code:'var store1 = ["coat1"];\nvar store2 = store1;\nstore1.push("coat2");\nconsole.log(store2);',
+      choices:['["coat1"] — store2 has its own copy','["coat1","coat2"] — arrays copy by reference, both updated','["coat2"] — store2 only gets the new item','undefined'],
+      answer:1,
+      exp:'Arrays are objects stored by REFERENCE. var store2 = store1 does NOT create a new array — it makes store2 point to the SAME array in memory. When you push to store1, the shared underlying array changes. store2 reflects that change immediately. This contrasts with numbers which copy by value.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Assign "Bob" to the FIRST row and FIRST column of a 2x2 array questionnaire. What is correct?',
+      code:'// Assign "Bob" to first row, first column:\nquestionnaire _______ = "Bob";',
+      choices:['[1][1]','[0][0]','[0,0]','(0,0)'],
+      answer:1,
+      exp:'JavaScript arrays (including multidimensional) are zero-based. First row = [0], first column = [0]. Two SEPARATE square brackets: questionnaire[0][0]. questionnaire[0,0] does NOT work — the comma creates a comma operator, not two indices. questionnaire[1][1] is the second row, second column.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 6 — FORMS ADVANCED
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[6] = {
+  color:'#67e8f9', tag:'Module 7', title:'Forms Advanced',
+  topics:'form action targets · type="password" · NaN from word input · input type=password · setting field values · GET vs POST',
+  concepts:[
+    {
+      badge:'FORM ACTION TARGETS', bg:'rgba(103,232,249,0.14)', fc:'#003a5a',
+      title:'Where can a form\'s action attribute send data? (Choose three)',
+      prose:'From image 68/69: the exam asks which three destinations are valid for the form action attribute.',
+      table:{
+        headers:['Destination','Valid?','How it works'],
+        rows:[
+          ['Database','YES','Form data is stored or queried in a database'],
+          ['Script','YES','Data sent to a server-side script (PHP, Python, C#) for processing'],
+          ['Another webpage','YES','Another .html page can receive and process the data'],
+          ['Firewall','NO','Not a valid form action target'],
+          ['Another form','NO','Forms cannot be action targets of other forms']
+        ]
+      },
+      code:[
+        '// Valid action targets:',
+        '<form action="database_handler.php">  <!-- sends to script/database -->',
+        '<form action="thankyou.html">         <!-- sends to another webpage -->',
+        '<form action="process.py">            <!-- sends to Python script -->'
+      ],
+      tip:'EXAM: Three valid action targets: database, script, another webpage. Firewall and "another form" are wrong.',
+      tipType:'exam'
+    },
+    {
+      badge:'FORM INPUT TYPES', bg:'rgba(103,232,249,0.14)', fc:'#003a5a',
+      title:'type="password" to mask input, and NaN from word inputs',
+      prose:'Two practical form topics from your new practice problems.',
+      code:[
+        '// Mask password — replace type="text" with type="password":',
+        '<input type="text" name="password" id="password" />  // shows text!',
+        '<input type="password" name="password" id="password" /> // masks with dots',
+        '',
+        '// NaN when user types a word in a number calculation:',
+        '// User types "hello" in a number field,',
+        '// calculation tries to use it as a number:',
+        'var revenue = Math.abs(document.getElementById("revenue").value);',
+        '// If user types a word: Math.abs("hello") = NaN',
+        '// NaN = Not a Number — calculation result displays NaN',
+        '// This does NOT crash the page or stop JS — just shows NaN',
+        '',
+        '// Prevent NaN with validation:',
+        'if (isNaN(revenue)) { alert("Please enter a number"); }'
+      ]
+    }
+  ],
+  drills:[
+    {
+      type:'FILL THE GAP', tc:'rgba(103,232,249,0.14)', fc:'#003a5a',
+      q:'Passwords are showing in plain text. Which attribute change fixes the input field to mask characters?',
+      code:'// BEFORE (shows text):\n<input type="text" name="password" id="password" />\n\n// AFTER (characters masked):\n<input _______ name="password" id="password" />',
+      choices:['type="hidden"','type="password"','type="masked"','type="secret"'],
+      answer:1,
+      exp:'type="password" is the HTML input type that masks characters as they are typed (shows dots or asterisks). type="hidden" hides the field from the user entirely but stores data. type="masked" and type="secret" are not valid HTML input types. This is a standard HTML form fix.'
+    },
+    {
+      type:'WHY', tc:'rgba(103,232,249,0.14)', fc:'#003a5a',
+      q:'A user types a word into a number field and clicks calculate. What is the most likely outcome?',
+      choices:['An alert appears saying numbers are required','No result displays','The webpage crashes','NaN displays — JavaScript shows Not a Number when a word is used in a calculation'],
+      answer:3,
+      exp:'JavaScript does not crash when you try to do math with a non-number. Instead it produces NaN (Not a Number). The calculation still runs, it just outputs NaN to the page. The code does not stop running. This is a "graceful failure" — JavaScript keeps going and shows NaN to signal a number was expected.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Convert a possibly-negative revenue input to always-positive. What fills the blank?',
+      code:'var revenue = Math._______(document.getElementById("revenue").value);',
+      choices:['floor','round','abs','ceil'],
+      answer:2,
+      exp:'Math.abs() converts any number to its absolute value (removes the negative sign). Math.abs(-50) = 50. Math.abs(50) = 50. The problem says users enter negative numbers but only positive values should be stored — Math.abs fixes that. floor, round, and ceil deal with decimal rounding, not sign.'
+    },
+    {
+      type:'TRACE', tc:'rgba(103,232,249,0.14)', fc:'#003a5a',
+      q:'Which THREE are valid targets for a form\'s action attribute?',
+      choices:['Database, Firewall, Script','Database, Script, Another webpage','Another form, Script, Database','Another webpage, Firewall, Another form'],
+      answer:1,
+      exp:'Three valid action targets: (1) Database — direct database storage/query. (2) Script — server-side script like PHP, Python, C# that processes the data. (3) Another webpage — a .html page that receives the submitted data. Firewall and "another form" are NOT valid action targets.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'Set qty field to empty (null) when the clear button is clicked. What is the correct onclick code?',
+      code:'<button id="clearQty" onclick="_______">Clear</button>',
+      choices:['qty.value = "";','qty.value = null;','qty.value = 0;','qty = null;'],
+      answer:1,
+      exp:'Setting .value = null empties the field and removes its value. This is the pattern shown in your practice problem. qty.value = "" (empty string) also works, but null specifically is shown as the answer. qty = null (without .value) would try to reassign the variable qty itself, not the form field value.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// MODULE 7 — try/catch & ERRORS
+// ═══════════════════════════════════════════════════════════════
+DOMAINS[7] = {
+  color:'#d9f99d', tag:'Module 8', title:'try/catch & Errors',
+  topics:'try/catch/finally structure · catch vs finally · case-sensitive variable trap · err.message · when finally always runs',
+  concepts:[
+    {
+      badge:'TRY/CATCH/FINALLY', bg:'rgba(217,249,157,0.2)', fc:'#1a3a00',
+      title:'try/catch/finally — the complete structure and when each block runs',
+      prose:'From images 45 and 16: the exam gives you a try/catch/finally scenario and asks what happens.',
+      code:[
+        '// Structure:',
+        'function grandTotal(amount, salesTax) {',
+        '  try {',
+        '    var orderTotal = amount + salesTax;  // attempt this',
+        '    alert(ordertotal);                   // ERROR: lowercase t',
+        '  }',
+        '  catch(err) {           // RUNS ONLY if try threw an error',
+        '    alert("You have a problem");',
+        '    alert(err.message);  // shows the error message',
+        '  }',
+        '  finally {              // ALWAYS runs — error or no error',
+        '    alert("If there are no errors, you should have your total");',
+        '  }',
+        '}',
+        '',
+        '// What happens:',
+        '// 1. try: orderTotal calculated fine, but alert(ordertotal)',
+        '//    throws ReferenceError — "ordertotal is not defined"',
+        '// 2. catch fires: "You have a problem" + error message',
+        '// 3. finally fires: always, no matter what'
+      ],
+      table:{
+        headers:['Block','When it runs','Can be omitted?'],
+        rows:[
+          ['try','Always (it is the main attempt)','No — required'],
+          ['catch(err)','Only when try throws an error','Yes (but usually included)'],
+          ['finally','ALWAYS — with or without error','Yes (often used for cleanup)']
+        ]
+      },
+      tip:'EXAM: If you see alert(ordertotal) when the variable is declared as orderTotal — that case mismatch throws an error. Both catch AND finally will run.',
+      tipType:'exam'
+    }
+  ],
+  drills:[
+    {
+      type:'TRACE', tc:'rgba(217,249,157,0.2)', fc:'#1a3a00',
+      q:'grandTotal(50, 4) is called. What sequence of alerts appears?',
+      code:'function grandTotal(amount, salesTax) {\n  try {\n    var orderTotal = amount + salesTax;\n    alert(ordertotal);   // lowercase t — bug!\n  }\n  catch(err) {\n    alert("You have a problem");\n    alert(err.message);\n  }\n  finally {\n    alert("If there are no errors, you should have your total");\n  }\n}',
+      choices:['54, then finally message only','Error message, then finally message — both catch and finally run','54 only','Finally message only'],
+      answer:1,
+      exp:'orderTotal (capital T) is declared but alert(ordertotal) uses lowercase t — JavaScript is case-sensitive so ordertotal is undefined. This throws a ReferenceError. catch block fires: "You have a problem" then err.message (the ReferenceError text). Then finally ALWAYS fires regardless. So the sequence is: catch alert 1, catch alert 2, finally alert. Option: error alerts then finally.'
+    },
+    {
+      type:'FILL THE GAP', tc:'rgba(29,78,216,0.1)', fc:'#1d4ed8',
+      q:'The code should: (1) attempt to show the total, (2) show "You have a problem" + error if it fails, (3) ALWAYS show the final message. What goes in blank 1 (before the error-checking block)?',
+      code:'function grandTotal(amount, salesTax) {\n  try {\n    var orderTotal = amount + salesTax;\n    alert(ordertotal);\n  }\n  _______ (err) {\n    alert("You have a problem");\n    alert(err.message);\n  }\n  finally {\n    alert("If there are no errors, you should have your total");\n  }\n}',
+      choices:['except','catch','error','handle'],
+      answer:1,
+      exp:'"catch" is the keyword for handling errors in JavaScript. It catches the error object (named err here) thrown by the try block. err.message is a property on the error object containing the human-readable error description. "except" is Python syntax, not JavaScript.'
+    },
+    {
+      type:'WHY', tc:'rgba(217,249,157,0.2)', fc:'#1a3a00',
+      q:'The finally block runs and shows "If there are no errors..." — but there WAS an error. Is this correct behavior?',
+      choices:['No — finally should only run when there is no error','Yes — finally ALWAYS runs regardless of whether try succeeded or failed','No — finally only runs if catch did not handle the error','Yes — but only if catch block was skipped'],
+      answer:1,
+      exp:'finally ALWAYS runs — that is its defining characteristic. Whether try succeeded completely, or threw an error that catch handled, finally runs regardless. This is useful for cleanup code (like closing a database connection) that must happen no matter what. The message "If there are no errors..." is just the message text — the finally block itself does not know whether there was an error.'
+    },
+    {
+      type:'SPOT THE BUG', tc:'rgba(181,52,28,0.1)', fc:'#8a0000',
+      q:'alert(ordertotal) when the variable is var orderTotal — what error does JavaScript throw?',
+      code:'var orderTotal = 54;\nalert(ordertotal);  // lowercase t',
+      choices:['SyntaxError — wrong capitalization is a syntax error','TypeError — wrong type','ReferenceError — ordertotal is not defined (case mismatch creates a new undefined variable name)','No error — JavaScript is case-insensitive'],
+      answer:2,
+      exp:'JavaScript is CASE-SENSITIVE. orderTotal and ordertotal are two DIFFERENT variable names. ordertotal was never declared, so accessing it throws a ReferenceError: "ordertotal is not defined". JavaScript is not case-insensitive — that is one of its common gotchas.'
+    }
+  ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+// APP ENGINE
+// ═══════════════════════════════════════════════════════════════
+var curDomain = 0;
+var drillState = {idx:0, score:0, answered:false};
+var gAns = 0, gCor = 0;
+
+function goHome(){
+  document.getElementById('pg-home').classList.add('active');
+  document.getElementById('pg-domain').classList.remove('active');
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('nav-home').classList.add('active');
+}
+
+function goDomain(idx){
+  curDomain = idx;
+  var d = DOMAINS[idx];
+  document.getElementById('pg-home').classList.remove('active');
+  document.getElementById('pg-domain').classList.add('active');
+  document.getElementById('d-tag').textContent = d.tag;
+  document.getElementById('d-tag').style.color = d.color;
+  document.getElementById('d-title').textContent = d.title;
+  setTab('concepts');
+  buildConcepts(d);
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.remove('active');});
+  document.querySelectorAll('.sb-item')[idx+1].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function setTab(which){
+  var cp = document.getElementById('concepts-panel');
+  var dp = document.getElementById('drills-panel');
+  var tc = document.getElementById('tab-concepts');
+  var td = document.getElementById('tab-drills');
+  if(which==='concepts'){cp.style.display='block';dp.style.display='none';tc.classList.add('active');td.classList.remove('active');}
+  else{cp.style.display='none';dp.style.display='block';tc.classList.remove('active');td.classList.add('active');initDrills();}
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function buildConcepts(d){
+  var html = '';
+  d.concepts.forEach(function(c,i){
+    var open = i===0;
+    html += '<div class="concept">';
+    html += '<div class="c-head" onclick="toggleC(this)">';
+    html += '<div class="c-htitle"><span class="c-badge" style="background:'+c.bg+';color:'+c.fc+'">'+c.badge+'</span>'+esc(c.title)+'</div>';
+    html += '<div class="c-arrow">'+(open?'−':'+')+'</div>';
+    html += '</div>';
+    html += '<div class="c-body'+(open?' open':'')+'"><div style="max-width:720px">';
+    if(c.prose) html += '<p class="prose">'+c.prose+'</p>';
+    if(c.code){
+      html += '<div class="code-box"><div class="code-top">JavaScript</div>';
+      html += '<div class="code-pre">'+esc(c.code.join('\n'))+'</div></div>';
+    }
+    if(c.table){
+      html += '<table class="ctable"><tr>';
+      c.table.headers.forEach(function(h){html+='<th>'+h+'</th>';});
+      html += '</tr>';
+      c.table.rows.forEach(function(row){
+        html += '<tr>';
+        row.forEach(function(cell,ci){html+='<td'+(ci===0?' class="mono"':'')+'>'+esc(cell)+'</td>';});
+        html += '</tr>';
+      });
+      html += '</table>';
+    }
+    if(c.tip){
+      var cls = c.tipType==='warn'?'callout-w':c.tipType==='exam'?'callout-e':'callout-t';
+      var icon = c.tipType==='warn'?'⚠️ ':'📋 ';
+      html += '<div class="callout '+cls+'">'+icon+esc(c.tip)+'</div>';
+    }
+    html += '</div></div></div>';
+  });
+  document.getElementById('concepts-panel').innerHTML = html;
+}
+
+function toggleC(head){
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.c-arrow');
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  arrow.textContent = isOpen?'+':'−';
+}
+
+function initDrills(){
+  drillState = {idx:0, score:0, answered:false};
+  renderDrill();
+}
+
+function renderDrill(){
+  drillState.answered = false;
+  var d = DOMAINS[curDomain];
+  var drill = d.drills[drillState.idx];
+  var total = d.drills.length;
+  var pct = (drillState.idx/total)*100;
+  var L = ['A','B','C','D'];
+  var html = '';
+  html += '<div class="drill-header">';
+  html += '<div class="drill-score">Score: <strong>'+drillState.score+'</strong>/'+drillState.idx+'</div>';
+  html += '<div class="drill-score">Q'+(drillState.idx+1)+' of '+total+'</div></div>';
+  html += '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div>';
+  html += '<div class="qcard"><div class="qcard-top">';
+  html += '<div class="qmeta"><span class="qtype" style="background:'+drill.tc+';color:'+drill.fc+'">'+drill.type+'</span></div>';
+  html += '<div class="qprompt">'+esc(drill.q)+'</div>';
+  if(drill.code) html += '<div class="qcode">'+esc(drill.code)+'</div>';
+  html += '</div><div class="choices">';
+  drill.choices.forEach(function(c,i){
+    html += '<button class="choice" id="ch'+i+'" onclick="answer('+i+')">';
+    html += '<span class="cltr">'+L[i]+'</span><span>'+esc(c)+'</span></button>';
+  });
+  html += '</div><div class="expbox" id="expbox"></div></div>';
+  var isLast = drillState.idx === total-1;
+  html += '<div class="drill-nav" style="margin-top:12px">';
+  html += '<button class="btn-prev" onclick="prevDrill()" style="opacity:'+(drillState.idx===0?'0.3':'1')+'">← Prev</button>';
+  html += '<div class="nav-center">'+(drillState.idx+1)+'/'+total+'</div>';
+  html += '<button class="btn-next" onclick="nextDrill()">'+(isLast?'Results →':'Next →')+'</button>';
+  html += '</div>';
+  document.getElementById('drills-panel').innerHTML = html;
+}
+
+function answer(idx){
+  if(drillState.answered) return;
+  drillState.answered = true;
+  var drill = DOMAINS[curDomain].drills[drillState.idx];
+  document.querySelectorAll('.choice').forEach(function(el){el.classList.add('locked');});
+  var expEl = document.getElementById('expbox');
+  gAns++;
+  if(idx===drill.answer){
+    document.getElementById('ch'+idx).classList.add('correct');
+    drillState.score++;
+    gCor++;
+    expEl.className='expbox ok show';
+    expEl.innerHTML='<div class="exp-head ok">✓ Correct!</div><div>'+esc(drill.exp)+'</div>';
+  } else {
+    document.getElementById('ch'+idx).classList.add('wrong');
+    document.getElementById('ch'+drill.answer).classList.add('correct');
+    expEl.className='expbox bad show';
+    expEl.innerHTML='<div class="exp-head bad">✗ Not quite.</div><div>'+esc(drill.exp)+'</div>';
+  }
+  updateStats();
+}
+
+function nextDrill(){
+  var d = DOMAINS[curDomain];
+  if(drillState.idx < d.drills.length-1){drillState.idx++;renderDrill();}
+  else showResult();
+}
+
+function prevDrill(){
+  if(drillState.idx>0){drillState.idx--;renderDrill();}
+}
+
+function showResult(){
+  var d = DOMAINS[curDomain];
+  var total = d.drills.length;
+  var pct = Math.round((drillState.score/total)*100);
+  var grade = pct>=90?'🏆 Mastered!':pct>=70?'🎯 Getting there!':'📚 Review concepts and retry.';
+  var html = '<div class="result-box">';
+  html += '<div class="result-score">'+drillState.score+'/'+total+'</div>';
+  html += '<div class="result-grade">'+grade+'</div>';
+  html += '<div class="result-msg">'+pct+'% correct</div>';
+  html += '<button class="btn-retake" onclick="initDrills()">↺ Retake Drills</button></div>';
+  document.getElementById('drills-panel').innerHTML = html;
+}
+
+function updateStats(){
+  document.getElementById('s-ans').textContent = gAns;
+  document.getElementById('s-cor').textContent = gCor;
+  document.getElementById('s-pct').textContent = gAns>0?Math.round((gCor/gAns)*100)+'%':'—';
+}
+
+function buildHome(){
+  var cols = ['#fbbf24','#60c8f5','#86efac','#f9a8d4','#c4b5fd','#fdba74','#67e8f9','#d9f99d'];
+  var html = '';
+  DOMAINS.forEach(function(d,i){
+    html += '<div class="dc" onclick="goDomain('+i+')" style="--c:'+cols[i]+'">';
+    html += '<style>.dc:nth-child('+(i+1)+')::before{background:'+cols[i]+'}</style>';
+    html += '<div class="dc-num">'+d.tag.toUpperCase()+'</div>';
+    html += '<div class="dc-title">'+esc(d.title)+'</div>';
+    html += '<div class="dc-tag">'+esc(d.topics)+'</div>';
+    html += '<div class="dc-btns">';
+    html += '<button class="dc-btn dc-btn-r" onclick="event.stopPropagation();goDomain('+i+');setTab(\'concepts\')">Study</button>';
+    html += '<button class="dc-btn dc-btn-d" onclick="event.stopPropagation();goDomain('+i+');setTab(\'drills\')">Drills →</button>';
+    html += '</div></div>';
+  });
+  document.getElementById('domain-grid').innerHTML = html;
+}
+
+buildHome();
+</script>
+</body>
+</html>

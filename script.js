@@ -71,23 +71,6 @@ function showIllusTab(tabName) {
     setTimeout(positionMoonAndSides, 60);
 }
 
-function showAnimTab(tabName) {
-    const section = document.querySelector('.animations-section');
-    section.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    section.querySelectorAll('.anim-tab').forEach(b => b.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    section.querySelectorAll('.anim-tab').forEach(btn => {
-        if (btn.getAttribute('onclick').includes(tabName)) btn.classList.add('active');
-    });
-    if (tabName === 'anim-gallery') {
-        setTimeout(() => {
-            document.querySelectorAll('#animGalleryGrid video').forEach(v => {
-                videoObserver.observe(v);
-            });
-        }, 100);
-    }
-    setTimeout(positionMoonAndSides, 60);
-}
 
 function showAboutTab(tabName) {
     const section = document.querySelector('.about-section');
@@ -111,17 +94,41 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ===== ILLUSTRATIONS =====
 const images = [
-    { src: 'imgs/illustration1.png', title: 'Enchanted Forest' },
-    { src: 'imgs/illustration2.png', title: 'Dragon Frog' },
-    { src: 'imgs/illustration3.png', title: 'Sky Islands' },
-    { src: 'imgs/illustration4.png', title: 'Starfield' },
-    { src: 'imgs/illustration5.png', title: 'Deep Sea' },
-    { src: 'imgs/illustration6.png', title: 'Dragon Night' },
-    { src: 'imgs/illustration7.png', title: 'Forest Scare' },
-    { src: 'imgs/illustration8.png', title: 'Dragon Night' },
-    { src: 'imgs/illustration9.png', title: 'Unicorn Dream' }
+    { src: 'imgs/illustration1.png', title: 'Enchanted Forest', category: 'digital' },
+    { src: 'imgs/illustration2.png', title: 'Dragon Frog', category: 'digital' },
+    { src: 'imgs/illustration3.png', title: 'Sky Islands', category: 'digital' },
+    { src: 'imgs/illustration4.png', title: 'Starfield', category: 'digital' },
+    { src: 'imgs/illustration5.png', title: 'Deep Sea', category: 'digital' },
+    { src: 'imgs/illustration6.png', title: 'Dragon Night', category: 'digital' },
+    { src: 'imgs/illustration7.png', title: 'Forest Scare', category: 'digital' },
+    { src: 'imgs/illustration8.png', title: 'Dragon Night', category: 'digital' },
+    { src: 'imgs/illustration9.png', title: 'Unicorn Dream', category: 'digital' },
+    { src: 'imgs/trad1.jpg', title: 'Traditional 1', category: 'traditional' },
+    { src: 'imgs/trad2.jpg', title: 'Traditional 2', category: 'traditional' },
+    { src: 'imgs/trad3.jpg', title: 'Traditional 3', category: 'traditional' },
+    { src: 'imgs/trad4.jpg', title: 'Traditional 4', category: 'traditional' },
+    { src: 'imgs/trad5.jpg', title: 'Traditional 5', category: 'traditional' },
+    { src: 'imgs/trad6.jpg', title: 'Traditional 6', category: 'traditional' },
+    { src: 'imgs/trad7.jpg', title: 'Traditional 7', category: 'traditional' },
+    { src: 'imgs/trad8.jpg', title: 'Traditional 8', category: 'traditional' },
 ];
 let currentImageIndex = 0;
+let currentCategory = 'digital';
+
+function getFilteredImages() {
+    return images.filter(img => img.category === currentCategory);
+}
+
+function showIllusCategory(category) {
+    currentCategory = category;
+    currentImageIndex = 0;
+    document.querySelectorAll('.illus-cat').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.illus-cat').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(category)) btn.classList.add('active');
+    });
+    updateShowcase();
+    populateGallery();
+}
 
 function preloadAdjacentImages() {
     const nextIdx = (currentImageIndex + 1) % images.length;
@@ -133,6 +140,7 @@ function preloadAdjacentImages() {
 }
 
 function updateShowcase() {
+    const filtered = getFilteredImages();
     const display = document.querySelector('.illustration-display');
     let inner = display.querySelector('.illus-inner');
     if (!inner) {
@@ -140,13 +148,14 @@ function updateShowcase() {
         inner.className = 'illus-inner';
         display.appendChild(inner);
     }
-    const imageSrc = images[currentImageIndex].src;
+    if (!filtered.length) { inner.innerHTML = '<p style="color:#fff;text-align:center">No images yet</p>'; return; }
+    const imageSrc = filtered[currentImageIndex].src;
     const img = new Image();
     img.onload = function() {
         inner.innerHTML = '';
         const imgEl = document.createElement('img');
         imgEl.src = imageSrc;
-        imgEl.alt = images[currentImageIndex].title;
+        imgEl.alt = filtered[currentImageIndex].title;
         imgEl.style.cssText = 'display:block;max-width:100%;max-height:100%;';
         inner.appendChild(imgEl);
         preloadAdjacentImages();
@@ -154,15 +163,16 @@ function updateShowcase() {
     img.src = imageSrc;
 }
 
-function nextImage() { currentImageIndex = (currentImageIndex + 1) % images.length; updateShowcase(); }
-function previousImage() { currentImageIndex = (currentImageIndex - 1 + images.length) % images.length; updateShowcase(); }
+function nextImage() { const f = getFilteredImages(); currentImageIndex = (currentImageIndex + 1) % f.length; updateShowcase(); }
+function previousImage() { const f = getFilteredImages(); currentImageIndex = (currentImageIndex - 1 + f.length) % f.length; updateShowcase(); }
 
 function populateGallery() {
+    const filtered = getFilteredImages();
     const galleryGrid = document.getElementById('galleryGrid');
     if (!galleryGrid) return;
     galleryGrid.innerHTML = '';
     const fragment = document.createDocumentFragment();
-    images.forEach((img, index) => {
+    filtered.forEach((img, index) => {
         const item = document.createElement('div');
         item.className = 'gallery-item';
         const imgEl = document.createElement('img');
@@ -172,9 +182,6 @@ function populateGallery() {
         imgEl.decoding = 'async';
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
-        const span = document.createElement('span');
-        span.textContent = img.title;
-        overlay.appendChild(span);
         item.appendChild(imgEl);
         item.appendChild(overlay);
         item.addEventListener('click', () => { currentImageIndex = index; updateShowcase(); showIllusTab('closeup'); });
@@ -202,38 +209,117 @@ function addSwipeSupport(container, onSwipeLeft, onSwipeRight) {
 // ===== ANIMATIONS =====
 const animationCategories = [
     { section: 'Locomotion', videos: [
-        { src: 'vids/GirlWalkCycle.gif', title: 'Girl Walk Cycle', thumbnail: 'vids/GirlWalkCycle.gif' },
-        { src: 'vids/StoneLionRunCycle.gif', title: 'Stone Lion Run Cycle', thumbnail: 'vids/StoneLionRunCycle.gif' },
-        { src: 'vids/SneakyWalkCycle.mp4', title: 'Sneaky Walk Cycle', thumbnail: 'vids/SneakyWalkCycle.mp4' },
-        { src: 'vids/walk4leggedfoxfixed (1).gif', title: 'Walk Fox Fixed', thumbnail: 'vids/walk4leggedfoxfixed (1).gif' },
+        { src: 'vids/GirlWalkCycle.gif', title: 'Ballerina Walk Cycle' },
+        { src: 'vids/StoneLionRunCycle.gif', title: 'Lion Run Cycle' },
+        { src: 'vids/SneakyWalkCycle.mp4', title: 'Child Sneak Walk Cycle' },
+        { src: 'vids/walk4leggedfoxfixed (1).gif', title: 'Fox Walk Cycle' },
     ]},
     { section: 'Motion Graphics', videos: [
-        { src: 'vids/icebreaker.mp4', title: 'Icebreaker', thumbnail: 'vids/icebreaker.mp4' },
-        { src: 'vids/rig.mp4', title: 'Rig', thumbnail: 'vids/rig.mp4' },
-        { src: 'vids/lyrics.mp4', title: 'Lyrics', thumbnail: 'vids/lyrics.mp4' },
-        { src: 'vids/Tiger-final.mp4', title: 'Tiger Final', thumbnail: 'vids/Tiger-final.mp4' },
+        { src: 'vids/icebreaker.mp4', title: 'Introduce Yourself Motion Animation' },
+        { src: 'vids/rig.mp4', title: 'Monkey! Motion Animation' },
+        { src: 'vids/lyrics.mp4', title: 'Roller Skating Dog Lyric Video' },
+        { src: 'vids/Tiger-final.mp4', title: 'Tiger Walk Cycle' },
+        { src: 'vids/MotionGraphicsFinal_Render1.mp4', title: 'Dog and Elephant' },
     ]},
     { section: 'Character Acting', videos: [
-        { src: 'vids/hair.mp4', title: 'Hair', thumbnail: 'vids/hair.mp4' },
-        { src: 'vids/wave.mp4', title: 'Wave', thumbnail: 'vids/wave.mp4' },
-        { src: 'vids/props.mp4', title: 'Props', thumbnail: 'vids/props.mp4' },
-        { src: 'vids/ScaryEncounter.mp4', title: 'Scary Encounter', thumbnail: 'vids/ScaryEncounter.mp4' },
-        { src: 'vids/dance.mp4', title: 'dance', thumbnail: 'vids/dance.mp4' },
+        { src: 'vids/hair.mp4', title: 'Cape' },
+        { src: 'vids/wave.mp4', title: 'Wave' },
+        { src: 'vids/props.mp4', title: 'Acting with a Prop' },
+        { src: 'vids/ScaryEncounter.mp4', title: 'Character Acting' },
+        { src: 'vids/dance.mp4', title: 'Dance!' },
     ]},
     { section: 'Stop Motion', videos: [
-        { src: 'vids/stopmotion-cat.mp4', title: '1 Cat', thumbnail: 'vids/stopmotion-cat.mp4' },
-        { src: 'vids/stopmotion-intro1.mp4', title: 'intro', thumbnail: 'vids/stopmotion-intro1.mp4' },
-        { src: 'vids/charcoal.mp4', title: 'charcoal', thumbnail: 'vids/charcoal.mp4' },
+        { src: 'vids/stopmotion-cat.mp4', title: 'Big Cat Paper' },
+        { src: 'vids/stopmotion-intro1.mp4', title: 'Sleepy Creature Clay' },
+        { src: 'vids/charcoal.mp4', title: 'Big Dog Charcoal' },
     ]},
 ];
 
-const allAnimations = animationCategories.flatMap(cat => cat.videos);
+let currentAnimCategory = 0;
 let currentVideoIndex = 0;
+
+function showAnimCategory(index) {
+    currentAnimCategory = index;
+    currentVideoIndex = 0;
+    const label = document.querySelector('.anim-cat-label');
+    if (label) label.textContent = animationCategories[index].section.toUpperCase();
+    updateVideoDisplay();
+    const galleryTab = document.getElementById('anim-gallery');
+    if (galleryTab && galleryTab.classList.contains('active')) populateAnimGallery();
+    setTimeout(positionMoonAndSides, 60);
+}
+
+function prevAnimCategory() { showAnimCategory((currentAnimCategory - 1 + animationCategories.length) % animationCategories.length); }
+function nextAnimCategory() { showAnimCategory((currentAnimCategory + 1) % animationCategories.length); }
+
+function showAnimViewTab(tabName) {
+    const section = document.querySelector('.animations-section');
+    section.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    section.querySelectorAll('.anim-view-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    section.querySelectorAll('.anim-view-tab').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(tabName)) btn.classList.add('active');
+    });
+    if (tabName === 'anim-gallery') {
+        populateAnimGallery();
+        setTimeout(() => {
+            document.querySelectorAll('#animGalleryGrid video').forEach(v => videoObserver.observe(v));
+        }, 100);
+    }
+    setTimeout(positionMoonAndSides, 60);
+}
+
+function populateAnimGallery() {
+    const container = document.getElementById('animGalleryGrid');
+    if (!container) return;
+    container.innerHTML = '';
+    const catVideos = animationCategories[currentAnimCategory].videos;
+    const fragment = document.createDocumentFragment();
+    catVideos.forEach((video, index) => {
+        const item = document.createElement('div');
+        item.className = 'anim-gallery-item';
+        let mediaEl;
+        const ext = video.src.split('.').pop().toLowerCase();
+        if (ext === 'gif') {
+            mediaEl = document.createElement('img');
+            mediaEl.src = video.src;
+            mediaEl.alt = video.title;
+            mediaEl.loading = 'lazy';
+            mediaEl.decoding = 'async';
+            mediaEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        } else {
+            mediaEl = document.createElement('video');
+            mediaEl.muted = true;
+            mediaEl.playsInline = true;
+            mediaEl.loop = true;
+            mediaEl.preload = 'none';
+            mediaEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+            const source = document.createElement('source');
+            source.src = video.src;
+            source.type = 'video/mp4';
+            mediaEl.appendChild(source);
+        }
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.innerHTML = '<div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>';
+        item.appendChild(mediaEl);
+        item.appendChild(overlay);
+        item.addEventListener('click', () => {
+            currentVideoIndex = index;
+            updateVideoDisplay();
+            showAnimViewTab('anim-closeup');
+        });
+        fragment.appendChild(item);
+        if (mediaEl.tagName === 'VIDEO') videoObserver.observe(mediaEl);
+    });
+    container.appendChild(fragment);
+}
 
 function updateVideoDisplay() {
     const vp = document.querySelector('.animations-section .video-placeholder');
     if (!vp) return;
-    const cur = allAnimations[currentVideoIndex];
+    const catVideos = animationCategories[currentAnimCategory].videos;
+    const cur = catVideos[currentVideoIndex];
     const ext = cur.src.split('.').pop().toLowerCase();
     if (ext === 'gif') {
         vp.innerHTML = '<div class="anim-inner-wrap"><img src="' + cur.src + '" alt="' + cur.title + '"></div>';
@@ -242,66 +328,17 @@ function updateVideoDisplay() {
     }
 }
 
-function nextVideo() { currentVideoIndex = (currentVideoIndex + 1) % allAnimations.length; updateVideoDisplay(); }
-function previousVideo() { currentVideoIndex = (currentVideoIndex - 1 + allAnimations.length) % allAnimations.length; updateVideoDisplay(); }
-
-function populateAnimGallery() {
-    const container = document.getElementById('animGalleryGrid');
-    if (!container) return;
-    container.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-    animationCategories.forEach(category => {
-        const section = document.createElement('div');
-        section.className = 'anim-gallery-section';
-        const title = document.createElement('h3');
-        title.className = 'anim-gallery-section-title';
-        title.textContent = category.section;
-        section.appendChild(title);
-        const grid = document.createElement('div');
-        grid.className = 'anim-gallery-grid';
-        category.videos.forEach(video => {
-            const item = document.createElement('div');
-            item.className = 'anim-gallery-item';
-            let mediaEl;
-            const thumbExt = video.thumbnail.split('.').pop().toLowerCase();
-            if (thumbExt === 'gif') {
-                mediaEl = document.createElement('img');
-                mediaEl.src = video.thumbnail;
-                mediaEl.alt = video.title;
-                mediaEl.loading = 'lazy';
-                mediaEl.decoding = 'async';
-                mediaEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-            } else {
-                mediaEl = document.createElement('video');
-                mediaEl.muted = true;
-                mediaEl.playsInline = true;
-                mediaEl.loop = true;
-                mediaEl.preload = 'none';
-                mediaEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-                const source = document.createElement('source');
-                source.src = video.thumbnail;
-                source.type = 'video/mp4';
-                mediaEl.appendChild(source);
-            }
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            overlay.innerHTML = '<div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><span>' + video.title + '</span>';
-            item.appendChild(mediaEl);
-            item.appendChild(overlay);
-            item.addEventListener('click', () => {
-                const idx = allAnimations.findIndex(v => v.src === video.src && v.title === video.title);
-                if (idx !== -1) { currentVideoIndex = idx; updateVideoDisplay(); showAnimTab('anim-closeup'); }
-            });
-            grid.appendChild(item);
-            if (mediaEl.tagName === 'VIDEO') {
-                videoObserver.observe(mediaEl);
-            }
-        });
-        section.appendChild(grid);
-        fragment.appendChild(section);
-    });
-    container.appendChild(fragment);
+function nextVideo() {
+    const catVideos = animationCategories[currentAnimCategory].videos;
+    currentVideoIndex = (currentVideoIndex + 1) % catVideos.length;
+    updateVideoDisplay();
 }
+function previousVideo() {
+    const catVideos = animationCategories[currentAnimCategory].videos;
+    currentVideoIndex = (currentVideoIndex - 1 + catVideos.length) % catVideos.length;
+    updateVideoDisplay();
+}
+
 
 // ===== FILMS =====
 const films = [
@@ -310,21 +347,40 @@ const films = [
         description: "A young painter searches for a reference for her aquatic painting, but doesn't know the fish she bought is actually magical. This imaginative animated short explores themes of curiosity, adventure, and finding your place in the world.",
         year: '2025', genre: 'Animation', duration: '7 min', roles: 'Director, Editor, Animator, Colorist',
         imdb: 'https://m.imdb.com/title/tt36786195/?ref_=ext_shr_lnk',
-        youtubeLink: 'https://www.youtube.com/watch?v=xO5sDt7_qN4',
-        behindScenesLabel: 'Behind the Scenes', artworkType: 'images',
-        artwork: ['imgs/artwork1.png','imgs/artwork2.png','imgs/artwork3.png','imgs/artwork4.png','imgs/artwork5.png','imgs/artwork6.png']
+        awards: [
+            { event: '2025 PUSD Film Festival', detail: '"Alice in Wonderland Animation" category', wins: ['Best Overall'] },
+            { event: '2024–2025 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://www.youtube.com/watch?v=09NP_b_IOHA&feature=youtu.be', linkLabel: '▶ Watch Ceremony' },
+            { event: '2025 National Academy of Television Arts & Sciences\' National Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://theemmys.tv/wp-content/uploads/2025/11/2025-NSPA-WINNERS-.pdf', linkLabel: 'View Winners PDF' },
+            { event: '2026 Arizona Student Film Festival', wins: ['Nominee'] },
+            { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
+        ],
+        behindScenesLabel: 'Behind the Scenes',
+        artworkCategories: [
+            { label: 'Concept Art', images: ['imgs/fishconcept1.png','imgs/fishconcept2.png','imgs/fishconcept3.png','imgs/fishconcept4.png','imgs/fishconcept5.png','imgs/fishconcept6.gif','imgs/fishconcept7.gif','imgs/fishconcept8.png'] },
+            { label: 'Reference Sheets', images: ['imgs/fishref.png','imgs/fishref1.png'] },
+            { label: 'Backgrounds', images: ['imgs/fishback1.png','imgs/fishback2.png','imgs/fishback3.png','imgs/fishback4.png','imgs/fishback5.png','imgs/fishback6.png','imgs/fishback7.png','imgs/fishback8.png','imgs/fishback9.png','imgs/fishback10.png'] },
+        ]
     },
     {
         url: 'https://www.youtube.com/watch?v=fXAdtJOotVQ', title: 'PIZZA DOG',
         description: 'Dog learns to let go. This heartfelt animated short explores themes of love and loss between two best friends.',
         year: '2024', genre: 'Animation', duration: '2 min', roles: 'Director, Editor, Animator, Colorist',
         imdb: 'https://m.imdb.com/title/tt36587391/?ref_=ext_shr_lnk',
-        youtubeLink: 'https://www.youtube.com/watch?v=fXAdtJOotVQ',
-        behindScenesLabel: 'Behind the Scenes', artworkType: 'images',
-        artwork: ['imgs/pizza1.png','imgs/pizza2.png','imgs/pizza3.png','imgs/pizza4.png']
+        awards: [
+            { event: '2024 PUSD Film Festival', detail: '"Coming of Age" category', wins: ['Best Sound Design', 'Best Overall'] },
+            { event: '2023–2024 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'] },
+            { event: '2024 National Academy of Arts and Sciences\' National Student Production Awards', wins: ['Nominee'] },
+        ],
+        behindScenesLabel: 'Behind the Scenes',
+        artworkCategories: [
+            { label: 'Concept Art', images: ['imgs/pizzaconcept.png','imgs/pizzaconcept2.png','imgs/pizzaconcept3.png','imgs/pizzaconcept4.png'] },
+            { label: 'Reference Sheets', images: ['imgs/pizzaref.png'] },
+            { label: 'Backgrounds', images: ['imgs/pizzaback1.png','imgs/pizzaback2.png','imgs/pizzaback3.png','imgs/pizzaback4.png','imgs/pizzaback5.png','imgs/pizzaback6.png'] },
+        ]
     },
     {
         url: 'https://www.youtube.com/watch?v=NrgbSkulAZk', title: 'BODY',
+        director: 'Directed by Lavender Birch',
         description: 'Body follows a young woman and her internal struggle as she juggles the complex challenge of chasing her dreams and the changing demands of her physical body.',
         year: '2025', genre: 'Animation', duration: '', roles: 'Guest Colorist',
         imdb: '', youtubeLink: 'https://www.youtube.com/watch?v=NrgbSkulAZk',
@@ -342,9 +398,9 @@ function updateFilmDisplay() {
     const filmMeta = document.querySelector('.film-meta');
     const filmRoles = document.querySelector('.film-roles');
     const filmLinks = document.querySelector('.film-links');
-    const artworkGrid = document.querySelector('.artwork-grid');
+    const filmAwards = document.querySelector('.film-awards');
     const processTitle = document.querySelector('.process-title');
-    const artworkHeading = document.querySelector('.artwork-heading');
+    const processContent = document.querySelector('.process-content');
     if (!vp) return;
 
     const f = films[currentFilmIndex];
@@ -352,6 +408,16 @@ function updateFilmDisplay() {
     vp.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vid + '" title="' + f.title + '" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border-radius: 20px;"></iframe>';
 
     if (filmTag) filmTag.textContent = f.title;
+
+    // Director credit
+    let directorEl = document.querySelector('.film-director');
+    if (!directorEl) {
+        directorEl = document.createElement('p');
+        directorEl.className = 'film-director';
+        filmTag.parentNode.insertBefore(directorEl, filmTag.nextSibling);
+    }
+    directorEl.textContent = f.director || '';
+    directorEl.style.display = f.director ? 'block' : 'none';
     if (filmText) filmText.textContent = f.description;
     if (filmMeta) {
         const parts = [f.year, f.genre, f.duration].filter(Boolean);
@@ -361,48 +427,117 @@ function updateFilmDisplay() {
     if (filmLinks) {
         filmLinks.innerHTML = '';
         if (f.imdb) filmLinks.innerHTML += '<a href="' + f.imdb + '" target="_blank" class="film-link">IMDB page</a>';
-        if (f.youtubeLink) filmLinks.innerHTML += '<a href="' + f.youtubeLink + '" target="_blank" class="film-link">YouTube Link</a>';
+        if (f.youtubeLink && !f.awards) filmLinks.innerHTML += '<a href="' + f.youtubeLink + '" target="_blank" class="film-link">YouTube Link</a>';
     }
+
+    if (filmAwards) {
+        filmAwards.innerHTML = '';
+        if (f.awards && f.awards.length) {
+            const title = document.createElement('h5');
+            title.className = 'film-awards-title';
+            title.textContent = 'Awards';
+            filmAwards.appendChild(title);
+            f.awards.forEach(award => {
+                const item = document.createElement('div');
+                item.className = 'film-award-item';
+                const eventEl = document.createElement('span');
+                eventEl.className = 'award-event';
+                eventEl.textContent = award.event;
+                item.appendChild(eventEl);
+                if (award.detail) {
+                    const detail = document.createElement('span');
+                    detail.className = 'award-detail';
+                    detail.textContent = award.detail;
+                    item.appendChild(detail);
+                }
+                const winsEl = document.createElement('span');
+                winsEl.className = 'award-wins';
+                award.wins.forEach(win => {
+                    const badge = document.createElement('span');
+                    badge.className = 'award-badge' + (win === 'Nominee' ? ' nominee' : '');
+                    badge.textContent = win;
+                    winsEl.appendChild(badge);
+                });
+                if (award.link) {
+                    const link = document.createElement('a');
+                    link.href = award.link;
+                    link.target = '_blank';
+                    link.className = 'award-link';
+                    link.textContent = award.linkLabel || 'View Link';
+                    winsEl.appendChild(link);
+                }
+                item.appendChild(winsEl);
+                filmAwards.appendChild(item);
+            });
+        }
+    }
+
     if (processTitle) processTitle.textContent = f.behindScenesLabel || 'Behind the Scenes';
-    if (artworkHeading) artworkHeading.textContent = f.artworkType === 'videos' ? 'Work:' : 'Artwork:';
-    if (artworkGrid) {
-        artworkGrid.innerHTML = '';
-        if (f.artwork && f.artwork.length > 0) {
-            const fragment = document.createDocumentFragment();
-            if (f.artworkType === 'videos') {
-                f.artwork.forEach(src => {
-                    const v = document.createElement('video');
-                    v.src = src;
-                    v.className = 'artwork-img';
-                    v.loop = true;
-                    v.muted = true;
-                    v.playsInline = true;
-                    v.preload = 'none';
-                    v.style.objectFit = 'cover';
-                    videoObserver.observe(v);
-                    if (f.noWatermark) {
-                        const wrapper = document.createElement('div');
-                        wrapper.style.cssText = 'width:95%;position:relative;overflow:hidden;border-radius:12px;';
-                        wrapper.appendChild(v);
-                        fragment.appendChild(wrapper);
-                    } else {
-                        fragment.appendChild(createWatermarkWrapper(v));
-                    }
-                });
-            } else {
-                f.artwork.forEach(src => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.alt = f.title + ' artwork';
-                    img.className = 'artwork-img';
-                    img.loading = 'lazy';
-                    img.decoding = 'async';
-                    fragment.appendChild(createWatermarkWrapper(img));
-                });
-            }
-            artworkGrid.appendChild(fragment);
+    if (processContent) {
+        processContent.innerHTML = '';
+        if (f.artworkCategories) {
+            f.artworkCategories.forEach(cat => {
+                const heading = document.createElement('h5');
+                heading.className = 'artwork-heading';
+                heading.textContent = cat.label + ':';
+                processContent.appendChild(heading);
+                const grid = document.createElement('div');
+                grid.className = 'artwork-grid';
+                if (cat.images && cat.images.length) {
+                    const fragment = document.createDocumentFragment();
+                    cat.images.forEach(src => {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.alt = cat.label;
+                        img.className = 'artwork-img';
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        fragment.appendChild(createWatermarkWrapper(img));
+                    });
+                    grid.appendChild(fragment);
+                } else {
+                    grid.innerHTML = '<p class="no-artwork">Images coming soon.</p>';
+                }
+                processContent.appendChild(grid);
+            });
         } else {
-            artworkGrid.innerHTML = '<p class="no-artwork">No artwork added yet.</p>';
+            const heading = document.createElement('h5');
+            heading.className = 'artwork-heading';
+            heading.textContent = f.artworkType === 'videos' ? 'Work:' : 'Artwork:';
+            processContent.appendChild(heading);
+            const grid = document.createElement('div');
+            grid.className = 'artwork-grid';
+            if (f.artwork && f.artwork.length > 0) {
+                const fragment = document.createDocumentFragment();
+                if (f.artworkType === 'videos') {
+                    f.artwork.forEach(src => {
+                        const v = document.createElement('video');
+                        v.src = src; v.className = 'artwork-img';
+                        v.loop = true; v.muted = true; v.playsInline = true; v.preload = 'none';
+                        v.style.objectFit = 'cover';
+                        videoObserver.observe(v);
+                        if (f.noWatermark) {
+                            const wrapper = document.createElement('div');
+                            wrapper.style.cssText = 'width:95%;position:relative;overflow:hidden;border-radius:12px;';
+                            wrapper.appendChild(v);
+                            fragment.appendChild(wrapper);
+                        } else {
+                            fragment.appendChild(createWatermarkWrapper(v));
+                        }
+                    });
+                } else {
+                    f.artwork.forEach(src => {
+                        const img = document.createElement('img');
+                        img.src = src; img.alt = f.title + ' artwork';
+                        img.className = 'artwork-img'; img.loading = 'lazy'; img.decoding = 'async';
+                        fragment.appendChild(createWatermarkWrapper(img));
+                    });
+                }
+                grid.appendChild(fragment);
+            } else {
+                grid.innerHTML = '<p class="no-artwork">No artwork added yet.</p>';
+            }
+            processContent.appendChild(grid);
         }
     }
     setTimeout(positionMoonAndSides, 60);
@@ -415,15 +550,27 @@ function previousFilm() { currentFilmIndex = (currentFilmIndex - 1 + films.lengt
 function addStampHighlight() {
     const stamps = document.querySelectorAll('.stamp');
     const stampBg = document.querySelector('.contact-stamp');
-    if (!stampBg) return;
+    const pcStampStatic = document.querySelector('.pc-stamp-static');
+
+    function startHeartbeat() {
+        if (pcStampStatic) pcStampStatic.classList.add('heartbeat');
+        if (stampBg) stampBg.classList.add('highlight');
+    }
+    function stopHeartbeat() {
+        if (pcStampStatic) pcStampStatic.classList.remove('heartbeat');
+        if (stampBg) stampBg.classList.remove('highlight');
+    }
+
     stamps.forEach(stamp => {
-        stamp.addEventListener('mouseenter', () => { stampBg.classList.add('highlight'); });
-        stamp.addEventListener('mouseleave', () => { if (!stamp.classList.contains('dragging')) stampBg.classList.remove('highlight'); });
-        stamp.addEventListener('mousedown', () => { stampBg.classList.add('highlight'); });
-        stamp.addEventListener('touchstart', () => { stampBg.classList.add('highlight'); }, { passive: true });
+        stamp.addEventListener('mouseenter', startHeartbeat);
+        stamp.addEventListener('mouseleave', () => {
+            if (!stamp.classList.contains('dragging')) stopHeartbeat();
+        });
+        stamp.addEventListener('mousedown', startHeartbeat);
+        stamp.addEventListener('touchstart', startHeartbeat, { passive: true });
     });
-    document.addEventListener('mouseup', () => { if (stampBg) setTimeout(() => { stampBg.classList.remove('highlight'); }, 300); });
-    document.addEventListener('touchend', () => { if (stampBg) setTimeout(() => { stampBg.classList.remove('highlight'); }, 300); });
+    document.addEventListener('mouseup', () => setTimeout(stopHeartbeat, 300));
+    document.addEventListener('touchend', () => setTimeout(stopHeartbeat, 300));
 }
 
 // ===== DRAGGABLE STAMPS =====
@@ -500,7 +647,7 @@ function makeDraggable() {
     });
 }
 
-// ===== STAMP CAROUSEL (visible only at ≤1200px) =====
+// ===== STAMP CAROUSEL (visible only at ≤1200px, old one kept for fallback) =====
 function initStampCarousel() {
     const stampImages = [
         'imgs/stamp1.png',
@@ -517,7 +664,6 @@ function initStampCarousel() {
 
     let current = 0;
 
-    // Build dots
     stampImages.forEach((_, i) => {
         const dot = document.createElement('span');
         dot.className = 'stamp-carousel__dot' + (i === 0 ? ' active' : '');
@@ -527,21 +673,15 @@ function initStampCarousel() {
 
     function goTo(index) {
         current = (index + stampImages.length) % stampImages.length;
-
-        // Animate out
         img.style.opacity = '0';
         img.style.transform = 'scale(0.82) rotate(5deg)';
         img.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
-
         setTimeout(() => {
             img.src = stampImages[current];
-            // Animate in
             img.style.transition = 'opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1)';
             img.style.opacity = '1';
             img.style.transform = 'scale(1) rotate(0deg)';
         }, 190);
-
-        // Update dots
         dotsEl.querySelectorAll('.stamp-carousel__dot').forEach((d, i) => {
             d.classList.toggle('active', i === current);
         });
@@ -549,9 +689,62 @@ function initStampCarousel() {
 
     prev.addEventListener('click', () => goTo(current - 1));
     next.addEventListener('click', () => goTo(current + 1));
-
-    // Swipe support on the carousel image
     addSwipeSupport(img.parentElement, () => goTo(current + 1), () => goTo(current - 1));
+}
+
+// ===== PC STAMP CAROUSEL (inside postcard, for tablets 769–1200px) =====
+function initPcStampCarousel() {
+    const stampImages = [
+        'imgs/stamp1.png',
+        'imgs/stamp2.png',
+        'imgs/stamp3.png',
+    ];
+
+    const img    = document.getElementById('pcStampImg');
+    const prev   = document.getElementById('pcStampPrev');
+    const next   = document.getElementById('pcStampNext');
+    const dotsEl = document.getElementById('pcStampDots');
+
+    if (!img || !prev || !next || !dotsEl) return;
+
+    let current = 0;
+
+    // Build dots
+    stampImages.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'pc-stamp-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dotsEl.appendChild(dot);
+    });
+
+    function goTo(index) {
+        current = (index + stampImages.length) % stampImages.length;
+
+        // Animate out
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.8) rotate(6deg)';
+        img.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
+
+        setTimeout(() => {
+            img.src = stampImages[current];
+            // Animate in with a springy bounce
+            img.style.transition = 'opacity 0.22s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1)';
+            img.style.opacity = '1';
+            img.style.transform = 'scale(1) rotate(0deg)';
+        }, 180);
+
+        // Update dots
+        dotsEl.querySelectorAll('.pc-stamp-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
+    }
+
+    prev.addEventListener('click', () => goTo(current - 1));
+    next.addEventListener('click', () => goTo(current + 1));
+
+    // Swipe on the stamp track
+    const track = img.parentElement;
+    if (track) addSwipeSupport(track, () => goTo(current + 1), () => goTo(current - 1));
 }
 
 // ===== POSITION MOON AND SIDE DECORATIONS =====
@@ -890,6 +1083,56 @@ function initLogoSpin() {
     });
 }
 
+// ===== PROFILE PIC CAROUSEL =====
+// First image matches the src in HTML (hana1.png) so it shows immediately on load
+const profilePics = [
+    'imgs/profile-pic.jpg',
+    'imgs/hana2.JPG',
+    'imgs/hana3.JPG',
+    'imgs/hana4.JPG',
+    'imgs/hana5.JPG',
+];
+let currentProfilePic = 0;
+
+function buildProfileDots() {
+    const wrapper = document.querySelector('.profile-pic-wrapper');
+    if (!wrapper) return;
+    // Remove any existing dots first to avoid duplicates
+    const existing = wrapper.querySelector('.profile-pic-dots');
+    if (existing) existing.remove();
+
+    const dotsEl = document.createElement('div');
+    dotsEl.className = 'profile-pic-dots';
+    profilePics.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.className = 'profile-pic-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goToProfilePic(i));
+        dotsEl.appendChild(dot);
+    });
+    wrapper.appendChild(dotsEl);
+}
+
+function goToProfilePic(index) {
+    const img = document.getElementById('profilePic');
+    if (!img) return;
+    currentProfilePic = (index + profilePics.length) % profilePics.length;
+
+    img.style.transition = 'opacity 0.22s ease';
+    img.style.opacity = '0';
+    setTimeout(() => {
+        img.src = profilePics[currentProfilePic];
+        img.style.opacity = '1';
+    }, 220);
+
+    document.querySelectorAll('.profile-pic-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentProfilePic);
+    });
+}
+
+function changeProfilePic(dir) {
+    goToProfilePic(currentProfilePic + dir);
+}
+
 // ===== INITIALIZE =====
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -916,7 +1159,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (illusShowcase) addSwipeSupport(illusShowcase, nextImage, previousImage);
 
     updateVideoDisplay();
-    populateAnimGallery();
 
     const animPrev = document.querySelector('.anim-arrow-prev');
     const animNext = document.querySelector('.anim-arrow-next');
@@ -925,6 +1167,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const animShowcase = document.querySelector('.animation-showcase');
     if (animShowcase) addSwipeSupport(animShowcase, nextVideo, previousVideo);
+
+    const animCatPrev = document.querySelector('.anim-cat-prev-btn');
+    const animCatNext = document.querySelector('.anim-cat-next-btn');
+    if (animCatPrev) animCatPrev.addEventListener('click', prevAnimCategory);
+    if (animCatNext) animCatNext.addEventListener('click', nextAnimCategory);
+
+    const animCatNav = document.querySelector('.anim-cat-nav');
+    if (animCatNav) addSwipeSupport(animCatNav, nextAnimCategory, prevAnimCategory);
 
     updateFilmDisplay();
     const filmPrev = document.querySelector('.film-arrow-prev');
@@ -938,8 +1188,28 @@ document.addEventListener('DOMContentLoaded', function () {
     makeDraggable();
     addStampHighlight();
 
-    // ── Stamp carousel (only active at ≤1200px via CSS display:none above) ──
+    // ── Old stamp carousel (for any legacy elements) ──
     initStampCarousel();
+
+    // ── Postcard stamp carousel (tablet 769–1200px) ──
+    initPcStampCarousel();
+
+    // ── Profile pic carousel: build dots and set first image immediately ──
+    buildProfileDots();
+    const profileImg = document.getElementById('profilePic');
+    if (profileImg) {
+        profileImg.style.transition = 'none';
+        profileImg.style.opacity = '1';
+        profileImg.style.visibility = 'visible';
+        profileImg.style.display = 'block';
+        profileImg.src = profilePics[0];
+        // Re-enable transition after paint so only arrow clicks animate
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                profileImg.style.transition = 'opacity 0.22s ease';
+            });
+        });
+    }
 
     const moonImg = document.querySelector('.right-moon');
     if (moonImg) {

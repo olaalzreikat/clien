@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITS302 Exam Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Outfit:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a2e;--paper:#f5f0e8;--paper2:#ede8df;--paper3:#e2dbd0;--border:#cec7ba;--accent:#c0392b;--blue:#2563c4;--green:#1a7a4a;--gold:#b8860b;--muted:#7a6f62;--code:#1e1e2e;--ctext:#cdd6f4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+.app{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:280px;flex-shrink:0;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sb-logo{padding:28px 22px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sb-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:6px;}
+.sb-title{font-family:'Instrument Serif',serif;font-size:22px;color:#fff;}
+.sb-title em{font-style:italic;color:#f0b429;}
+.sb-section{padding:16px 14px 6px;}
+.sb-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.22);padding:0 8px;margin-bottom:6px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);transition:all .15s;margin-bottom:2px;border:1px solid transparent;user-select:none;}
+.sb-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);}
+.sb-item.active{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.1);}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sb-stats{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);font-size:12px;}
+.sb-stat{display:flex;justify-content:space-between;margin-bottom:5px;color:rgba(255,255,255,0.35);}
+.sb-stat span{color:#f0b429;font-family:'IBM Plex Mono',monospace;font-weight:600;}
+
+/* MAIN */
+.main{flex:1;overflow-x:hidden;}
+.page{display:none;}
+.page.active{display:block;}
+
+/* HOME */
+.home-hero{padding:56px 56px 40px;border-bottom:2px solid var(--border);background:linear-gradient(135deg,var(--paper) 60%,var(--paper2));}
+.hero-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+.hero-h1{font-family:'Instrument Serif',serif;font-size:clamp(34px,5vw,60px);font-weight:400;line-height:1.05;margin-bottom:18px;}
+.hero-h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:15px;color:var(--muted);max-width:540px;line-height:1.7;margin-bottom:28px;}
+.method-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:640px;}
+.mc{background:var(--paper2);border:1px solid var(--border);border-radius:8px;padding:18px;}
+.mc-icon{font-size:22px;margin-bottom:8px;}
+.mc-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.mc-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.domain-grid{padding:36px 56px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+.dc{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:20px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
+.dc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.dc:hover{border-color:var(--border);background:var(--paper2);transform:translateY(-2px);box-shadow:0 4px 18px rgba(0,0,0,0.08);}
+.dc-num{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:7px;}
+.dc-title{font-size:15px;font-weight:700;margin-bottom:7px;}
+.dc-topics{font-size:12px;color:var(--muted);line-height:1.6;}
+.dc-btns{display:flex;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.dc-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:5px;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .15s;}
+.dc-btn-r{background:rgba(184,134,11,0.13);color:var(--gold);}
+.dc-btn-r:hover{background:rgba(184,134,11,0.22);}
+.dc-btn-d{background:var(--ink);color:#fff;}
+.dc-btn-d:hover{background:#2a2a4e;}
+
+/* DOMAIN PAGE */
+.pg-header{padding:32px 56px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(245,240,232,0.95);backdrop-filter:blur(8px);z-index:10;}
+.pg-back{font-size:13px;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-bottom:10px;transition:color .15s;}
+.pg-back:hover{color:var(--ink);}
+.pg-tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px;}
+.pg-h1{font-family:'Instrument Serif',serif;font-size:34px;font-weight:400;}
+.tab-row{display:flex;border-bottom:2px solid var(--border);padding:0 56px;background:var(--paper);}
+.tab{padding:11px 22px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;user-select:none;}
+.tab:hover{color:var(--ink);}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.content{padding:36px 56px;}
+
+/* CONCEPTS */
+.concept{border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow:hidden;}
+.c-head{padding:14px 20px;background:var(--paper2);border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
+.c-head:hover{background:var(--paper3);}
+.c-htitle{font-size:14px;font-weight:700;display:flex;align-items:center;gap:10px;}
+.c-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 8px;border-radius:3px;letter-spacing:1px;font-weight:600;text-transform:uppercase;}
+.c-arrow{font-size:16px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.c-body{padding:22px;display:none;}
+.c-body.open{display:block;}
+.prose{font-size:14px;line-height:1.8;color:var(--muted);margin-bottom:14px;}
+.prose strong{color:var(--ink);}
+.code-box{background:var(--code);border-radius:8px;overflow:hidden;margin-bottom:12px;}
+.code-top{background:rgba(255,255,255,0.04);padding:7px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:1px;}
+.code-pre{padding:16px 18px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.85;color:var(--ctext);overflow-x:auto;white-space:pre;}
+.callout{border-radius:6px;padding:11px 15px;font-size:13px;line-height:1.6;margin-bottom:12px;}
+.callout-w{background:rgba(192,57,43,0.07);border-left:3px solid var(--accent);color:var(--ink);}
+.callout-t{background:rgba(26,122,74,0.07);border-left:3px solid var(--green);color:var(--ink);}
+.callout-e{background:rgba(37,99,196,0.07);border-left:3px solid var(--blue);color:var(--ink);}
+.ctable{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px;}
+.ctable th{background:var(--ink);color:var(--paper);padding:9px 13px;text-align:left;font-size:11px;letter-spacing:.5px;}
+.ctable td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top;}
+.ctable tr:last-child td{border-bottom:none;}
+.ctable tr:nth-child(even) td{background:var(--paper2);}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* DRILLS */
+.drill-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.drill-score-badge{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);}
+.drill-score-badge strong{color:var(--ink);}
+.prog-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:28px;}
+.prog-fill{height:100%;background:var(--ink);border-radius:3px;transition:width .4s ease;}
+.qcard{background:var(--paper);border:1px solid var(--border);border-radius:10px;overflow:hidden;animation:qin .25s ease;}
+@keyframes qin{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.qcard-top{padding:20px 24px 0;}
+.qmeta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.qtype{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:3px;font-weight:600;}
+.qnum{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+.qprompt{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:14px;color:var(--ink);}
+.qcode{background:var(--code);border-radius:6px;padding:14px 16px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.8;color:var(--ctext);margin-bottom:0;white-space:pre-wrap;word-break:break-all;}
+.choices{display:flex;flex-direction:column;gap:8px;padding:16px 24px;}
+.choice{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:7px;border:1px solid var(--border);background:var(--paper2);cursor:pointer;transition:all .15s;font-size:14px;line-height:1.5;text-align:left;font-family:'Outfit',sans-serif;color:var(--ink);width:100%;}
+.choice:hover:not(.locked){border-color:var(--border);background:var(--paper3);}
+.cltr{width:26px;height:26px;border-radius:5px;background:var(--border);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;margin-top:1px;transition:all .15s;}
+.choice.correct{border-color:var(--green);background:rgba(26,122,74,0.07);}
+.choice.correct .cltr{background:var(--green);color:#fff;}
+.choice.wrong{border-color:var(--accent);background:rgba(192,57,43,0.06);}
+.choice.wrong .cltr{background:var(--accent);color:#fff;}
+.choice.locked{cursor:default;}
+.expbox{margin:0 24px 16px;border-radius:8px;padding:14px 16px;display:none;font-size:13px;line-height:1.7;}
+.expbox.show{display:block;}
+.expbox.ok{background:rgba(26,122,74,0.08);border:1px solid rgba(26,122,74,0.22);}
+.expbox.bad{background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.18);}
+.exp-head{font-weight:700;font-size:14px;margin-bottom:5px;}
+.exp-head.ok{color:var(--green);}
+.exp-head.bad{color:var(--accent);}
+.drill-nav{display:flex;align-items:center;justify-content:space-between;margin-top:16px;}
+.btn-prev{padding:10px 20px;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--paper2);color:var(--muted);transition:all .15s;}
+.btn-prev:hover{color:var(--ink);}
+.btn-next{padding:10px 20px;border-radius:7px;font-size:13px;font-family:'Outfit',sans-serif;font-weight:700;cursor:pointer;border:none;background:var(--ink);color:#fff;transition:all .15s;}
+.btn-next:hover{background:#2a2a4e;}
+.nav-center{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);}
+.result-box{background:var(--ink);color:#fff;border-radius:10px;padding:32px;text-align:center;margin-bottom:22px;}
+.result-score{font-family:'Instrument Serif',serif;font-size:54px;font-weight:400;line-height:1;}
+.result-grade{font-size:20px;font-weight:700;margin:8px 0;}
+.result-msg{font-size:14px;color:rgba(255,255,255,0.55);}
+.btn-retake{margin-top:18px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:11px 28px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;}
+.btn-retake:hover{background:rgba(255,255,255,0.18);}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-eyebrow">ITS302 · Exam Trainer</div>
+    <div class="sb-title">Code <em>Reasoning</em></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Home</div>
+    <div class="sb-item active" onclick="goHome()"><span class="sb-dot" style="background:rgba(255,255,255,0.3)"></span> Overview</div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Domains</div>
+    <div class="sb-item" onclick="goDomain(0)"><span class="sb-dot" style="background:#f0b429"></span> Domain 1 — Operators</div>
+    <div class="sb-item" onclick="goDomain(1)"><span class="sb-dot" style="background:#60c8f5"></span> Domain 2 — Variables</div>
+    <div class="sb-item" onclick="goDomain(2)"><span class="sb-dot" style="background:#f06090"></span> Domain 3 — Loops</div>
+    <div class="sb-item" onclick="goDomain(3)"><span class="sb-dot" style="background:#60f0a0"></span> Domain 4 — DOM</div>
+    <div class="sb-item" onclick="goDomain(4)"><span class="sb-dot" style="background:#c060f5"></span> Domain 5 — Forms</div>
+  </div>
+  <div class="sb-stats">
+    <div class="sb-stat">Answered <span id="s-ans">0</span></div>
+    <div class="sb-stat">Correct <span id="s-cor">0</span></div>
+    <div class="sb-stat">Accuracy <span id="s-pct">—</span></div>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- HOME -->
+<div class="page active" id="pg-home">
+  <div class="home-hero">
+    <div class="hero-label">Exam-Level Code Trainer</div>
+    <h1 class="hero-h1">Stop memorizing.<br>Start <em>reasoning.</em></h1>
+    <p class="hero-sub">Your exam shows you real code blocks and asks what happens, what's broken, or what goes in the blank. This app trains exactly that skill — with scenarios from your actual course.</p>
+    <div class="method-row">
+      <div class="mc"><div class="mc-icon">🔍</div><div class="mc-title">Trace the Code</div><div class="mc-desc">Follow every line. Predict the exact output.</div></div>
+      <div class="mc"><div class="mc-icon">🐛</div><div class="mc-title">Spot the Bug</div><div class="mc-desc">Find the one wrong thing — missing keyword, wrong operator.</div></div>
+      <div class="mc"><div class="mc-icon">🧩</div><div class="mc-title">Fill the Gap</div><div class="mc-desc">Working code with one blank. Pick what belongs.</div></div>
+    </div>
+  </div>
+  <div class="domain-grid" id="domain-grid"></div>
+</div>
+
+<!-- DOMAIN -->
+<div class="page" id="pg-domain">
+  <div class="pg-header">
+    <div class="pg-back" onclick="goHome()">← Back</div>
+    <div class="pg-tag" id="d-tag"></div>
+    <div class="pg-h1" id="d-title"></div>
+  </div>
+  <div class="tab-row">
+    <div class="tab active" onclick="setTab('concepts')" id="tab-concepts">📖 Concepts</div>
+    <div class="tab" onclick="setTab('drills')" id="tab-drills">⚡ Drills</div>
+  </div>
+  <div class="content">
+    <div id="concepts-panel"></div>
+    <div id="drills-panel" style="display:none"></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ===================== DATA =====================
+// NO HTML inside strings. No backtick nesting issues.
+// Code examples use plain text. Explanations are plain text.
+
+var DOMAINS = [
+  {
+    id: 'd1', color: '#f0b429', dot: '#f0b429',
+    tag: 'Domain 1', title: 'Operators & Syntax',
+    topics: '= vs == vs ===  ·  modulus %  ·  parseInt  ·  try/catch/finally  ·  camelCase  ·  toFixed()',
+    concepts: [
+      {
+        badge: 'ASSIGNMENT vs COMPARISON', badgeBg: 'rgba(240,180,41,0.15)', badgeColor: '#8a6500',
+        title: '= vs == vs === — The Most Tested Distinction',
+        prose: 'The exam loves this. One wrong character changes everything. = assigns. == compares value. === compares value AND type.',
+        code: [
+          'var checkOutExists = false;    // = ASSIGNS the value false',
+          '',
+          'if (checkOutExists == false)   // == COMPARES: is it false?',
+          'if (checkOutExists === false)  // === checks value AND type',
+          '',
+          '// Tricky:',
+          'var x = 0;',
+          'x == false    // true  (both "falsy" - loose equality)',
+          'x === false   // false (number 0 is NOT boolean false)'
+        ],
+        tip: 'EXAM TRAP: They show checkOutExists = false vs checkOutExists == false and ask which is assignment vs comparison. Single = always assigns. Double/triple always compares.',
+        tipType: 'exam',
+        table: {
+          headers: ['Symbol', 'Name', 'What it does', 'Example'],
+          rows: [
+            ['=', 'Assignment', 'Stores a value', "x = 5 → x holds 5"],
+            ['==', 'Loose equality', 'Compares value only (converts types)', "'5' == 5 → true"],
+            ['===', 'Strict equality', 'Compares value AND type', "'5' === 5 → false"],
+            ['!=', 'Loose inequality', 'Not equal (value only)', "5 != '5' → false"]
+          ]
+        }
+      },
+      {
+        badge: 'TYPE CONVERSION', badgeBg: 'rgba(240,180,41,0.15)', badgeColor: '#8a6500',
+        title: 'parseInt — It Cuts Off, It Does NOT Round',
+        prose: 'This is one of the most commonly missed questions. parseInt does not round. It truncates — it cuts off everything after the decimal point, period.',
+        code: [
+          'parseInt("7.9")    // 7  (NOT 8 — cuts off, does not round up)',
+          'parseInt("3.1")    // 3',
+          'parseFloat("7.9")  // 7.9 (keeps decimal)',
+          '',
+          '// Currency formatting — .toFixed(2) rounds AND formats:',
+          'var total = 35.6789;',
+          'total.toFixed(2)   // "35.68" — returns a STRING, not a number'
+        ],
+        tip: 'WRONG ANSWER TRAP: "parseInt(7.9) returns 8 because it rounds up." That is WRONG. It truncates. 7.9 becomes 7.',
+        tipType: 'warn'
+      },
+      {
+        badge: 'EXCEPTION HANDLING', badgeBg: 'rgba(240,180,41,0.15)', badgeColor: '#8a6500',
+        title: 'try / catch / finally — Placement and Order Matter',
+        prose: '"use strict" must be the FIRST statement in the function body, BEFORE the try block. The finally block ALWAYS runs no matter what.',
+        code: [
+          'function getPracticeHours() {',
+          '  "use strict";   // MUST be first — before try',
+          '',
+          '  try {',
+          '    // code that might fail',
+          '    var hours = parseInt(input.value);',
+          '    if (isNaN(hours)) throw "Not a number";',
+          '',
+          '  } catch(error) {',
+          '    // runs ONLY if try throws an error',
+          '    document.getElementById("status").innerHTML = error;',
+          '',
+          '  } finally {',
+          '    // ALWAYS runs — success or failure',
+          '    document.getElementById("practiceWeeks").innerHTML += "Done!";',
+          '  }',
+          '}'
+        ],
+        table: {
+          headers: ['Block', 'When it runs', 'Purpose'],
+          rows: [
+            ['try', 'Always attempted first', 'Code that might fail'],
+            ['catch(error)', 'ONLY if try throws an error', 'Handle the error'],
+            ['finally', 'ALWAYS — no exceptions', 'Cleanup that must happen regardless']
+          ]
+        },
+        tip: 'EXAM TRAP: "use strict" inside the try block is WRONG. It must come before try, as the very first line of the function.',
+        tipType: 'exam'
+      },
+      {
+        badge: 'NAMING', badgeBg: 'rgba(240,180,41,0.15)', badgeColor: '#8a6500',
+        title: 'camelCase — Which Version Is Actually Correct?',
+        prose: 'Start lowercase. Capitalize each new word. No underscores, no spaces.',
+        table: {
+          headers: ['Version', 'Correct?', 'Why'],
+          rows: [
+            ['getElementById', 'YES', 'Starts lowercase, capital B and I'],
+            ['GetElementById', 'NO', 'Starts with capital G — that is PascalCase'],
+            ['getelementbyid', 'NO', 'All lowercase, no humps'],
+            ['getElementByID', 'NO', 'ID should be Id — both capitals is wrong']
+          ]
+        },
+        tip: 'The correct JS method is getElementById — lowercase d in Id, not ID.',
+        tipType: 'warn'
+      }
+    ],
+    drills: [
+      {
+        type: 'TRACE', typeCss: 'rgba(240,180,41,0.15)', typeColor: '#8a6500',
+        q: 'What does this code log to the console?',
+        code: 'var checkOutExists = false;\ncheckOutExists = true;\nconsole.log(typeof checkOutExists);',
+        choices: ["'false'", "'boolean'", "'string'", "'undefined'"],
+        answer: 1,
+        exp: 'typeof returns a string naming the DATA TYPE — not the value. checkOutExists holds true, which is a boolean. So typeof returns "boolean". Even though the value is true, typeof tells you the TYPE.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'This should check if checkout exists. Which line has the bug?',
+        code: 'var checkOutExists = false;\n\nif (checkOutExists = false) {\n  console.log("No checkout open");\n}',
+        choices: [
+          'Line 1 — should use let instead of var',
+          'Line 3 — uses = (assignment) instead of == (comparison)',
+          'Line 3 — missing semicolon after the condition',
+          'Line 4 — console.log should be alert'
+        ],
+        answer: 1,
+        exp: 'Line 3 uses = inside if() — that is the ASSIGNMENT operator, not a comparison. It sets checkOutExists to false, which evaluates as false, so the block never runs. It should be checkOutExists == false or checkOutExists === false.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,180,41,0.15)', typeColor: '#8a6500',
+        q: 'What does parseInt("7.9") return?',
+        code: 'var hours = parseInt("7.9");\nconsole.log(hours);',
+        choices: ['8', '7.9', '7', 'NaN'],
+        answer: 2,
+        exp: 'parseInt TRUNCATES — it does NOT round. "7.9" becomes 7, not 8. The decimal and everything after it is cut off entirely. This is one of the most tested distinctions on the exam.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'Which keyword makes this block ALWAYS run, whether try succeeded or an error occurred?',
+        code: 'try {\n  var hours = parseInt(input.value);\n} catch(error) {\n  console.log(error);\n} _______ {\n  document.getElementById("practiceWeeks").innerHTML += "Done!";\n}',
+        choices: ['catch', 'always', 'finally', 'done'],
+        answer: 2,
+        exp: 'finally is the keyword. It runs after try and catch, no matter what happened. Used for cleanup that must happen regardless of success or failure.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: '"use strict" is in the wrong place. Where should it actually go?',
+        code: 'function getPracticeHours() {\n  try {\n    "use strict";\n    var hours = parseInt(input.value);\n  } catch(error) {\n    console.log(error);\n  }\n}',
+        choices: [
+          '"use strict" is correct inside the try block',
+          '"use strict" must go BEFORE try, as the first line of the function body',
+          '"use strict" goes after the catch block',
+          '"use strict" belongs outside the function entirely'
+        ],
+        answer: 1,
+        exp: '"use strict" must be the FIRST statement inside the function body, BEFORE the try block. Inside try is wrong — it needs to apply to the whole function scope from the very start.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,180,41,0.15)', typeColor: '#8a6500',
+        q: 'What does 15 % 4 return?',
+        code: 'var result = 15 % 4;\nconsole.log(result);',
+        choices: ['3.75', '4', '3', '1'],
+        answer: 2,
+        exp: 'Modulus (%) gives the REMAINDER after division. 4 goes into 15 exactly 3 times (4 x 3 = 12). 15 minus 12 = 3. So 15 % 4 = 3. It is NOT division — it is what is LEFT OVER.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,180,41,0.15)', typeColor: '#8a6500',
+        q: 'Trace step by step. What is the final value of x?',
+        code: 'var x = 10;\nx += 5;\nx *= 2;\nx--;\nconsole.log(x);',
+        choices: ['29', '30', '31', '25'],
+        answer: 0,
+        exp: 'Step by step: x = 10. += 5 makes x = 15. *= 2 makes x = 30. -- makes x = 29. Output: 29. Trace compound operators in order — each one changes x before the next line.'
+      },
+      {
+        type: 'WHY', typeCss: 'rgba(120,60,180,0.12)', typeColor: '#4a1880',
+        q: 'User clicks Cancel on this confirm dialog. What does "answer" hold?',
+        code: 'var answer = confirm("Are you sure you want to delete this?");',
+        choices: ['null', '"Cancel"', 'undefined', 'false'],
+        answer: 3,
+        exp: 'confirm() returns a BOOLEAN: true when OK is clicked, false when Cancel is clicked. It never returns strings like "OK" or "Cancel" — always boolean. prompt() is the one that returns a string.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'An external .js file has this content. What is wrong with it?',
+        code: '// This is the content of myScript.js:\n\n// WRONG — .js files should NOT contain this:\n// [script language="JavaScript"]  <- this tag does not belong here\n  var total = 0;\n  function calculate() {\n    total = 99.99;\n  }\n// [/script]  <- this tag does not belong here either',
+        choices: [
+          '"total" is a reserved keyword',
+          'External .js files must NOT contain script tags — those belong in the HTML file only',
+          '"calculate" uses incorrect camelCase',
+          'var should be replaced with let'
+        ],
+        answer: 1,
+        exp: 'External .js files contain PURE JAVASCRIPT ONLY — no HTML tags at all. The script tag only goes in the HTML file that links to the .js file. If a script tag appears inside a .js file, the browser will fail to parse it.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'A student wants to display a price with exactly 2 decimal places. Which method fills the blank?',
+        code: 'var total = 35.6789;\nvar display = total._______(2);\n// display should be "35.68"',
+        choices: ['parseFloat', 'toFixed', 'parseInt', 'round'],
+        answer: 1,
+        exp: '.toFixed(2) formats a number to exactly 2 decimal places and rounds appropriately. 35.6789.toFixed(2) returns "35.68". Note: it returns a STRING, not a number. parseInt(2) and parseFloat do not format decimals this way.'
+      }
+    ]
+  },
+  {
+    id: 'd2', color: '#60c8f5', dot: '#60c8f5',
+    tag: 'Domain 2', title: 'Variables & Data Types',
+    topics: 'null vs undefined  ·  typeof  ·  scope  ·  Math methods  ·  arrays  ·  Date object',
+    concepts: [
+      {
+        badge: 'DATA TYPES', badgeBg: 'rgba(96,200,245,0.15)', badgeColor: '#0a4a7a',
+        title: 'null vs undefined — Not the Same Thing',
+        prose: 'Both look like "nothing" but mean completely different things. The exam tests whether you can tell them apart by context.',
+        code: [
+          '// UNDEFINED — declared but never assigned',
+          'var subtotal;         // subtotal is undefined',
+          'var grandtotal;       // also undefined',
+          '',
+          '// NULL — deliberately set to empty',
+          'var cart = null;      // you chose to make it empty',
+          '',
+          '// typeof reveals the type:',
+          'typeof subtotal       // "undefined"',
+          'typeof cart           // "object"  (quirk! null typeof is "object")',
+          'typeof 42             // "number"',
+          'typeof "hello"        // "string"',
+          'typeof true           // "boolean"'
+        ],
+        tip: 'EXAM QUESTION: "A variable has been declared but has no number, no string value, and no Boolean value. What type is it?" Answer: undefined. Not null — null means intentionally empty.',
+        tipType: 'exam'
+      },
+      {
+        badge: 'SCOPE', badgeBg: 'rgba(96,200,245,0.15)', badgeColor: '#0a4a7a',
+        title: 'Variable Scope — Where You Declare Matters',
+        prose: 'Scope is controlled by WHERE the variable is declared and WHETHER the var keyword is used.',
+        code: [
+          'var grandTotal = 0;  // GLOBAL — accessible everywhere',
+          '',
+          'function calculate() {',
+          '  var subtotal = 99; // LOCAL — only inside this function',
+          '  discount = 10;     // IMPLICIT GLOBAL — no var! Accessible everywhere',
+          '}',
+          '',
+          'calculate();',
+          'console.log(grandTotal); // works — global',
+          'console.log(discount);   // works — implicit global (bad practice!)',
+          'console.log(subtotal);   // ERROR — local, dies when function ends'
+        ],
+        table: {
+          headers: ['Type', 'How created', 'Where accessible'],
+          rows: [
+            ['Local', 'var inside a function', 'Only inside that function'],
+            ['Global', 'var outside all functions', 'Anywhere in the script'],
+            ['Implicit Global', 'No var keyword, inside function', 'Everywhere (dangerous!)']
+          ]
+        }
+      },
+      {
+        badge: 'ARRAYS', badgeBg: 'rgba(96,200,245,0.15)', badgeColor: '#0a4a7a',
+        title: 'Array Methods — push/pop/shift/unshift & indexOf',
+        prose: 'Four methods, two ends of the array. The exam deliberately mixes these up.',
+        code: [
+          'var tools = ["Lever", "Fork", "Mute"];',
+          '',
+          'tools.push("Hammer");    // ADD to END   → ["Lever","Fork","Mute","Hammer"]',
+          'tools.pop();             // REMOVE from END  → ["Lever","Fork","Mute"]',
+          'tools.unshift("Key");    // ADD to FRONT → ["Key","Lever","Fork","Mute"]',
+          'tools.shift();           // REMOVE from FRONT → ["Lever","Fork","Mute"]',
+          '',
+          '// indexOf returns position, or -1 if not found:',
+          'tools.indexOf("Fork")    // 1',
+          'tools.indexOf("Wrench")  // -1 (not found)'
+        ],
+        table: {
+          headers: ['Method', 'Where', 'Action', 'Returns'],
+          rows: [
+            ['.push(item)', 'END', 'Adds item', 'New length'],
+            ['.pop()', 'END', 'Removes item', 'The removed item'],
+            ['.unshift(item)', 'FRONT', 'Adds item', 'New length'],
+            ['.shift()', 'FRONT', 'Removes item', 'The removed item']
+          ]
+        }
+      },
+      {
+        badge: 'DATE OBJECT', badgeBg: 'rgba(96,200,245,0.15)', badgeColor: '#0a4a7a',
+        title: 'Date Object — Months Are Zero-Based',
+        prose: 'The most common Date trap: getMonth() returns 0 for January, 11 for December. Always add 1 when displaying to users.',
+        code: [
+          'var start = new Date("October 2, 2024");',
+          '',
+          'start.getDate()       // 2   (day of month, 1-31)',
+          'start.getMonth()      // 9   (October = 9, not 10! Zero-based)',
+          'start.getFullYear()   // 2024',
+          '',
+          '// Add 56 days:',
+          'var end = new Date("October 2, 2024");',
+          'end.setDate(end.getDate() + 56);  // setDate + getDate pattern',
+          '',
+          '// Format for display:',
+          'start.toLocaleDateString("en-gb");'
+        ],
+        tip: 'January = 0, February = 1, ... October = 9, December = 11. To display month for humans, always add 1: getMonth() + 1.',
+        tipType: 'warn'
+      }
+    ],
+    drills: [
+      {
+        type: 'TRACE', typeCss: 'rgba(96,200,245,0.15)', typeColor: '#0a4a7a',
+        q: 'What does this code log?',
+        code: 'var subtotal;\nconsole.log(typeof subtotal);',
+        choices: ["'null'", "'number'", "'undefined'", "'object'"],
+        answer: 2,
+        exp: 'A variable declared but never assigned a value is undefined. typeof undefined returns the string "undefined". This is different from null — null is intentionally set to empty.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,200,245,0.15)', typeColor: '#0a4a7a',
+        q: 'What does getMonth() return for October 2, 2024?',
+        code: 'var start = new Date("October 2, 2024");\nconsole.log(start.getMonth());',
+        choices: ['October', '10', '9', '1'],
+        answer: 2,
+        exp: 'getMonth() is zero-based: January = 0, February = 1 ... September = 8, October = 9, November = 10, December = 11. To display the human month number, always add 1: getMonth() + 1 = 10 for October.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'To add 56 days to a date, which method fills the first blank?',
+        code: 'var end = new Date("October 2, 2024");\nend._______(end.getDate() + 56);',
+        choices: ['setMonth', 'getDate', 'setDate', 'addDays'],
+        answer: 2,
+        exp: 'setDate() sets the day of the month. The pattern is setDate(getDate() + N) — get current day, add N, set it back. JavaScript handles month/year rollovers automatically.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,200,245,0.15)', typeColor: '#0a4a7a',
+        q: 'Array has 3 items. After push and shift, what is the length?',
+        code: 'var tools = ["Lever", "Fork", "Mute"];\ntools.push("Hammer");\ntools.shift();\nconsole.log(tools.length);',
+        choices: ['2', '3', '4', '1'],
+        answer: 1,
+        exp: 'Start: ["Lever","Fork","Mute"] length 3. push("Hammer") adds to end → length 4. shift() removes from front → length 3. Added one, removed one — same length as start. Result: 3.'
+      },
+      {
+        type: 'WHY', typeCss: 'rgba(120,60,180,0.12)', typeColor: '#4a1880',
+        q: 'A function uses discount without var. What scope does it have?',
+        code: 'function calculate() {\n  discount = 10;    // no var keyword\n  var subtotal = 99;\n}\ncalculate();\nconsole.log(discount);  // ?\nconsole.log(subtotal);  // ?',
+        choices: [
+          'Both are local to the function',
+          'discount becomes an implicit global (no var); subtotal is local (has var)',
+          'Both become global when the function runs',
+          'subtotal is global; discount is local'
+        ],
+        answer: 1,
+        exp: 'When you assign a variable without var inside a function, JavaScript creates it as an implicit global — accessible everywhere. subtotal has var, so it is local and dies when the function ends. This is why "use strict" exists — it prevents accidental globals by throwing an error instead.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,200,245,0.15)', typeColor: '#0a4a7a',
+        q: 'What are the possible output values of videoNumber?',
+        code: 'var videoNumber = Math.floor(Math.random() * 2);\nconsole.log(videoNumber);',
+        choices: ['0 to 2 inclusive', '1 or 2 only', '0 or 1 only', '0.0 to 1.999'],
+        answer: 2,
+        exp: 'Math.random() gives 0 to 0.999. Multiply by 2 gives 0 to 1.999. Math.floor() rounds DOWN to the nearest whole number: 0 or 1. It never reaches 2 because Math.random() never returns exactly 1.0.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'A student wants to check if discount is a whole number. What is wrong?',
+        code: 'var discount = 10;\nif (Number.(discount)isInteger) {\n  console.log("It is a whole number");\n}',
+        choices: [
+          'discount should use parseFloat instead',
+          'Number.isInteger(discount) — the variable goes INSIDE the parentheses after the method name',
+          'Number.isInteger only works with strings',
+          'The condition needs === instead of =='
+        ],
+        answer: 1,
+        exp: 'The correct syntax is Number.isInteger(discount) — the variable goes INSIDE the parentheses after the method name. Writing Number.(discount)isInteger is invalid JavaScript syntax. Think of it like any method call: MethodName(argument).'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,200,245,0.15)', typeColor: '#0a4a7a',
+        q: 'A number is passed to a function and changed inside. What prints?',
+        code: 'var price = 100;\n\nfunction applyDiscount(p) {\n  p = p - 10;\n}\n\napplyDiscount(price);\nconsole.log(price);',
+        choices: ['90', '100', '10', 'undefined'],
+        answer: 1,
+        exp: 'Numbers are passed by VALUE — a copy is sent into the function. When p = p - 10 runs, it only changes the local copy p. The original variable price is completely untouched. Result: 100. Objects and arrays behave differently — they are passed by reference.'
+      }
+    ]
+  },
+  {
+    id: 'd3', color: '#f06090', dot: '#f06090',
+    tag: 'Domain 3', title: 'Decisions & Loops',
+    topics: 'if/else order  ·  switch fall-through  ·  for vs while vs do-while  ·  break vs continue',
+    concepts: [
+      {
+        badge: 'SWITCH', badgeBg: 'rgba(240,96,144,0.15)', badgeColor: '#7a0030',
+        title: 'switch Fall-Through — The Missing break',
+        prose: 'The most common switch bug: forgetting break. Without it, code runs into the next case even though the value does not match.',
+        code: [
+          '// WITHOUT break — dangerous fall-through:',
+          'switch (today.getDate()) {',
+          '  case 1:',
+          '    msg = "10% off";    // no break!',
+          '  case 15:',
+          '    msg = "15% off";   // ALSO runs if day is 1!',
+          '    break;',
+          '}',
+          '// If date is 1: msg ends up as "15% off" — WRONG',
+          '',
+          '// CORRECT — every case has break:',
+          'switch (today.getDate()) {',
+          '  case 1:  msg = "10% off";  break;',
+          '  case 15: msg = "15% off";  break;',
+          '  default: msg = "No special today.";',
+          '}'
+        ],
+        tip: 'EXAM PATTERN: They show a switch missing a break and ask what the bug causes. Answer: fall-through — the next case executes even though the value does not match it.',
+        tipType: 'exam'
+      },
+      {
+        badge: 'LOOPS', badgeBg: 'rgba(240,96,144,0.15)', badgeColor: '#7a0030',
+        title: 'for vs while vs do-while — Know the Difference',
+        prose: 'The exam gives you a loop and asks which type it is or what it outputs. One key difference: do-while always runs at least once.',
+        code: [
+          '// FOR — set number of iterations',
+          'for (var i = 0; i < 3; i++) {',
+          '  console.log(i);   // outputs: 0, 1, 2',
+          '}',
+          '',
+          '// WHILE — checks condition FIRST (may never run)',
+          'var x = 100;',
+          'while (x < 3) {',
+          '  console.log("never printed");  // 100 is not < 3',
+          '}',
+          '',
+          '// DO-WHILE — body runs FIRST, condition checked AFTER',
+          'var y = 100;',
+          'do {',
+          '  console.log("prints once!");  // ALWAYS runs at least once',
+          '} while (y < 3);               // then checks — false, stops'
+        ],
+        table: {
+          headers: ['Loop', 'Checks condition', 'Min runs', 'Best for'],
+          rows: [
+            ['for', 'Before each iteration', '0', 'Known count of iterations'],
+            ['while', 'Before each iteration', '0', 'Condition-driven, unknown count'],
+            ['do...while', 'AFTER each iteration', '1 (always)', 'Must run at least once']
+          ]
+        }
+      },
+      {
+        badge: 'LOOP CONTROL', badgeBg: 'rgba(240,96,144,0.15)', badgeColor: '#7a0030',
+        title: 'break vs continue — Opposite Effects',
+        prose: 'break exits the loop entirely. continue skips only the current iteration and moves to the next. The exam shows a loop with one of these and asks what numbers print.',
+        code: [
+          '// break: exits at i === 5',
+          'for (var i = 0; i < 10; i++) {',
+          '  if (i === 5) break;',
+          '  console.log(i);',
+          '}',
+          '// Output: 0 1 2 3 4  (stops when i reaches 5)',
+          '',
+          '// continue: skips even numbers',
+          'for (var i = 1; i <= 9; i++) {',
+          '  if (i % 2 === 0) continue;',
+          '  console.log(i);',
+          '}',
+          '// Output: 1 3 5 7 9  (evens are skipped)'
+        ],
+        tip: 'EXAM TRAP: They show a loop with continue and ask what numbers print. Trace each iteration: when the condition hits, that number is SKIPPED but the loop continues with the next value.',
+        tipType: 'exam'
+      }
+    ],
+    drills: [
+      {
+        type: 'TRACE', typeCss: 'rgba(240,96,144,0.15)', typeColor: '#7a0030',
+        q: 'What numbers does this loop print?',
+        code: 'for (var i = 1; i <= 9; i++) {\n  if (i % 2 === 0) continue;\n  console.log(i);\n}',
+        choices: ['1 2 3 4 5 6 7 8 9', '2 4 6 8', '1 3 5 7 9', '0 2 4 6 8'],
+        answer: 2,
+        exp: 'i % 2 === 0 is true for even numbers. When true, continue skips that iteration — even numbers never reach console.log. The loop visits every number 1-9 but only odd numbers (1 3 5 7 9) print.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'This switch gives the wrong discount on the 1st of the month. Why?',
+        code: 'switch (today.getDate()) {\n  case 1:\n    msg = "10% off";\n  case 15:\n    msg = "15% off";\n    break;\n  default:\n    msg = "No special";\n}',
+        choices: [
+          'The default case should come first',
+          'case 1 is missing a break statement — causes fall-through to case 15',
+          'getDate() returns 0-based values, so case 1 should be case 0',
+          'msg needs the var keyword'
+        ],
+        answer: 1,
+        exp: 'case 1 is missing its break statement. Without break, after setting msg = "10% off", the code immediately falls into case 15 and overwrites it with "15% off". On the 1st, msg ends up as "15% off" — wrong. Every case that should not fall through needs break.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,96,144,0.15)', typeColor: '#7a0030',
+        q: 'How many times does "hello" print?',
+        code: 'var x = 100;\ndo {\n  console.log("hello");\n} while (x < 3);',
+        choices: ['0 times — x is not less than 3', '1 time — runs once before condition is checked', '3 times', '100 times'],
+        answer: 1,
+        exp: 'A do-while loop ALWAYS executes at least once. The body runs first (printing "hello"), THEN the condition x < 3 is checked. Since 100 is not less than 3, the loop stops. Total: 1 print. A regular while loop would print 0 times with the same condition.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,96,144,0.15)', typeColor: '#7a0030',
+        q: 'score = 85. What prints?',
+        code: 'var score = 85;\n\nif (score >= 90) {\n  console.log("A");\n} else if (score >= 80) {\n  console.log("B");\n} else if (score >= 70) {\n  console.log("C");\n} else {\n  console.log("F");\n}',
+        choices: ['A', 'B and C (both conditions true)', 'B', 'C'],
+        answer: 2,
+        exp: '85 is NOT >= 90, so A is skipped. 85 IS >= 80, so "B" prints — and the entire chain stops. Even though 85 is also >= 70, that branch is never reached. Once one condition in an if/else-if chain is true, all remaining branches are skipped.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'The loop needs to exit immediately when it finds a match. Which keyword fills the blank?',
+        code: 'for (var i = 0; i < restaurants.length; i++) {\n  if (restaurants[i].distance < 5) {\n    console.log("Found: " + restaurants[i].name);\n    _______;\n  }\n}',
+        choices: ['continue', 'return', 'break', 'exit'],
+        answer: 2,
+        exp: 'break exits the loop immediately. Once we find the first restaurant within 5 miles, we use break to stop searching. continue would skip this iteration but keep looking. return would only work inside a function.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'Is this a valid JavaScript if statement?',
+        code: 'if I play the piano, go dog go',
+        choices: [
+          'Valid — JavaScript understands plain English',
+          'Invalid — condition must be in parentheses and action in curly braces: if (condition) { action }',
+          'Invalid — "piano" is a reserved keyword',
+          'Valid — JavaScript supports natural language'
+        ],
+        answer: 1,
+        exp: 'Completely invalid. An if statement REQUIRES: the keyword if, the condition inside parentheses (), and the code to run inside curly braces {}. Structure is always: if (condition) { action }. Plain English phrases are not valid JavaScript.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(240,96,144,0.15)', typeColor: '#7a0030',
+        q: 'Trace every iteration. What does this print?',
+        code: 'for (var i = 0; i < 5; i++) {\n  if (i === 2) continue;\n  if (i === 4) break;\n  console.log(i);\n}',
+        choices: ['0 1 2 3 4', '0 1 3', '0 1 3 4', '0 1 2 3'],
+        answer: 1,
+        exp: 'i=0: nothing special → prints 0. i=1: nothing special → prints 1. i=2: continue → skips, no print. i=3: nothing special → prints 3. i=4: break → exits immediately, no print. Result: 0 1 3.'
+      },
+      {
+        type: 'WHY', typeCss: 'rgba(120,60,180,0.12)', typeColor: '#4a1880',
+        q: 'lessonStartDate equals lessonEndDate at the start. How many times does the while body run?',
+        code: 'while (lessonStartDate < lessonEndDate) {\n  lessonStartDate.setDate(lessonStartDate.getDate() + 7);\n}',
+        choices: [
+          'Once — then it checks the condition',
+          'Infinitely — the condition is never false',
+          '0 times — equal dates means < is false from the start',
+          'JavaScript throws an error comparing dates'
+        ],
+        answer: 2,
+        exp: 'A while loop checks its condition BEFORE running the body. If lessonStartDate < lessonEndDate is false from the beginning (they are equal, so not less-than), the loop body never runs at all — 0 times. This is the key difference from do-while, which always runs once.'
+      }
+    ]
+  },
+  {
+    id: 'd4', color: '#60f0a0', dot: '#60f0a0',
+    tag: 'Domain 4', title: 'DOM Manipulation',
+    topics: 'innerText vs innerHTML vs textContent  ·  createElement workflow  ·  bubbling vs capturing',
+    concepts: [
+      {
+        badge: 'CONTENT PROPERTIES', badgeBg: 'rgba(96,240,160,0.15)', badgeColor: '#0a5a30',
+        title: 'innerText vs innerHTML vs textContent vs outerHTML',
+        prose: 'Four properties that look similar but behave very differently. The exam gives you code using one and asks for the result.',
+        table: {
+          headers: ['Property', 'What it does', 'Parses HTML?', 'Includes hidden?', 'Replaces element?'],
+          rows: [
+            ['innerText', 'Gets/sets plain text', 'No', 'No (visible only)', 'No'],
+            ['innerHTML', 'Gets/sets HTML content', 'YES', 'Yes', 'No'],
+            ['textContent', 'Gets/sets plain text', 'No', 'YES (includes hidden)', 'No'],
+            ['outerHTML', 'Replaces entire element + its own tags', 'YES', 'Yes', 'YES']
+          ]
+        },
+        code: [
+          '// HTML: <div id="box">Hello <span style="display:none">Hidden</span></div>',
+          '',
+          'document.getElementById("box").innerText    // "Hello"',
+          'document.getElementById("box").textContent  // "Hello Hidden"',
+          '',
+          '// innerHTML parses tags:',
+          'el.innerHTML = "<b>Bold text</b>";   // renders bold',
+          'el.innerText = "<b>Bold text</b>";   // shows tags as literal text'
+        ],
+        tip: 'document.write() called AFTER the page loads does NOT append — it OVERWRITES the entire page.',
+        tipType: 'warn'
+      },
+      {
+        badge: 'DOM MANIPULATION', badgeBg: 'rgba(96,240,160,0.15)', badgeColor: '#0a5a30',
+        title: 'createElement is Always a Two-Step Process',
+        prose: 'Creating an element and adding it to the page are ALWAYS two separate steps. createElement puts it in memory only. Then you attach it.',
+        code: [
+          '// Step 1: Create in MEMORY — not visible yet',
+          'var newItem = document.createElement("li");',
+          '',
+          '// Step 2: Configure it',
+          'newItem.innerText = "New list item";',
+          '',
+          '// Step 3: Attach to DOM — NOW it is visible',
+          'var list = document.getElementById("myList");',
+          'list.appendChild(newItem);               // adds as LAST child',
+          'list.insertBefore(newItem, list.firstChild); // adds at START',
+          '',
+          '// Remove:',
+          'newItem.remove();',
+          'list.removeChild(newItem);',
+          '',
+          '// Replace:',
+          'list.replaceChild(newItem, oldItem);'
+        ]
+      },
+      {
+        badge: 'EVENTS', badgeBg: 'rgba(96,240,160,0.15)', badgeColor: '#0a5a30',
+        title: 'Bubbling vs Capturing — Direction of Event Travel',
+        prose: 'When an event fires on a nested element, it travels. The direction depends on bubbling vs capturing.',
+        code: [
+          '// BUBBLING (default) — child fires first, travels UP',
+          'element.addEventListener("click", handler, false);',
+          '// Order: child → parent → grandparent',
+          '',
+          '// CAPTURING — grandparent fires first, travels DOWN',
+          'element.addEventListener("click", handler, true);',
+          '// Order: grandparent → parent → child',
+          '',
+          '// NO "on" prefix in addEventListener!',
+          'element.addEventListener("click", ...)     // correct',
+          'element.addEventListener("onclick", ...)   // WRONG',
+          '',
+          '// Stop the event from traveling:',
+          'function handler(e) {',
+          '  e.stopPropagation();   // stops bubbling or capturing',
+          '  e.preventDefault();    // cancels browser default behavior',
+          '}'
+        ],
+        table: {
+          headers: ['', 'Bubbling', 'Capturing'],
+          rows: [
+            ['Direction', 'Upward: child → parent', 'Downward: parent → child'],
+            ['3rd parameter', 'false (default)', 'true'],
+            ['Is default?', 'YES', 'No — must opt in']
+          ]
+        }
+      }
+    ],
+    drills: [
+      {
+        type: 'TRACE', typeCss: 'rgba(96,240,160,0.15)', typeColor: '#0a5a30',
+        q: 'After this code, what appears inside the div?',
+        code: 'document.getElementById("box").innerHTML = "<b>Hello</b> World";',
+        choices: [
+          '"<b>Hello</b> World" — the tags show as text',
+          '"Hello World" — Hello is bold, World is normal',
+          'undefined — innerHTML only reads content',
+          'An error — innerHTML requires two arguments'
+        ],
+        answer: 1,
+        exp: 'innerHTML PARSES HTML tags. So the bold tags render as actual bold formatting. Hello appears bold, World appears normal. If you used innerText instead, the tags would show literally as text on screen.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'An event listener is attached but never fires. Find the bug.',
+        code: 'document.getElementById("btn").addEventListener("onclick", function() {\n  console.log("clicked!");\n});',
+        choices: [
+          'Should use .onclick = instead of addEventListener',
+          'The event name "onclick" is wrong — use "click" without the "on" prefix',
+          'function() needs to be an arrow function',
+          'getElementById should be querySelector'
+        ],
+        answer: 1,
+        exp: 'addEventListener uses event names WITHOUT the "on" prefix. Write "click" not "onclick". The "on" prefix is only used when assigning directly to a property: element.onclick = function(){}. In addEventListener, always use the bare event name: "click", "keydown", "blur", etc.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,240,160,0.15)', typeColor: '#0a5a30',
+        q: 'Three nested elements all have capturing listeners (true). User clicks the child. Which fires FIRST?',
+        code: 'grandparent.addEventListener("click", handlerA, true);\nparent.addEventListener("click", handlerB, true);\nchild.addEventListener("click", handlerC, true);\n// User clicks child',
+        choices: [
+          'handlerC → handlerB → handlerA (child first)',
+          'handlerA → handlerB → handlerC (grandparent first)',
+          'All three fire simultaneously',
+          'Only handlerC fires'
+        ],
+        answer: 1,
+        exp: 'Capturing goes DOWNWARD — from outermost toward the target. Third parameter true = capturing. Order: grandparent (A) → parent (B) → child (C). If it were bubbling (false), the order reverses: child → parent → grandparent.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'A new element is created in memory. Which method actually adds it to the page?',
+        code: 'var newPara = document.createElement("p");\nnewPara.innerText = "New content";\ndocument.getElementById("myList")._______(newPara);',
+        choices: ['createElement', 'addChild', 'appendChild', 'insertElement'],
+        answer: 2,
+        exp: 'appendChild() takes an element in memory and adds it as the LAST child of the parent. Until appendChild (or insertBefore) is called, the element only exists in memory and is not visible on the page.'
+      },
+      {
+        type: 'WHY', typeCss: 'rgba(120,60,180,0.12)', typeColor: '#4a1880',
+        q: 'document.write() is called after the page has fully loaded. What happens?',
+        code: '// Page is already loaded. Then:\ndocument.write("<p>New content</p>");',
+        choices: [
+          'The paragraph is appended to the end of the page',
+          'Nothing happens',
+          'The ENTIRE page is wiped and replaced with only the new paragraph',
+          'The browser shows a permission error'
+        ],
+        answer: 2,
+        exp: 'When document.write() is called after the page has finished loading, it first clears the entire existing document and then writes the new content. The whole page disappears — only what you just wrote remains.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(96,240,160,0.15)', typeColor: '#0a5a30',
+        q: 'What does textContent return vs innerText for this element?',
+        code: '// HTML: <div id="d">Visible <span style="display:none">Hidden</span></div>\n\nconsole.log(document.getElementById("d").innerText);\nconsole.log(document.getElementById("d").textContent);',
+        choices: [
+          'Both return "Visible Hidden"',
+          'Both return "Visible"',
+          'innerText → "Visible", textContent → "Visible Hidden"',
+          'innerText → "Visible Hidden", textContent → "Visible"'
+        ],
+        answer: 2,
+        exp: 'innerText respects CSS visibility — only returns visually rendered text. The span has display:none so it is excluded: "Visible". textContent does not care about CSS — it returns ALL text nodes regardless of visibility: "Visible Hidden".'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'The code tries to add an element at the START of the list. What is wrong?',
+        code: 'var newItem = document.createElement("li");\nnewItem.innerText = "Should be first";\n\ndocument.getElementById("myList").appendChild(newItem);',
+        choices: [
+          'createElement should be createNode',
+          'appendChild adds to the END, not the start — use insertBefore(newItem, list.firstChild)',
+          'innerText is not valid for li elements',
+          'getElementById needs a # prefix'
+        ],
+        answer: 1,
+        exp: 'appendChild() always adds as the LAST child. To add at the START, use insertBefore(newItem, list.firstChild) — this inserts before the current first child. The variable name says "first" but appendChild puts it last.'
+      }
+    ]
+  },
+  {
+    id: 'd5', color: '#c060f5', dot: '#c060f5',
+    tag: 'Domain 5', title: 'Forms & Validation',
+    topics: 'document.forms path  ·  isNaN edge cases  ·  localeCompare  ·  GET vs POST  ·  onsubmit',
+    concepts: [
+      {
+        badge: 'FORM ACCESS', badgeBg: 'rgba(192,96,245,0.15)', badgeColor: '#5a0a8a',
+        title: 'document.forms — The Exact Access Path',
+        prose: 'The exam tests whether you know the exact dot-notation path to read a form input value. One wrong bracket or missing .value at the end is a wrong answer.',
+        code: [
+          '// Access all forms:',
+          'document.forms              // collection of all forms',
+          'document.forms[0]           // first form by index',
+          'document.forms["myForm"]    // form by name attribute',
+          '',
+          '// Read an input value — memorize this full path:',
+          'document.forms["customerForm"]["firstName"].value',
+          '',
+          '// Set a value:',
+          'document.forms["customerForm"]["firstName"].value = "John";',
+          '',
+          '// Multi-select: MUST loop — cannot use .value for all selections',
+          'var sel = document.forms["myForm"]["colors"];',
+          'var chosen = [];',
+          'for (var i = 0; i < sel.options.length; i++) {',
+          '  if (sel.options[i].selected) {',
+          '    chosen.push(sel.options[i].value);',
+          '  }',
+          '}'
+        ],
+        tip: 'The exam shows different versions of the access path. The correct one is: document.forms["formName"]["fieldName"].value — three levels deep, ending in .value.',
+        tipType: 'exam'
+      },
+      {
+        badge: 'NUMBER VALIDATION', badgeBg: 'rgba(192,96,245,0.15)', badgeColor: '#5a0a8a',
+        title: 'isNaN() — The Edge Cases That Catch Everyone',
+        prose: 'isNaN() returns true when the value CANNOT be converted to a number. The tricky part: several values that look non-numeric actually DO convert successfully.',
+        table: {
+          headers: ['Value', 'isNaN() returns', 'Why'],
+          rows: [
+            ["42", 'false', 'Already a number'],
+            ["'42'", 'false', 'Numeric string converts to 42'],
+            ['true', 'false', 'true converts to 1'],
+            ['false', 'false', 'false converts to 0'],
+            ["'' (empty)", 'false', 'Empty string converts to 0'],
+            ['null', 'false', 'null converts to 0'],
+            ["'hello'", 'TRUE', 'Cannot convert'],
+            ['undefined', 'TRUE', 'Cannot convert'],
+            ["'12abc'", 'TRUE', 'Mix of chars, not convertible']
+          ]
+        },
+        tip: 'TRAP: isNaN(true) returns FALSE (not true!) because true converts to 1. And isNaN("") returns FALSE because empty string converts to 0.',
+        tipType: 'warn'
+      },
+      {
+        badge: 'SUBMISSION', badgeBg: 'rgba(192,96,245,0.15)', badgeColor: '#5a0a8a',
+        title: 'Form Submission — action, method, target, onsubmit',
+        prose: 'Why "return validateForm()" and not just "validateForm()"? Without the return keyword, false is ignored and the form always submits.',
+        code: [
+          '<form action="/submit" method="POST"',
+          '      target="_blank"',
+          '      onsubmit="return validateForm()">',
+          '',
+          'function validateForm() {',
+          '  var name = document.forms["myForm"]["firstName"].value;',
+          '  if (name.length === 0) {',
+          '    alert("Name required!");',
+          '    return false;   // BLOCKS the submit',
+          '  }',
+          '  return true;    // ALLOWS the submit',
+          '}'
+        ],
+        table: {
+          headers: ['', 'GET', 'POST'],
+          rows: [
+            ['Data location', 'In the URL: ?name=John', 'In request body (hidden)'],
+            ['Visible?', 'Yes — in the address bar', 'No'],
+            ['Use for', 'Searches, bookmarkable results', 'Passwords, sensitive data']
+          ]
+        }
+      },
+      {
+        badge: 'STRING COMPARISON', badgeBg: 'rgba(192,96,245,0.15)', badgeColor: '#5a0a8a',
+        title: 'localeCompare — What Each Return Value Means',
+        prose: 'The return values are counterintuitive. The exam tests all three cases.',
+        code: [
+          '"apple".localeCompare("apple")   //  0 — strings are EQUAL',
+          '"apple".localeCompare("banana")  // -1 — argument comes AFTER caller',
+          '"banana".localeCompare("apple")  //  1 — argument comes BEFORE caller'
+        ],
+        table: {
+          headers: ['Returns', 'Meaning', 'Example'],
+          rows: [
+            ['0', 'Strings are equal', '"apple".localeCompare("apple")'],
+            ['-1', 'Argument comes AFTER caller alphabetically', '"apple".localeCompare("banana")'],
+            ['1', 'Argument comes BEFORE caller alphabetically', '"banana".localeCompare("apple")']
+          ]
+        },
+        tip: 'Memory trick: when the argument comes AFTER the caller in the alphabet, the result is negative (-1). apple comes before banana, so from apple\'s view, banana is "after" it → -1.',
+        tipType: 'warn'
+      }
+    ],
+    drills: [
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(192,96,245,0.15)', typeColor: '#5a0a8a',
+        q: 'Complete the correct path to read the email field value in contactForm.',
+        code: 'var email = document.forms["contactForm"]_______"email"_______;',
+        choices: ['.email.value', '["email"].value', '.getField("email").value', '["email"]'],
+        answer: 1,
+        exp: 'Full path: document.forms["contactForm"]["email"].value. The field is accessed with bracket notation ["email"] and you must end with .value to get the text. Without .value you get the DOM element object, not the text inside it.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(192,96,245,0.15)', typeColor: '#5a0a8a',
+        q: 'What do all four of these isNaN calls return?',
+        code: 'console.log(isNaN(true));\nconsole.log(isNaN(false));\nconsole.log(isNaN(""));\nconsole.log(isNaN(null));',
+        choices: [
+          'true, true, true, true',
+          'false, false, false, false',
+          'true, false, true, false',
+          'false, true, false, true'
+        ],
+        answer: 1,
+        exp: 'All four return FALSE because all four can be converted to numbers: true→1, false→0, ""→0, null→0. isNaN returns false when conversion succeeds. Values that return true: "hello", undefined, "12abc" — things that genuinely cannot become a number.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'This form should block submission when name is empty — but it always submits. Why?',
+        code: '<form name="myForm" onsubmit="validateForm()">\n  <input name="firstName">\n  <button type="submit">Submit</button>\n</form>\n\nfunction validateForm() {\n  var name = document.forms["myForm"]["firstName"].value;\n  if (name.length === 0) return false;\n  return true;\n}',
+        choices: [
+          'The form needs an action="" attribute',
+          'onsubmit needs "return validateForm()" not just "validateForm()" — without return, false is ignored',
+          'return false should be return 0',
+          'name.length === 0 should be name === null'
+        ],
+        answer: 1,
+        exp: 'onsubmit must be: return validateForm() — WITH the word return. Without it, when validateForm() returns false, that value is discarded. The browser sees onsubmit finished and submits anyway. The return keyword passes false back to the browser so it knows to block submission.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(192,96,245,0.15)', typeColor: '#5a0a8a',
+        q: 'What does this localeCompare call return?',
+        code: 'var result = "banana".localeCompare("apple");\nconsole.log(result);',
+        choices: ['-1', '0', '1', 'true'],
+        answer: 2,
+        exp: '"apple" comes before "banana" alphabetically — so the argument "apple" comes BEFORE the caller "banana". When the argument comes BEFORE the caller, localeCompare returns 1. (0 = equal, -1 = argument comes after caller, 1 = argument comes before caller.)'
+      },
+      {
+        type: 'WHY', typeCss: 'rgba(120,60,180,0.12)', typeColor: '#4a1880',
+        q: 'A form uses method="GET" to submit a password. What security problem occurs?',
+        code: '<form method="GET" action="/login">\n  <input name="username" value="john">\n  <input type="password" name="pass">\n</form>',
+        choices: [
+          'GET is more secure because the URL is encrypted',
+          'GET appends data to the URL — the password appears in the address bar and server logs',
+          'GET is identical to POST for form submissions',
+          'GET fails on login forms'
+        ],
+        answer: 1,
+        exp: 'GET puts all form data into the URL: /login?username=john&pass=secret123. The password is now VISIBLE in the browser address bar, browser history, server logs, and can be bookmarked. Always use POST for sensitive data — it sends data in the hidden request body.'
+      },
+      {
+        type: 'TRACE', typeCss: 'rgba(192,96,245,0.15)', typeColor: '#5a0a8a',
+        q: 'A student uses .value on a multi-select element. Does this get ALL selected values?',
+        code: 'var sel = document.forms["myForm"]["colors"];\nvar result = sel.value;\nconsole.log(result);',
+        choices: [
+          'Yes — .value returns an array of all selected options',
+          'No — .value only returns the FIRST selected value. Must loop through options.',
+          'Yes — .value works for any input type',
+          'No — .value returns undefined for select elements'
+        ],
+        answer: 1,
+        exp: 'For a select-multiple element, .value only returns the FIRST selected option. To get all selections, you must loop through sel.options and check each option\'s .selected property, pushing matching values into an array.'
+      },
+      {
+        type: 'FILL THE GAP', typeCss: 'rgba(37,99,196,0.12)', typeColor: '#0a3a8a',
+        q: 'The validation must BLOCK submission when the field is empty. What goes in the blank?',
+        code: 'function validateForm() {\n  var name = document.forms["reg"]["username"].value;\n  if (name.length === 0) {\n    alert("Username required!");\n    return _______;\n  }\n  return true;\n}',
+        choices: ['true', 'null', 'false', '0'],
+        answer: 2,
+        exp: 'return false tells the browser to CANCEL the form submission. Combined with "return validateForm()" in onsubmit, the false value is passed back and the browser knows not to submit. return true or return 0 would not reliably block it.'
+      },
+      {
+        type: 'SPOT THE BUG', typeCss: 'rgba(192,57,43,0.12)', typeColor: '#8a1500',
+        q: 'User types "PHOENIX" but the check fails. What is wrong?',
+        code: 'var city = document.getElementById("city").value; // "PHOENIX"\n\nif (city === "phoenix") {\n  console.log("Valid city!");\n} else {\n  console.log("Unknown city");\n}',
+        choices: [
+          'getElementById should be document.forms',
+          'Should use == instead of ===',
+          'Case not normalized — should use city.toLowerCase() === "phoenix"',
+          'The string should be in uppercase: "PHOENIX"'
+        ],
+        answer: 2,
+        exp: '"PHOENIX" !== "phoenix" because JavaScript strings are case-sensitive. Fix: city.toLowerCase() === "phoenix". This converts whatever the user typed to lowercase before comparing, so "PHOENIX", "Phoenix", and "phoenix" all match. Always normalize case before comparing user input.'
+      }
+    ]
+  }
+];
+
+// ===================== STATE =====================
+var currentDomain = 0;
+var drillState = { idx: 0, score: 0, answered: false };
+var globalAnswered = 0;
+var globalCorrect = 0;
+
+// ===================== NAV =====================
+function goHome() {
+  document.getElementById('pg-home').classList.add('active');
+  document.getElementById('pg-domain').classList.remove('active');
+  document.querySelectorAll('.sb-item').forEach(function(el, i) { el.classList.remove('active'); });
+  document.querySelectorAll('.sb-item')[0].classList.add('active');
+}
+
+function goDomain(idx) {
+  currentDomain = idx;
+  var d = DOMAINS[idx];
+  document.getElementById('pg-home').classList.remove('active');
+  document.getElementById('pg-domain').classList.add('active');
+  document.getElementById('d-tag').textContent = d.tag;
+  document.getElementById('d-tag').style.color = d.color;
+  document.getElementById('d-title').textContent = d.title;
+  setTab('concepts');
+  buildConcepts(d);
+  document.querySelectorAll('.sb-item').forEach(function(el, i) { el.classList.remove('active'); });
+  document.querySelectorAll('.sb-item')[idx + 1].classList.add('active');
+}
+
+function setTab(which) {
+  var cEl = document.getElementById('concepts-panel');
+  var dEl = document.getElementById('drills-panel');
+  var tC = document.getElementById('tab-concepts');
+  var tD = document.getElementById('tab-drills');
+  if (which === 'concepts') {
+    cEl.style.display = 'block';
+    dEl.style.display = 'none';
+    tC.classList.add('active');
+    tD.classList.remove('active');
+  } else {
+    cEl.style.display = 'none';
+    dEl.style.display = 'block';
+    tC.classList.remove('active');
+    tD.classList.add('active');
+    initDrills();
+  }
+}
+
+// ===================== CONCEPTS =====================
+function buildConcepts(d) {
+  var html = '';
+  d.concepts.forEach(function(c, i) {
+    html += '<div class="concept">';
+    html += '<div class="c-head" onclick="toggleC(this)">';
+    html += '<div class="c-htitle">';
+    html += '<span class="c-badge" style="background:' + c.badgeBg + ';color:' + c.badgeColor + '">' + c.badge + '</span>';
+    html += c.title;
+    html += '</div>';
+    html += '<div class="c-arrow">' + (i === 0 ? '−' : '+') + '</div>';
+    html += '</div>';
+    html += '<div class="c-body' + (i === 0 ? ' open' : '') + '">';
+
+    if (c.prose) {
+      html += '<div class="prose">' + c.prose + '</div>';
+    }
+
+    if (c.code) {
+      html += '<div class="code-box">';
+      html += '<div class="code-top">JavaScript</div>';
+      html += '<div class="code-pre">';
+      html += escHtml(c.code.join('\n'));
+      html += '</div></div>';
+    }
+
+    if (c.table) {
+      html += '<table class="ctable"><tr>';
+      c.table.headers.forEach(function(h) { html += '<th>' + h + '</th>'; });
+      html += '</tr>';
+      c.table.rows.forEach(function(row) {
+        html += '<tr>';
+        row.forEach(function(cell, ci) {
+          html += '<td' + (ci === 0 ? ' class="mono"' : '') + '>' + cell + '</td>';
+        });
+        html += '</tr>';
+      });
+      html += '</table>';
+    }
+
+    if (c.tip) {
+      var cls = c.tipType === 'warn' ? 'callout-w' : (c.tipType === 'exam' ? 'callout-e' : 'callout-t');
+      var icon = c.tipType === 'warn' ? '⚠️ ' : (c.tipType === 'exam' ? '📋 ' : '✅ ');
+      html += '<div class="callout ' + cls + '">' + icon + c.tip + '</div>';
+    }
+
+    html += '</div></div>';
+  });
+  document.getElementById('concepts-panel').innerHTML = html;
+}
+
+function toggleC(head) {
+  var body = head.nextElementSibling;
+  var arrow = head.querySelector('.c-arrow');
+  var open = body.classList.contains('open');
+  body.classList.toggle('open', !open);
+  arrow.textContent = open ? '+' : '−';
+}
+
+function escHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ===================== DRILLS =====================
+function initDrills() {
+  drillState = { idx: 0, score: 0, answered: false };
+  renderDrill();
+}
+
+function renderDrill() {
+  drillState.answered = false;
+  var d = DOMAINS[currentDomain];
+  var drill = d.drills[drillState.idx];
+  var total = d.drills.length;
+  var pct = (drillState.idx / total) * 100;
+  var letters = ['A', 'B', 'C', 'D'];
+
+  var html = '';
+  html += '<div class="drill-header">';
+  html += '<div class="drill-score-badge">Score: <strong>' + drillState.score + '</strong> / ' + drillState.idx + '</div>';
+  html += '<div class="drill-score-badge">Q' + (drillState.idx + 1) + ' of ' + total + '</div>';
+  html += '</div>';
+  html += '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>';
+
+  html += '<div class="qcard">';
+  html += '<div class="qcard-top">';
+  html += '<div class="qmeta">';
+  html += '<span class="qtype" style="background:' + drill.typeCss + ';color:' + drill.typeColor + '">' + drill.type + '</span>';
+  html += '</div>';
+  html += '<div class="qprompt">' + drill.q + '</div>';
+  if (drill.code) {
+    html += '<div class="qcode">' + escHtml(drill.code) + '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="choices">';
+  drill.choices.forEach(function(c, i) {
+    html += '<button class="choice" id="ch' + i + '" onclick="answer(' + i + ')">';
+    html += '<span class="cltr">' + letters[i] + '</span>';
+    html += '<span>' + escHtml(c) + '</span>';
+    html += '</button>';
+  });
+  html += '</div>';
+
+  html += '<div class="expbox" id="expbox"></div>';
+  html += '</div>';
+
+  html += '<div class="drill-nav" style="margin-top:16px">';
+  html += '<button class="btn-prev" onclick="prevDrill()" style="opacity:' + (drillState.idx === 0 ? '0.3' : '1') + '">← Prev</button>';
+  html += '<div class="nav-center">' + (drillState.idx + 1) + ' / ' + total + '</div>';
+  var isLast = drillState.idx === total - 1;
+  html += '<button class="btn-next" onclick="nextDrill()">' + (isLast ? 'Results →' : 'Next →') + '</button>';
+  html += '</div>';
+
+  document.getElementById('drills-panel').innerHTML = html;
+}
+
+function answer(idx) {
+  if (drillState.answered) return;
+  drillState.answered = true;
+  var drill = DOMAINS[currentDomain].drills[drillState.idx];
+
+  document.querySelectorAll('.choice').forEach(function(el) { el.classList.add('locked'); });
+
+  var expEl = document.getElementById('expbox');
+  globalAnswered++;
+
+  if (idx === drill.answer) {
+    document.getElementById('ch' + idx).classList.add('correct');
+    drillState.score++;
+    globalCorrect++;
+    expEl.className = 'expbox ok show';
+    expEl.innerHTML = '<div class="exp-head ok">✓ Correct!</div><div>' + drill.exp + '</div>';
+  } else {
+    document.getElementById('ch' + idx).classList.add('wrong');
+    document.getElementById('ch' + drill.answer).classList.add('correct');
+    expEl.className = 'expbox bad show';
+    expEl.innerHTML = '<div class="exp-head bad">✗ Not quite.</div><div>' + drill.exp + '</div>';
+  }
+
+  updateStats();
+}
+
+function nextDrill() {
+  var d = DOMAINS[currentDomain];
+  if (drillState.idx < d.drills.length - 1) {
+    drillState.idx++;
+    renderDrill();
+  } else {
+    showScore();
+  }
+}
+
+function prevDrill() {
+  if (drillState.idx > 0) {
+    drillState.idx--;
+    renderDrill();
+  }
+}
+
+function showScore() {
+  var d = DOMAINS[currentDomain];
+  var total = d.drills.length;
+  var pct = Math.round((drillState.score / total) * 100);
+  var grade = pct >= 90 ? '🏆 Mastered — exam ready!' : pct >= 70 ? '🎯 Strong — almost there!' : '📚 Keep drilling — review the concepts.';
+
+  var html = '<div class="result-box">';
+  html += '<div class="result-score">' + drillState.score + '/' + total + '</div>';
+  html += '<div class="result-grade">' + grade + '</div>';
+  html += '<div class="result-msg">' + pct + '% correct on this domain</div>';
+  html += '<button class="btn-retake" onclick="initDrills()">↺ Retake Drills</button>';
+  html += '</div>';
+
+  document.getElementById('drills-panel').innerHTML = html;
+}
+
+function updateStats() {
+  document.getElementById('s-ans').textContent = globalAnswered;
+  document.getElementById('s-cor').textContent = globalCorrect;
+  document.getElementById('s-pct').textContent = globalAnswered > 0 ? Math.round((globalCorrect / globalAnswered) * 100) + '%' : '—';
+}
+
+// ===================== BUILD HOME GRID =====================
+function buildHome() {
+  var grid = document.getElementById('domain-grid');
+  var colors = ['#f0b429', '#60c8f5', '#f06090', '#60f0a0', '#c060f5'];
+  var html = '';
+  DOMAINS.forEach(function(d, i) {
+    html += '<div class="dc" onclick="goDomain(' + i + ')" style="">';
+    html += '<style>.dc:nth-child(' + (i+1) + ')::before{background:' + colors[i] + ';}</style>';
+    html += '<div class="dc-num">' + d.tag.toUpperCase() + '</div>';
+    html += '<div class="dc-title">' + d.title + '</div>';
+    html += '<div class="dc-topics">' + d.topics + '</div>';
+    html += '<div class="dc-btns">';
+    html += '<button class="dc-btn dc-btn-r" onclick="event.stopPropagation();goDomain(' + i + ');setTab(\'concepts\')">Read Concepts</button>';
+    html += '<button class="dc-btn dc-btn-d" onclick="event.stopPropagation();goDomain(' + i + ');setTab(\'drills\')">Start Drills →</button>';
+    html += '</div></div>';
+  });
+  grid.innerHTML = html;
+}
+
+buildHome();
+</script>
+</body>
+</html>
