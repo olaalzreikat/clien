@@ -1,3 +1,48 @@
+// ===== FILM ARTWORK LIGHTBOX =====
+let lightboxImages = [];
+let lightboxIndex  = 0;
+
+function openLightbox(images, index) {
+    lightboxImages = images;
+    lightboxIndex  = index;
+    updateLightboxImage();
+    document.getElementById('filmLightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('filmLightbox').classList.remove('active');
+    document.body.style.overflow = '';
+    lightboxImages = [];
+}
+
+function lightboxNext() {
+    if (!lightboxImages.length) return;
+    lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+    updateLightboxImage();
+}
+
+function lightboxPrev() {
+    if (!lightboxImages.length) return;
+    lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+    updateLightboxImage();
+}
+
+function updateLightboxImage() {
+    const img     = document.getElementById('lightboxImg');
+    const counter = document.getElementById('lightboxCounter');
+    if (img)     img.src = lightboxImages[lightboxIndex];
+    if (counter) counter.textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
+}
+
+document.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('filmLightbox');
+    if (!lb || !lb.classList.contains('active')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowRight') lightboxNext();
+    if (e.key === 'ArrowLeft')  lightboxPrev();
+});
+
 // ===== UTILITY: Debounce =====
 function debounce(fn, ms = 100) {
     let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
@@ -71,6 +116,15 @@ function showIllusTab(tabName) {
     setTimeout(positionMoonAndSides, 60);
 }
 
+
+function showCommTab(tabName) {
+    document.querySelectorAll('.comm-panel').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.comm-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    document.querySelectorAll('.comm-tab').forEach(btn => {
+        if (btn.getAttribute('onclick').includes(tabName)) btn.classList.add('active');
+    });
+}
 
 function showAboutTab(tabName) {
     const section = document.querySelector('.about-section');
@@ -182,6 +236,9 @@ function populateGallery() {
         imgEl.decoding = 'async';
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = img.title;
+        overlay.appendChild(titleSpan);
         item.appendChild(imgEl);
         item.appendChild(overlay);
         item.addEventListener('click', () => { currentImageIndex = index; updateShowcase(); showIllusTab('closeup'); });
@@ -301,7 +358,7 @@ function populateAnimGallery() {
         }
         const overlay = document.createElement('div');
         overlay.className = 'overlay';
-        overlay.innerHTML = '<div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>';
+        overlay.innerHTML = '<div class="play-icon"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div><span>' + video.title + '</span>';
         item.appendChild(mediaEl);
         item.appendChild(overlay);
         item.addEventListener('click', () => {
@@ -370,6 +427,8 @@ const films = [
             { event: '2024 PUSD Film Festival', detail: '"Coming of Age" category', wins: ['Best Sound Design', 'Best Overall'] },
             { event: '2023–2024 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'] },
             { event: '2024 National Academy of Arts and Sciences\' National Student Production Awards', wins: ['Nominee'] },
+            { event: '2026 Arizona Student Film Festival', wins: ['Nominee'] },
+            { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
         ],
         behindScenesLabel: 'Behind the Scenes',
         artworkCategories: [
@@ -485,13 +544,14 @@ function updateFilmDisplay() {
                 grid.className = 'artwork-grid';
                 if (cat.images && cat.images.length) {
                     const fragment = document.createDocumentFragment();
-                    cat.images.forEach(src => {
+                    cat.images.forEach((src, imgIdx) => {
                         const img = document.createElement('img');
                         img.src = src;
                         img.alt = cat.label;
-                        img.className = 'artwork-img';
+                        img.className = 'artwork-img artwork-img-zoomable';
                         img.loading = 'lazy';
                         img.decoding = 'async';
+                        img.addEventListener('click', () => openLightbox(cat.images, imgIdx));
                         fragment.appendChild(createWatermarkWrapper(img));
                     });
                     grid.appendChild(fragment);
@@ -526,10 +586,11 @@ function updateFilmDisplay() {
                         }
                     });
                 } else {
-                    f.artwork.forEach(src => {
+                    f.artwork.forEach((src, imgIdx) => {
                         const img = document.createElement('img');
                         img.src = src; img.alt = f.title + ' artwork';
-                        img.className = 'artwork-img'; img.loading = 'lazy'; img.decoding = 'async';
+                        img.className = 'artwork-img artwork-img-zoomable'; img.loading = 'lazy'; img.decoding = 'async';
+                        img.addEventListener('click', () => openLightbox(f.artwork, imgIdx));
                         fragment.appendChild(createWatermarkWrapper(img));
                     });
                 }
@@ -1193,6 +1254,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── Postcard stamp carousel (tablet 769–1200px) ──
     initPcStampCarousel();
+
+    // ── Lightbox swipe on mobile ──
+    const lbImgWrap = document.querySelector('.lightbox-img-wrap');
+    if (lbImgWrap) addSwipeSupport(lbImgWrap, lightboxNext, lightboxPrev);
 
     // ── Profile pic carousel: build dots and set first image immediately ──
     buildProfileDots();

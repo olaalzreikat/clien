@@ -1,485 +1,1890 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JS Study Game — Domains 2 & 3</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 650px; margin: 0 auto; }
-    h1 { font-size: 22px; }
-    button { padding: 8px 14px; cursor: pointer; margin: 4px 2px; font-size: 14px; }
-    .opt { display: block; width: 100%; text-align: left; padding: 10px; margin: 5px 0; font-size: 14px; background: #f0f0f0; border: 1px solid #ccc; cursor: pointer; }
-    .opt:hover { background: #dde; }
-    .correct { background: #c8f5c8 !important; border-color: green !important; }
-    .wrong   { background: #f5c8c8 !important; border-color: red !important; }
-    #feedback { margin: 12px 0; padding: 10px; font-size: 14px; border-left: 4px solid #ccc; background: #f9f9f9; display: none; }
-    #feedback.pass { border-color: green; }
-    #feedback.fail { border-color: red; }
-    code { background: #eee; padding: 2px 5px; font-size: 13px; }
-    pre  { background: #eee; padding: 12px; font-size: 13px; line-height: 1.7; overflow-x: auto; }
-    #hud { display: flex; gap: 20px; margin-bottom: 16px; font-size: 14px; }
-    #hud span { font-weight: bold; }
-    hr { margin: 18px 0; }
-    #titleScreen, #gameScreen, #resultScreen { }
-    .hidden { display: none; }
-    #resultScreen { text-align: center; padding: 30px 0; }
-    #resultScreen h2 { font-size: 28px; margin-bottom: 8px; }
-    .domain-btn { padding: 14px 20px; margin: 6px; font-size: 14px; cursor: pointer; display: block; width: 100%; text-align: left; background: #f0f0f0; border: 1px solid #ccc; }
-    .domain-btn:hover { background: #dde; }
-    #nextBtn { background: #333; color: white; display: none; }
-    #fill-input { padding: 6px; font-size: 14px; width: 200px; margin-right: 8px; }
-    #qNum { color: #666; font-size: 13px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITS 306 — Full Practice Exam</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0c0c0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: #2a2a38;
+    --border-hi: #3a3a50;
+    --green: #4ade9a;
+    --green-dim: #1a3d2e;
+    --green-text: #2dd47a;
+    --red: #ff5e6c;
+    --red-dim: #3d1a1e;
+    --red-text: #ff8090;
+    --amber: #fbbf24;
+    --amber-dim: #3d2e0a;
+    --blue: #60a5fa;
+    --blue-dim: #1a2a40;
+    --purple: #a78bfa;
+    --purple-dim: #1e1a3d;
+    --text: #e8e8f0;
+    --text-muted: #6b6b88;
+    --text-dim: #9898b0;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Syne', sans-serif;
+    --body: 'DM Sans', sans-serif;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,222,154,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,222,154,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, #0d2018 0%, #13131a 60%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 48px 36px;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: .65rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--green);
+  }
+  .header h1 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--green); }
+  .header p {
+    color: var(--text-dim);
+    font-size: .95rem;
+    font-weight: 300;
+    max-width: 560px;
+    margin-bottom: 24px;
+  }
+  .header-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: .65rem;
+    letter-spacing: .05em;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(74,222,154,.25);
+    background: rgba(74,222,154,.08);
+    color: var(--green);
+  }
+
+  /* ── STICKY BAR ── */
+  .sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(12,12,15,.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--blue));
+    border-radius: 2px;
+    width: 0%;
+    transition: width .5s ease;
+  }
+  .score-tag {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--green);
+    background: var(--green-dim);
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .pct-tag {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 0;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .04em;
+    padding: 14px 18px;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all .15s;
+    text-transform: uppercase;
+  }
+  .nav-tab:hover { color: var(--text-dim); }
+  .nav-tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+  /* ── SECTION ── */
+  .section { display: none; padding: 40px 48px 80px; position: relative; z-index: 1; }
+  .section.active { display: block; }
+  .section-title {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--green);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 200px;
+  }
+  .section-sub {
+    font-size: .82rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .q-card.state-correct { border-color: var(--green); }
+  .q-card.state-wrong { border-color: var(--red); }
+  .q-card.state-partial { border-color: var(--amber); }
+
+  .q-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 24px 0;
+  }
+  .q-num {
+    font-family: var(--mono);
+    font-size: .62rem;
+    background: var(--green-dim);
+    color: var(--green);
+    padding: 3px 9px;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 3px;
+    letter-spacing: .04em;
+  }
+  .q-num.fill { background: var(--blue-dim); color: var(--blue); }
+  .q-num.trap { background: var(--amber-dim); color: var(--amber); }
+  .q-text {
+    font-size: .95rem;
+    font-weight: 500;
+    line-height: 1.6;
+    padding-bottom: 16px;
+    color: var(--text);
+  }
+  .q-text code {
+    font-family: var(--mono);
+    font-size: .8rem;
+    background: rgba(96,165,250,.12);
+    color: var(--blue);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* code block */
+  pre.q-code {
+    margin: 0 24px 16px;
+    background: #0a0a10;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: .78rem;
+    color: #a8d8ff;
+    line-height: 1.75;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre.q-code .kw { color: var(--purple); }
+  pre.q-code .str { color: var(--green); }
+  pre.q-code .cm { color: #444; }
+  pre.q-code .blank { color: var(--amber); border-bottom: 2px solid var(--amber); display: inline-block; min-width: 40px; }
+
+  /* options */
+  .opts { padding: 0 24px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: .88rem;
+    line-height: 1.5;
+    background: var(--surface);
+    transition: all .12s;
+    user-select: none;
+    text-align: left;
+    color: var(--text);
+  }
+  .opt:hover:not(.locked) { border-color: var(--border-hi); background: #1e1e2c; }
+  .opt-key {
+    font-family: var(--mono);
+    font-size: .62rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all .12s;
+  }
+  .opt code { font-family: var(--mono); font-size: .78rem; background: rgba(96,165,250,.1); color: var(--blue); padding: 1px 5px; border-radius: 3px; }
+  .opt.correct { border-color: var(--green); background: var(--green-dim); }
+  .opt.correct .opt-key { background: var(--green); color: #000; font-weight: 700; }
+  .opt.wrong { border-color: var(--red); background: var(--red-dim); }
+  .opt.wrong .opt-key { background: var(--red); color: #fff; font-weight: 700; }
+  .opt.reveal { border-color: var(--green); background: var(--green-dim); opacity: .6; }
+  .opt.locked { cursor: default; }
+
+  /* fill in blank */
+  .fill-wrap { padding: 0 24px 20px; }
+  .blank-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .blank-label { font-family: var(--mono); font-size: .72rem; color: var(--text-muted); }
+  .blank-input {
+    background: #0a0a10;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: .82rem;
+    padding: 8px 12px;
+    width: 220px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .blank-input:focus { border-color: var(--green); }
+  .blank-input.correct-i { border-color: var(--green); background: var(--green-dim); color: var(--green-text); }
+  .blank-input.wrong-i { border-color: var(--red); background: var(--red-dim); color: var(--red-text); }
+  .check-btn {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .05em;
+    padding: 8px 18px;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity .15s;
+    margin-top: 8px;
+  }
+  .check-btn:hover { opacity: .85; }
+  .check-btn:disabled { opacity: .35; cursor: default; }
+
+  /* feedback */
+  .feedback {
+    display: none;
+    margin: 0 24px 18px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: .85rem;
+    line-height: 1.6;
+  }
+  .feedback.show { display: block; }
+  .feedback.fb-correct { background: var(--green-dim); border-left: 3px solid var(--green); color: #7dd3a8; }
+  .feedback.fb-wrong { background: var(--red-dim); border-left: 3px solid var(--red); color: var(--red-text); }
+  .feedback strong { font-weight: 600; }
+  .feedback code { font-family: var(--mono); font-size: .78rem; background: rgba(0,0,0,.3); padding: 1px 5px; border-radius: 3px; }
+
+  /* exam trap callout */
+  .trap-box {
+    margin: 0 24px 16px;
+    padding: 10px 14px;
+    background: var(--amber-dim);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: .82rem;
+    color: var(--amber);
+    font-family: var(--mono);
+  }
+
+  /* ── RESULTS ── */
+  .results-panel {
+    display: none;
+    margin-top: 48px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px;
+    text-align: center;
+  }
+  .results-panel.show { display: block; }
+  .results-score {
+    font-family: var(--display);
+    font-size: 5.5rem;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    letter-spacing: -.04em;
+    margin-bottom: 4px;
+  }
+  .results-denom { font-family: var(--mono); font-size: .85rem; color: var(--text-muted); margin-bottom: 24px; }
+  .results-bar-wrap { width: 320px; max-width: 100%; margin: 0 auto 28px; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .results-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); border-radius: 3px; transition: width 1.2s ease; }
+  .results-msg { font-family: var(--display); font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; }
+  .results-sub { font-size: .88rem; color: var(--text-dim); margin-bottom: 36px; }
+  .breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+    text-align: left;
+  }
+  .bd-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .bd-cat { font-family: var(--mono); font-size: .62rem; color: var(--green); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+  .bd-score { font-family: var(--display); font-size: 1.3rem; font-weight: 700; }
+  .bd-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .bd-fill { height: 100%; border-radius: 2px; }
+  .retry-btn {
+    font-family: var(--mono);
+    font-size: .75rem;
+    letter-spacing: .06em;
+    padding: 14px 36px;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity .15s;
+  }
+  .retry-btn:hover { opacity: .85; }
+
+  /* ── REFERENCE TAB ── */
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .ref-grid { grid-template-columns: 1fr; } }
+  .ref-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+  }
+  .ref-card h3 {
+    font-family: var(--display);
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 14px;
+    letter-spacing: .02em;
+  }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .ref-table th { color: var(--text-muted); font-family: var(--mono); font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 400; }
+  .ref-table td { padding: 8px 10px; border-bottom: 1px solid rgba(42,42,56,.5); vertical-align: top; line-height: 1.5; color: var(--text-dim); }
+  .ref-table td:first-child { font-family: var(--mono); font-size: .75rem; color: var(--blue); white-space: nowrap; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .trap-chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: .6rem;
+    padding: 2px 7px;
+    background: var(--amber-dim);
+    color: var(--amber);
+    border-radius: 12px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .ref-tip {
+    background: var(--amber-dim);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 10px 14px;
+    font-size: .82rem;
+    color: var(--amber);
+    margin-top: 14px;
+  }
+
+  @media (max-width: 700px) {
+    .header, .section, .nav-tabs, .sticky-bar { padding-left: 20px; padding-right: 20px; }
+    .results-panel { padding: 28px 20px; }
+  }
+</style>
 </head>
 <body>
 
-<!-- TITLE SCREEN -->
-<div id="titleScreen">
-  <h1>JS Study Game 🎮</h1>
-  <p>Pick a domain to practice, or play all at once.</p>
-  <hr>
-  <button class="domain-btn" onclick="startGame(2)">📦 Domain 2 — Variables, Data Types & Functions</button>
-  <button class="domain-btn" onclick="startGame(3)">🔀 Domain 3 — Decisions & Loops</button>
-  <button class="domain-btn" onclick="startGame(0)">🎯 Play All (Domains 2 & 3)</button>
-</div>
-
-<!-- GAME SCREEN -->
-<div id="gameScreen" class="hidden">
-  <div id="hud">
-    <div>Score: <span id="scoreDisplay">0</span></div>
-    <div>Correct: <span id="correctDisplay">0</span></div>
-    <div>Wrong: <span id="wrongDisplay">0</span></div>
-    <div id="qNum"></div>
+<div class="header">
+  <div class="header-tag">ITS 306 HTML5 App Development Certification</div>
+  <h1>Full Practice <span>Exam</span></h1>
+  <p>Every question from both documents — standards 1 through 5 — multiple choice and fill-in-the-blank. Instant feedback with detailed explanations on wrong answers.</p>
+  <div class="header-pills">
+    <span class="pill">75 Questions</span>
+    <span class="pill">Standards 1.0 – 5.5</span>
+    <span class="pill">MC + Fill-in-blank</span>
+    <span class="pill">Full Explanations</span>
+    <span class="pill">Self-Grading</span>
   </div>
-  <hr>
-  <div id="category" style="color:#888; font-size:12px; margin-bottom:6px;"></div>
-  <div id="question" style="font-size:16px; margin-bottom:10px; line-height:1.6;"></div>
-  <div id="codeBlock"></div>
-  <div id="answersArea"></div>
-  <div id="feedback"></div>
-  <br>
-  <button id="nextBtn" onclick="nextQuestion()">Next ▶</button>
-  <button onclick="goHome()" style="margin-left:8px;">⬅ Menu</button>
 </div>
 
-<!-- RESULT SCREEN -->
-<div id="resultScreen" class="hidden">
-  <h2 id="resultTitle"></h2>
-  <p id="resultScore" style="font-size:20px;"></p>
-  <p id="resultMsg" style="color:#555;"></p>
-  <br>
-  <button onclick="replayGame()">▶ Play Again</button>
-  <button onclick="goHome()" style="margin-left:8px;">⬅ Menu</button>
+<div class="sticky-bar">
+  <div class="progress-track"><div class="progress-fill" id="prog"></div></div>
+  <span class="score-tag" id="score-tag">0 / 75</span>
+  <span class="pct-tag" id="pct-tag">0%</span>
 </div>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('s1')">Standard 1</button>
+  <button class="nav-tab" onclick="showTab('s2')">Standard 2</button>
+  <button class="nav-tab" onclick="showTab('s3')">Standard 3</button>
+  <button class="nav-tab" onclick="showTab('s4')">Standard 4</button>
+  <button class="nav-tab" onclick="showTab('s5')">Standard 5</button>
+  <button class="nav-tab" onclick="showTab('ref')">Reference</button>
+</div>
+
+<div id="exam-body">
+
+<!-- ════════════════════════════════════════ STANDARD 1 ════════════════════════════════════════ -->
+<div id="s1" class="section active">
+  <div class="section-title">Standard 1 — App Lifecycle &amp; Debugging</div>
+  <div class="section-sub">App lifecycle phases · QA testing · error types · browser DevTools</div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="c1">
+    <div class="q-head"><span class="q-num">Q01 · MC</span><p class="q-text">What is the correct order of the Software Application Development Life Cycle?</p></div>
+    <div class="opts">
+      <div class="opt" id="o1A" onclick="pick(1,'A')"><span class="opt-key">A</span>Plan → Code → Test → Design → Deploy → Maintain</div>
+      <div class="opt" id="o1B" onclick="pick(1,'B')"><span class="opt-key">B</span>Plan → Design → Develop → Test → Deploy → Maintain</div>
+      <div class="opt" id="o1C" onclick="pick(1,'C')"><span class="opt-key">C</span>Design → Plan → Develop → Deploy → Test → Maintain</div>
+      <div class="opt" id="o1D" onclick="pick(1,'D')"><span class="opt-key">D</span>Code → Test → Plan → Design → Deploy → Maintain</div>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="c2">
+    <div class="q-head"><span class="q-num">Q02 · MC</span><p class="q-text">Which TWO activities should be included in the <strong>Plan</strong> step of application lifecycle management?</p></div>
+    <div class="opts">
+      <div class="opt" id="o2A" onclick="pick(2,'A')"><span class="opt-key">A</span>Programming the application and determining program architecture</div>
+      <div class="opt" id="o2B" onclick="pick(2,'B')"><span class="opt-key">B</span>Delegation of responsibilities and goal setting</div>
+      <div class="opt" id="o2C" onclick="pick(2,'C')"><span class="opt-key">C</span>Testing the application and deploying to production</div>
+      <div class="opt" id="o2D" onclick="pick(2,'D')"><span class="opt-key">D</span>Writing documentation and compiling code</div>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="c3">
+    <div class="q-head"><span class="q-num">Q03 · MC</span><p class="q-text">A team completes coding and hands the project to QA. Which THREE activities should QA perform?</p></div>
+    <div class="opts">
+      <div class="opt" id="o3A" onclick="pick(3,'A')"><span class="opt-key">A</span>Check functionality, ensure design specs are met, check code syntax</div>
+      <div class="opt" id="o3B" onclick="pick(3,'B')"><span class="opt-key">B</span>Check functionality, identify bugs/defects, ensure design specifications are met</div>
+      <div class="opt" id="o3C" onclick="pick(3,'C')"><span class="opt-key">C</span>Ask customers for input, rewrite code, check functionality</div>
+      <div class="opt" id="o3D" onclick="pick(3,'D')"><span class="opt-key">D</span>Deploy to production, check bugs, run marketing campaigns</div>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="c4">
+    <div class="q-head"><span class="q-num">Q04 · MC</span><p class="q-text">A user submits a form but the email field accepts <code>'12345'</code> as a valid email. What type of error is this?</p></div>
+    <div class="opts">
+      <div class="opt" id="o4A" onclick="pick(4,'A')"><span class="opt-key">A</span>Runtime error</div>
+      <div class="opt" id="o4B" onclick="pick(4,'B')"><span class="opt-key">B</span>Syntax error</div>
+      <div class="opt" id="o4C" onclick="pick(4,'C')"><span class="opt-key">C</span>Logic error</div>
+      <div class="opt" id="o4D" onclick="pick(4,'D')"><span class="opt-key">D</span>Input validation error</div>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="c5">
+    <div class="q-head"><span class="q-num">Q05 · MC</span><p class="q-text">Which browser developer tool feature lets you pause JavaScript execution at a specific line of code?</p></div>
+    <div class="opts">
+      <div class="opt" id="o5A" onclick="pick(5,'A')"><span class="opt-key">A</span>Console log</div>
+      <div class="opt" id="o5B" onclick="pick(5,'B')"><span class="opt-key">B</span>Breakpoint</div>
+      <div class="opt" id="o5C" onclick="pick(5,'C')"><span class="opt-key">C</span>Network tab</div>
+      <div class="opt" id="o5D" onclick="pick(5,'D')"><span class="opt-key">D</span>Lighthouse audit</div>
+    </div>
+    <div class="feedback" id="fb5"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="c6">
+    <div class="q-head"><span class="q-num">Q06 · MC</span><p class="q-text">A script tries to call a function named <code>getData</code> that was never defined. What type of error is this?</p></div>
+    <div class="opts">
+      <div class="opt" id="o6A" onclick="pick(6,'A')"><span class="opt-key">A</span>Input validation error</div>
+      <div class="opt" id="o6B" onclick="pick(6,'B')"><span class="opt-key">B</span>Syntax error</div>
+      <div class="opt" id="o6C" onclick="pick(6,'C')"><span class="opt-key">C</span>Runtime error</div>
+      <div class="opt" id="o6D" onclick="pick(6,'D')"><span class="opt-key">D</span>Deploy error</div>
+    </div>
+    <div class="feedback" id="fb6"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ STANDARD 2 ════════════════════════════════════════ -->
+<div id="s2" class="section">
+  <div class="section-title">Standard 2 — Graphics &amp; Animation</div>
+  <div class="section-sub">Canvas · SVG elements · CSS transforms · CSS filters · keyframe animations</div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="c7">
+    <div class="q-head"><span class="q-num">Q07 · MC</span><p class="q-text">How many arguments does <code>ctx.arc()</code> require, and what are they in order?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — most commonly missed canvas question</div>
+    <div class="opts">
+      <div class="opt" id="o7A" onclick="pick(7,'A')"><span class="opt-key">A</span>5 — x, y, radius, startAngle, endAngle</div>
+      <div class="opt" id="o7B" onclick="pick(7,'B')"><span class="opt-key">B</span>3 — x, y, radius</div>
+      <div class="opt" id="o7C" onclick="pick(7,'C')"><span class="opt-key">C</span>4 — x, y, radius, color</div>
+      <div class="opt" id="o7D" onclick="pick(7,'D')"><span class="opt-key">D</span>6 — x, y, rx, ry, startAngle, endAngle</div>
+    </div>
+    <div class="feedback" id="fb7"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="c8">
+    <div class="q-head"><span class="q-num">Q08 · MC</span><p class="q-text">What value for endAngle draws a complete full circle using <code>ctx.arc()</code>?</p></div>
+    <div class="opts">
+      <div class="opt" id="o8A" onclick="pick(8,'A')"><span class="opt-key">A</span><code>Math.PI</code></div>
+      <div class="opt" id="o8B" onclick="pick(8,'B')"><span class="opt-key">B</span><code>Math.PI * 0.5</code></div>
+      <div class="opt" id="o8C" onclick="pick(8,'C')"><span class="opt-key">C</span><code>Math.PI * 2</code></div>
+      <div class="opt" id="o8D" onclick="pick(8,'D')"><span class="opt-key">D</span><code>360</code></div>
+    </div>
+    <div class="feedback" id="fb8"></div>
+  </div>
+
+  <!-- Q9 fill -->
+  <div class="q-card" id="c9">
+    <div class="q-head"><span class="q-num q-num fill">Q09 · FILL</span><p class="q-text">Fill in the blanks to draw a yellow filled circle at center (200, 150) with radius 60:</p></div>
+    <pre class="q-code">ctx.beginPath();
+ctx.<span class="blank">___</span>(200, 150, 60, 0, Math.PI * 2);
+ctx.fillStyle = '<span class="blank">___</span>';
+ctx.fill();</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">Method name:</span><input class="blank-input" id="b9_0" placeholder="ctx.???()" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(9)"/></div>
+      <div class="blank-row"><span class="blank-label">Color value:</span><input class="blank-input" id="b9_1" placeholder="color name" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(9)"/></div>
+      <button class="check-btn" id="btn9" onclick="checkFill(9)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb9"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="c10">
+    <div class="q-head"><span class="q-num">Q10 · MC</span><p class="q-text">What must you call before <code>ctx.arc()</code> to start a fresh shape and prevent paths from connecting?</p></div>
+    <div class="opts">
+      <div class="opt" id="o10A" onclick="pick(10,'A')"><span class="opt-key">A</span><code>ctx.clear()</code></div>
+      <div class="opt" id="o10B" onclick="pick(10,'B')"><span class="opt-key">B</span><code>ctx.reset()</code></div>
+      <div class="opt" id="o10C" onclick="pick(10,'C')"><span class="opt-key">C</span><code>ctx.beginPath()</code></div>
+      <div class="opt" id="o10D" onclick="pick(10,'D')"><span class="opt-key">D</span><code>ctx.newShape()</code></div>
+    </div>
+    <div class="feedback" id="fb10"></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="c11">
+    <div class="q-head"><span class="q-num">Q11 · MC</span><p class="q-text">A canvas is animated with <code>rotateY(180deg)</code> but looks completely flat with no 3D depth. What is most likely missing?</p></div>
+    <div class="opts">
+      <div class="opt" id="o11A" onclick="pick(11,'A')"><span class="opt-key">A</span><code>perspective</code> must be set on the parent element or in the transform chain</div>
+      <div class="opt" id="o11B" onclick="pick(11,'B')"><span class="opt-key">B</span>The canvas needs a width and height attribute</div>
+      <div class="opt" id="o11C" onclick="pick(11,'C')"><span class="opt-key">C</span><code>rotateY</code> only works on div elements</div>
+      <div class="opt" id="o11D" onclick="pick(11,'D')"><span class="opt-key">D</span>The animation needs linear timing</div>
+    </div>
+    <div class="feedback" id="fb11"></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="c12">
+    <div class="q-head"><span class="q-num">Q12 · MC</span><p class="q-text">What is the primary advantage of SVG over raster image formats like PNG or JPEG?</p></div>
+    <div class="opts">
+      <div class="opt" id="o12A" onclick="pick(12,'A')"><span class="opt-key">A</span>SVG files are always smaller</div>
+      <div class="opt" id="o12B" onclick="pick(12,'B')"><span class="opt-key">B</span>SVG supports more colors</div>
+      <div class="opt" id="o12C" onclick="pick(12,'C')"><span class="opt-key">C</span>SVG uses mathematical paths and scales to any size without losing quality</div>
+      <div class="opt" id="o12D" onclick="pick(12,'D')"><span class="opt-key">D</span>SVG loads faster on all connections</div>
+    </div>
+    <div class="feedback" id="fb12"></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="c13">
+    <div class="q-head"><span class="q-num">Q13 · MC</span><p class="q-text">In SVG, where is the <code>(0,0)</code> origin, and which direction does Y increase?</p></div>
+    <div class="opts">
+      <div class="opt" id="o13A" onclick="pick(13,'A')"><span class="opt-key">A</span>Bottom-left; Y increases upward (like a math graph)</div>
+      <div class="opt" id="o13B" onclick="pick(13,'B')"><span class="opt-key">B</span>Center of the SVG; Y increases in both directions</div>
+      <div class="opt" id="o13C" onclick="pick(13,'C')"><span class="opt-key">C</span>Top-left; Y increases downward</div>
+      <div class="opt" id="o13D" onclick="pick(13,'D')"><span class="opt-key">D</span>Top-right; Y increases to the left</div>
+    </div>
+    <div class="feedback" id="fb13"></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="c14">
+    <div class="q-head"><span class="q-num">Q14 · MC</span><p class="q-text">Which SVG element automatically draws a closing line from the last point back to the first point?</p></div>
+    <div class="opts">
+      <div class="opt" id="o14A" onclick="pick(14,'A')"><span class="opt-key">A</span><code>&lt;polyline&gt;</code></div>
+      <div class="opt" id="o14B" onclick="pick(14,'B')"><span class="opt-key">B</span><code>&lt;path&gt;</code></div>
+      <div class="opt" id="o14C" onclick="pick(14,'C')"><span class="opt-key">C</span><code>&lt;line&gt;</code></div>
+      <div class="opt" id="o14D" onclick="pick(14,'D')"><span class="opt-key">D</span><code>&lt;polygon&gt;</code></div>
+    </div>
+    <div class="feedback" id="fb14"></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="c15">
+    <div class="q-head"><span class="q-num">Q15 · MC</span><p class="q-text">For a <code>&lt;rect&gt;</code> element, what does the <code>rx</code> attribute do?</p></div>
+    <div class="opts">
+      <div class="opt" id="o15A" onclick="pick(15,'A')"><span class="opt-key">A</span>Sets the horizontal position (x) of the rectangle</div>
+      <div class="opt" id="o15B" onclick="pick(15,'B')"><span class="opt-key">B</span>Sets the horizontal radius of an ellipse inside the rect</div>
+      <div class="opt" id="o15C" onclick="pick(15,'C')"><span class="opt-key">C</span>Adds rounded corners to the rectangle</div>
+      <div class="opt" id="o15D" onclick="pick(15,'D')"><span class="opt-key">D</span>Rotates the rectangle by rx degrees</div>
+    </div>
+    <div class="feedback" id="fb15"></div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" id="c16">
+    <div class="q-head"><span class="q-num">Q16 · MC</span><p class="q-text">What do <code>cx</code> and <code>cy</code> define on a <code>&lt;circle&gt;</code> element?</p></div>
+    <div class="opts">
+      <div class="opt" id="o16A" onclick="pick(16,'A')"><span class="opt-key">A</span>The corner coordinates of the bounding box</div>
+      <div class="opt" id="o16B" onclick="pick(16,'B')"><span class="opt-key">B</span>The center point coordinates of the circle</div>
+      <div class="opt" id="o16C" onclick="pick(16,'C')"><span class="opt-key">C</span>The curve control points</div>
+      <div class="opt" id="o16D" onclick="pick(16,'D')"><span class="opt-key">D</span>The clip position of the circle</div>
+    </div>
+    <div class="feedback" id="fb16"></div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="c17">
+    <div class="q-head"><span class="q-num">Q17 · MC</span><p class="q-text">To draw an oval (not a perfect circle) in SVG, which element do you use and what attributes set its radii?</p></div>
+    <div class="opts">
+      <div class="opt" id="o17A" onclick="pick(17,'A')"><span class="opt-key">A</span><code>&lt;circle&gt;</code> with <code>rx</code> and <code>ry</code></div>
+      <div class="opt" id="o17B" onclick="pick(17,'B')"><span class="opt-key">B</span><code>&lt;ellipse&gt;</code> with <code>rx</code> and <code>ry</code></div>
+      <div class="opt" id="o17C" onclick="pick(17,'C')"><span class="opt-key">C</span><code>&lt;ellipse&gt;</code> with <code>width</code> and <code>height</code></div>
+      <div class="opt" id="o17D" onclick="pick(17,'D')"><span class="opt-key">D</span><code>&lt;oval&gt;</code> with <code>r1</code> and <code>r2</code></div>
+    </div>
+    <div class="feedback" id="fb17"></div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="c18">
+    <div class="q-head"><span class="q-num">Q18 · MC</span><p class="q-text">What does the <code>stroke</code> attribute control in SVG?</p></div>
+    <div class="opts">
+      <div class="opt" id="o18A" onclick="pick(18,'A')"><span class="opt-key">A</span>The fill color of the shape</div>
+      <div class="opt" id="o18B" onclick="pick(18,'B')"><span class="opt-key">B</span>The border/outline color of the shape</div>
+      <div class="opt" id="o18C" onclick="pick(18,'C')"><span class="opt-key">C</span>The opacity of the shape</div>
+      <div class="opt" id="o18D" onclick="pick(18,'D')"><span class="opt-key">D</span>The shadow applied to the shape</div>
+    </div>
+    <div class="feedback" id="fb18"></div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card" id="c19">
+    <div class="q-head"><span class="q-num">Q19 · MC</span><p class="q-text">Which SVG element takes <code>x1</code>, <code>y1</code>, <code>x2</code>, <code>y2</code> as its key attributes?</p></div>
+    <div class="opts">
+      <div class="opt" id="o19A" onclick="pick(19,'A')"><span class="opt-key">A</span><code>&lt;rect&gt;</code></div>
+      <div class="opt" id="o19B" onclick="pick(19,'B')"><span class="opt-key">B</span><code>&lt;path&gt;</code></div>
+      <div class="opt" id="o19C" onclick="pick(19,'C')"><span class="opt-key">C</span><code>&lt;line&gt;</code></div>
+      <div class="opt" id="o19D" onclick="pick(19,'D')"><span class="opt-key">D</span><code>&lt;ellipse&gt;</code></div>
+    </div>
+    <div class="feedback" id="fb19"></div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card" id="c20">
+    <div class="q-head"><span class="q-num">Q20 · MC</span><p class="q-text">An SVG filter is defined in <code>&lt;defs&gt;</code> with <code>id="myBlur"</code>. How do you apply it to a circle?</p></div>
+    <div class="opts">
+      <div class="opt" id="o20A" onclick="pick(20,'A')"><span class="opt-key">A</span><code>class="myBlur"</code></div>
+      <div class="opt" id="o20B" onclick="pick(20,'B')"><span class="opt-key">B</span><code>apply-filter="myBlur"</code></div>
+      <div class="opt" id="o20C" onclick="pick(20,'C')"><span class="opt-key">C</span><code>effect="myBlur"</code></div>
+      <div class="opt" id="o20D" onclick="pick(20,'D')"><span class="opt-key">D</span><code>filter="url(#myBlur)"</code></div>
+    </div>
+    <div class="feedback" id="fb20"></div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="q-card" id="c21">
+    <div class="q-head"><span class="q-num q-num trap">Q21 · MC ⚠</span><p class="q-text">Which of the following is <strong>NOT</strong> a valid argument to the CSS <code>matrix()</code> transform function?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — this is the #1 most tested transform question</div>
+    <div class="opts">
+      <div class="opt" id="o21A" onclick="pick(21,'A')"><span class="opt-key">A</span><code>scaleX</code></div>
+      <div class="opt" id="o21B" onclick="pick(21,'B')"><span class="opt-key">B</span><code>skewY</code></div>
+      <div class="opt" id="o21C" onclick="pick(21,'C')"><span class="opt-key">C</span><code>translateX</code></div>
+      <div class="opt" id="o21D" onclick="pick(21,'D')"><span class="opt-key">D</span><code>zoom</code></div>
+    </div>
+    <div class="feedback" id="fb21"></div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="q-card" id="c22">
+    <div class="q-head"><span class="q-num">Q22 · MC</span><p class="q-text">What does <code>transform: translate(50px, 20px)</code> do to an element?</p></div>
+    <div class="opts">
+      <div class="opt" id="o22A" onclick="pick(22,'A')"><span class="opt-key">A</span>Moves it 50px right and 20px down without affecting document layout flow</div>
+      <div class="opt" id="o22B" onclick="pick(22,'B')"><span class="opt-key">B</span>Moves it and pushes surrounding elements out of the way</div>
+      <div class="opt" id="o22C" onclick="pick(22,'C')"><span class="opt-key">C</span>Scales it to 50px wide and 20px tall</div>
+      <div class="opt" id="o22D" onclick="pick(22,'D')"><span class="opt-key">D</span>Skews the element 50 degrees</div>
+    </div>
+    <div class="feedback" id="fb22"></div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="q-card" id="c23">
+    <div class="q-head"><span class="q-num">Q23 · MC</span><p class="q-text">What does <code>transform: scale(2)</code> do to an element?</p></div>
+    <div class="opts">
+      <div class="opt" id="o23A" onclick="pick(23,'A')"><span class="opt-key">A</span>Doubles the element's font size only</div>
+      <div class="opt" id="o23B" onclick="pick(23,'B')"><span class="opt-key">B</span>Doubles both the width and height of the element</div>
+      <div class="opt" id="o23C" onclick="pick(23,'C')"><span class="opt-key">C</span>Moves the element 2px to the right</div>
+      <div class="opt" id="o23D" onclick="pick(23,'D')"><span class="opt-key">D</span>Rotates the element 2 degrees</div>
+    </div>
+    <div class="feedback" id="fb23"></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="q-card" id="c24">
+    <div class="q-head"><span class="q-num">Q24 · MC</span><p class="q-text">What is the visual result of <code>transform: skewX(20deg)</code>?</p></div>
+    <div class="opts">
+      <div class="opt" id="o24A" onclick="pick(24,'A')"><span class="opt-key">A</span>The element is sheared horizontally — top and bottom edges slide in opposite directions</div>
+      <div class="opt" id="o24B" onclick="pick(24,'B')"><span class="opt-key">B</span>The element rotates 20 degrees clockwise</div>
+      <div class="opt" id="o24C" onclick="pick(24,'C')"><span class="opt-key">C</span>The element stretches 20% wider</div>
+      <div class="opt" id="o24D" onclick="pick(24,'D')"><span class="opt-key">D</span>The element moves 20px to the right</div>
+    </div>
+    <div class="feedback" id="fb24"></div>
+  </div>
+
+  <!-- Q25 fill -->
+  <div class="q-card" id="c25">
+    <div class="q-head"><span class="q-num fill">Q25 · FILL</span><p class="q-text">Complete the keyframe animation that rotates an element one full turn:</p></div>
+    <pre class="q-code">@keyframes spin {
+  from { transform: rotate(<span class="blank">___</span>); }
+  to   { transform: rotate(<span class="blank">___</span>); }
+}</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">from value:</span><input class="blank-input" id="b25_0" placeholder="e.g. 0deg" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(25)"/></div>
+      <div class="blank-row"><span class="blank-label">to value:</span><input class="blank-input" id="b25_1" placeholder="e.g. 360deg" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(25)"/></div>
+      <button class="check-btn" id="btn25" onclick="checkFill(25)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb25"></div>
+  </div>
+
+  <!-- Q26 -->
+  <div class="q-card" id="c26">
+    <div class="q-head"><span class="q-num">Q26 · MC</span><p class="q-text">What does <code>animation-timing-function: linear</code> do differently from <code>ease</code> for a looping rotation?</p></div>
+    <div class="opts">
+      <div class="opt" id="o26A" onclick="pick(26,'A')"><span class="opt-key">A</span>Linear is slower overall</div>
+      <div class="opt" id="o26B" onclick="pick(26,'B')"><span class="opt-key">B</span>Linear maintains constant speed making loops seamless; ease slows at endpoints causing a visible stutter</div>
+      <div class="opt" id="o26C" onclick="pick(26,'C')"><span class="opt-key">C</span>They are identical for rotations</div>
+      <div class="opt" id="o26D" onclick="pick(26,'D')"><span class="opt-key">D</span>Linear only works on 2D transforms</div>
+    </div>
+    <div class="feedback" id="fb26"></div>
+  </div>
+
+  <!-- Q27 -->
+  <div class="q-card" id="c27">
+    <div class="q-head"><span class="q-num q-num trap">Q27 · MC ⚠</span><p class="q-text">What is the key visual difference between <code>box-shadow</code> and <code>filter: drop-shadow()</code>?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — appears on nearly every version of this exam</div>
+    <div class="opts">
+      <div class="opt" id="o27A" onclick="pick(27,'A')"><span class="opt-key">A</span><code>drop-shadow</code> follows the actual visible shape including transparent areas; <code>box-shadow</code> always uses the rectangular bounding box</div>
+      <div class="opt" id="o27B" onclick="pick(27,'B')"><span class="opt-key">B</span><code>box-shadow</code> works on SVG; <code>drop-shadow</code> works on HTML only</div>
+      <div class="opt" id="o27C" onclick="pick(27,'C')"><span class="opt-key">C</span><code>drop-shadow</code> is only for text elements</div>
+      <div class="opt" id="o27D" onclick="pick(27,'D')"><span class="opt-key">D</span>They are identical — just different syntax</div>
+    </div>
+    <div class="feedback" id="fb27"></div>
+  </div>
+
+  <!-- Q28 -->
+  <div class="q-card" id="c28">
+    <div class="q-head"><span class="q-num">Q28 · MC</span><p class="q-text">Which CSS filter applies a warm brownish vintage tone mimicking old film photography?</p></div>
+    <div class="opts">
+      <div class="opt" id="o28A" onclick="pick(28,'A')"><span class="opt-key">A</span><code>filter: grayscale(100%)</code></div>
+      <div class="opt" id="o28B" onclick="pick(28,'B')"><span class="opt-key">B</span><code>filter: sepia(80%)</code></div>
+      <div class="opt" id="o28C" onclick="pick(28,'C')"><span class="opt-key">C</span><code>filter: saturate(0%)</code></div>
+      <div class="opt" id="o28D" onclick="pick(28,'D')"><span class="opt-key">D</span><code>filter: blur(2px)</code></div>
+    </div>
+    <div class="feedback" id="fb28"></div>
+  </div>
+
+  <!-- Q29 -->
+  <div class="q-card" id="c29">
+    <div class="q-head"><span class="q-num">Q29 · MC</span><p class="q-text">What does <code>filter: saturate(0%)</code> do visually?</p></div>
+    <div class="opts">
+      <div class="opt" id="o29A" onclick="pick(29,'A')"><span class="opt-key">A</span>Makes the element fully transparent</div>
+      <div class="opt" id="o29B" onclick="pick(29,'B')"><span class="opt-key">B</span>Makes the image black and white (similar visual result to grayscale)</div>
+      <div class="opt" id="o29C" onclick="pick(29,'C')"><span class="opt-key">C</span>Adds a sepia tone</div>
+      <div class="opt" id="o29D" onclick="pick(29,'D')"><span class="opt-key">D</span>Nothing visible changes</div>
+    </div>
+    <div class="feedback" id="fb29"></div>
+  </div>
+
+  <!-- Q30 -->
+  <div class="q-card" id="c30">
+    <div class="q-head"><span class="q-num">Q30 · MC</span><p class="q-text">What is the correct syntax for a CSS drop-shadow with 5px right offset, 5px down, 10px blur, black color?</p></div>
+    <div class="opts">
+      <div class="opt" id="o30A" onclick="pick(30,'A')"><span class="opt-key">A</span><code>filter: drop-shadow(5px, 5px, 10px, black)</code></div>
+      <div class="opt" id="o30B" onclick="pick(30,'B')"><span class="opt-key">B</span><code>drop-shadow: 5px 5px 10px black</code></div>
+      <div class="opt" id="o30C" onclick="pick(30,'C')"><span class="opt-key">C</span><code>filter: drop-shadow(5px 5px 10px black)</code></div>
+      <div class="opt" id="o30D" onclick="pick(30,'D')"><span class="opt-key">D</span><code>filter: shadow(black 5px 5px 10px)</code></div>
+    </div>
+    <div class="feedback" id="fb30"></div>
+  </div>
+
+  <!-- Q31 -->
+  <div class="q-card" id="c31">
+    <div class="q-head"><span class="q-num">Q31 · MC</span><p class="q-text">Which CSS transform property is required on the parent to make <code>rotateY(45deg)</code> show actual 3D depth?</p></div>
+    <div class="opts">
+      <div class="opt" id="o31A" onclick="pick(31,'A')"><span class="opt-key">A</span><code>transform-style: preserve-3d</code></div>
+      <div class="opt" id="o31B" onclick="pick(31,'B')"><span class="opt-key">B</span><code>perspective: 600px</code></div>
+      <div class="opt" id="o31C" onclick="pick(31,'C')"><span class="opt-key">C</span><code>z-index: 3d</code></div>
+      <div class="opt" id="o31D" onclick="pick(31,'D')"><span class="opt-key">D</span><code>overflow: visible</code></div>
+    </div>
+    <div class="feedback" id="fb31"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ STANDARD 3 ════════════════════════════════════════ -->
+<div id="s3" class="section">
+  <div class="section-title">Standard 3 — Forms &amp; Validation</div>
+  <div class="section-sub">HTML5 form elements · input types · regex patterns · validation attributes</div>
+
+  <!-- Q32 -->
+  <div class="q-card" id="c32">
+    <div class="q-head"><span class="q-num">Q32 · MC</span><p class="q-text">What HTML elements create a visual group around related form fields with a title label?</p></div>
+    <div class="opts">
+      <div class="opt" id="o32A" onclick="pick(32,'A')"><span class="opt-key">A</span><code>&lt;group&gt;</code> with <code>&lt;title&gt;</code></div>
+      <div class="opt" id="o32B" onclick="pick(32,'B')"><span class="opt-key">B</span><code>&lt;section&gt;</code> with <code>&lt;label&gt;</code></div>
+      <div class="opt" id="o32C" onclick="pick(32,'C')"><span class="opt-key">C</span><code>&lt;fieldset&gt;</code> with <code>&lt;legend&gt;</code></div>
+      <div class="opt" id="o32D" onclick="pick(32,'D')"><span class="opt-key">D</span><code>&lt;div&gt;</code> with <code>&lt;h3&gt;</code></div>
+    </div>
+    <div class="feedback" id="fb32"></div>
+  </div>
+
+  <!-- Q33 -->
+  <div class="q-card" id="c33">
+    <div class="q-head"><span class="q-num">Q33 · MC</span><p class="q-text">How do you connect a text input to a <code>&lt;datalist&gt;</code> so that autocomplete suggestions appear?</p></div>
+    <div class="opts">
+      <div class="opt" id="o33A" onclick="pick(33,'A')"><span class="opt-key">A</span>Set the input's <code>list</code> attribute to match the datalist's <code>id</code></div>
+      <div class="opt" id="o33B" onclick="pick(33,'B')"><span class="opt-key">B</span>Set the input's <code>id</code> to match the datalist's <code>name</code></div>
+      <div class="opt" id="o33C" onclick="pick(33,'C')"><span class="opt-key">C</span>Wrap the input inside the datalist element</div>
+      <div class="opt" id="o33D" onclick="pick(33,'D')"><span class="opt-key">D</span>Set the datalist's <code>for</code> attribute to match the input's <code>id</code></div>
+    </div>
+    <div class="feedback" id="fb33"></div>
+  </div>
+
+  <!-- Q34 -->
+  <div class="q-card" id="c34">
+    <div class="q-head"><span class="q-num">Q34 · MC</span><p class="q-text">What does the HTML <code>&lt;meter&gt;</code> element display?</p></div>
+    <div class="opts">
+      <div class="opt" id="o34A" onclick="pick(34,'A')"><span class="opt-key">A</span>A progress bar for loading operations</div>
+      <div class="opt" id="o34B" onclick="pick(34,'B')"><span class="opt-key">B</span>A countdown timer</div>
+      <div class="opt" id="o34C" onclick="pick(34,'C')"><span class="opt-key">C</span>A scalar measurement within a known range, like a gauge or disk usage</div>
+      <div class="opt" id="o34D" onclick="pick(34,'D')"><span class="opt-key">D</span>An audio volume control</div>
+    </div>
+    <div class="feedback" id="fb34"></div>
+  </div>
+
+  <!-- Q35 fill -->
+  <div class="q-card" id="c35">
+    <div class="q-head"><span class="q-num fill">Q35 · FILL</span><p class="q-text">The <code>&lt;output&gt;</code> element displays a calculated result. Fill in the missing attribute:</p></div>
+    <pre class="q-code">&lt;input type="number" name="a" id="a"&gt;
+&lt;input type="number" name="b" id="b"&gt;
+&lt;output name="result" <span class="blank">___</span> ="a b"&gt;&lt;/output&gt;</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">Attribute name:</span><input class="blank-input" id="b35_0" placeholder="attribute" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(35)"/></div>
+      <button class="check-btn" id="btn35" onclick="checkFill(35)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb35"></div>
+  </div>
+
+  <!-- Q36 -->
+  <div class="q-card" id="c36">
+    <div class="q-head"><span class="q-num">Q36 · MC</span><p class="q-text">Which regex pattern correctly matches the format <code>54a-B32-4a8Z</code> (3 alphanumeric, dash, 3 alphanumeric, dash, 4 alphanumeric)?</p></div>
+    <div class="opts">
+      <div class="opt" id="o36A" onclick="pick(36,'A')"><span class="opt-key">A</span><code>[a-z]{3}-[A-Z]{3}-[0-9]{4}</code></div>
+      <div class="opt" id="o36B" onclick="pick(36,'B')"><span class="opt-key">B</span><code>[a-zA-Z0-9]{3}-[a-zA-Z\d]{3}-[a-zA-Z\d]{4}</code></div>
+      <div class="opt" id="o36C" onclick="pick(36,'C')"><span class="opt-key">C</span><code>\w{3}-\w{3}-\w{3}</code></div>
+      <div class="opt" id="o36D" onclick="pick(36,'D')"><span class="opt-key">D</span><code>[a-z0-9]{3}+[A-Z]{3}+[0-9]{4}</code></div>
+    </div>
+    <div class="feedback" id="fb36"></div>
+  </div>
+
+  <!-- Q37 -->
+  <div class="q-card" id="c37">
+    <div class="q-head"><span class="q-num">Q37 · MC</span><p class="q-text">Which input attribute makes a field mandatory — the form cannot be submitted without a value?</p></div>
+    <div class="opts">
+      <div class="opt" id="o37A" onclick="pick(37,'A')"><span class="opt-key">A</span><code>required</code></div>
+      <div class="opt" id="o37B" onclick="pick(37,'B')"><span class="opt-key">B</span><code>validate</code></div>
+      <div class="opt" id="o37C" onclick="pick(37,'C')"><span class="opt-key">C</span><code>nonempty</code></div>
+      <div class="opt" id="o37D" onclick="pick(37,'D')"><span class="opt-key">D</span><code>mandatory</code></div>
+    </div>
+    <div class="feedback" id="fb37"></div>
+  </div>
+
+  <!-- Q38 -->
+  <div class="q-card" id="c38">
+    <div class="q-head"><span class="q-num">Q38 · MC</span><p class="q-text">An input uses <code>pattern='[A-Z]{2}[0-9]{4}'</code>. Which value would the browser REJECT?</p></div>
+    <div class="opts">
+      <div class="opt" id="o38A" onclick="pick(38,'A')"><span class="opt-key">A</span>AB1234</div>
+      <div class="opt" id="o38B" onclick="pick(38,'B')"><span class="opt-key">B</span>ZZ9999</div>
+      <div class="opt" id="o38C" onclick="pick(38,'C')"><span class="opt-key">C</span>AZ0001</div>
+      <div class="opt" id="o38D" onclick="pick(38,'D')"><span class="opt-key">D</span>ab1234</div>
+    </div>
+    <div class="feedback" id="fb38"></div>
+  </div>
+
+  <!-- Q39 -->
+  <div class="q-card" id="c39">
+    <div class="q-head"><span class="q-num">Q39 · MC</span><p class="q-text">Which attribute limits the number of characters a user can type into an input?</p></div>
+    <div class="opts">
+      <div class="opt" id="o39A" onclick="pick(39,'A')"><span class="opt-key">A</span><code>size</code></div>
+      <div class="opt" id="o39B" onclick="pick(39,'B')"><span class="opt-key">B</span><code>max</code></div>
+      <div class="opt" id="o39C" onclick="pick(39,'C')"><span class="opt-key">C</span><code>maxlength</code></div>
+      <div class="opt" id="o39D" onclick="pick(39,'D')"><span class="opt-key">D</span><code>limit</code></div>
+    </div>
+    <div class="feedback" id="fb39"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ STANDARD 4 ════════════════════════════════════════ -->
+<div id="s4" class="section">
+  <div class="section-title">Standard 4 — Layouts &amp; Responsive Design</div>
+  <div class="section-sub">CSS layout · overflow · position · flexbox · CSS grid · media queries · responsive units</div>
+
+  <!-- Q40 -->
+  <div class="q-card" id="c40">
+    <div class="q-head"><span class="q-num">Q40 · MC</span><p class="q-text">What is the default CSS <code>display</code> value for a <code>&lt;div&gt;</code> element?</p></div>
+    <div class="opts">
+      <div class="opt" id="o40A" onclick="pick(40,'A')"><span class="opt-key">A</span>block</div>
+      <div class="opt" id="o40B" onclick="pick(40,'B')"><span class="opt-key">B</span>inline-block</div>
+      <div class="opt" id="o40C" onclick="pick(40,'C')"><span class="opt-key">C</span>flex</div>
+      <div class="opt" id="o40D" onclick="pick(40,'D')"><span class="opt-key">D</span>inline</div>
+    </div>
+    <div class="feedback" id="fb40"></div>
+  </div>
+
+  <!-- Q41 -->
+  <div class="q-card" id="c41">
+    <div class="q-head"><span class="q-num">Q41 · MC</span><p class="q-text">A developer sets <code>overflow: hidden</code> on a container. What happens to content that extends beyond it?</p></div>
+    <div class="opts">
+      <div class="opt" id="o41A" onclick="pick(41,'A')"><span class="opt-key">A</span>Content is clipped and invisible at the container's boundary</div>
+      <div class="opt" id="o41B" onclick="pick(41,'B')"><span class="opt-key">B</span>Content scrolls within the container</div>
+      <div class="opt" id="o41C" onclick="pick(41,'C')"><span class="opt-key">C</span>Content pushes the container to expand</div>
+      <div class="opt" id="o41D" onclick="pick(41,'D')"><span class="opt-key">D</span>Content appears in a tooltip</div>
+    </div>
+    <div class="feedback" id="fb41"></div>
+  </div>
+
+  <!-- Q42 -->
+  <div class="q-card" id="c42">
+    <div class="q-head"><span class="q-num q-num trap">Q42 · MC ⚠</span><p class="q-text">What is the difference between <code>position: absolute</code> and <code>float</code>?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — float is NOT a position value</div>
+    <div class="opts">
+      <div class="opt" id="o42A" onclick="pick(42,'A')"><span class="opt-key">A</span>They are the same — both remove elements from normal flow</div>
+      <div class="opt" id="o42B" onclick="pick(42,'B')"><span class="opt-key">B</span>absolute keeps the element in flow; float removes it</div>
+      <div class="opt" id="o42C" onclick="pick(42,'C')"><span class="opt-key">C</span>float only works on images</div>
+      <div class="opt" id="o42D" onclick="pick(42,'D')"><span class="opt-key">D</span>float is NOT a position value — it is a separate CSS property; absolute removes the element from document flow entirely</div>
+    </div>
+    <div class="feedback" id="fb42"></div>
+  </div>
+
+  <!-- Q43 -->
+  <div class="q-card" id="c43">
+    <div class="q-head"><span class="q-num">Q43 · MC</span><p class="q-text">Which CSS property controls how an image fills a container that has a different aspect ratio?</p></div>
+    <div class="opts">
+      <div class="opt" id="o43A" onclick="pick(43,'A')"><span class="opt-key">A</span><code>background-size</code></div>
+      <div class="opt" id="o43B" onclick="pick(43,'B')"><span class="opt-key">B</span><code>image-resize</code></div>
+      <div class="opt" id="o43C" onclick="pick(43,'C')"><span class="opt-key">C</span><code>object-fit</code></div>
+      <div class="opt" id="o43D" onclick="pick(43,'D')"><span class="opt-key">D</span><code>aspect-ratio</code></div>
+    </div>
+    <div class="feedback" id="fb43"></div>
+  </div>
+
+  <!-- Q44 -->
+  <div class="q-card" id="c44">
+    <div class="q-head"><span class="q-num">Q44 · MC</span><p class="q-text">What does <code>overflow: scroll</code> do differently from <code>overflow: auto</code>?</p></div>
+    <div class="opts">
+      <div class="opt" id="o44A" onclick="pick(44,'A')"><span class="opt-key">A</span>They are identical</div>
+      <div class="opt" id="o44B" onclick="pick(44,'B')"><span class="opt-key">B</span>auto always shows scrollbars; scroll hides them</div>
+      <div class="opt" id="o44C" onclick="pick(44,'C')"><span class="opt-key">C</span>scroll always shows scrollbars even if content fits; auto only shows them when content overflows</div>
+      <div class="opt" id="o44D" onclick="pick(44,'D')"><span class="opt-key">D</span>scroll only works vertically; auto works in both directions</div>
+    </div>
+    <div class="feedback" id="fb44"></div>
+  </div>
+
+  <!-- Q45 -->
+  <div class="q-card" id="c45">
+    <div class="q-head"><span class="q-num">Q45 · MC</span><p class="q-text">What does the <code>vh</code> CSS unit represent?</p></div>
+    <div class="opts">
+      <div class="opt" id="o45A" onclick="pick(45,'A')"><span class="opt-key">A</span>1% of the viewport height</div>
+      <div class="opt" id="o45B" onclick="pick(45,'B')"><span class="opt-key">B</span>Vertical header — height of the page header</div>
+      <div class="opt" id="o45C" onclick="pick(45,'C')"><span class="opt-key">C</span>Variable height — adjusts to content</div>
+      <div class="opt" id="o45D" onclick="pick(45,'D')"><span class="opt-key">D</span>Virtual height — used only in animations</div>
+    </div>
+    <div class="feedback" id="fb45"></div>
+  </div>
+
+  <!-- Q46 -->
+  <div class="q-card" id="c46">
+    <div class="q-head"><span class="q-num q-num trap">Q46 · MC ⚠</span><p class="q-text">A media query is written as <code>@media (min-width: 768px)</code>. When does this CSS apply?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — min-width means "this size and LARGER", not smaller</div>
+    <div class="opts">
+      <div class="opt" id="o46A" onclick="pick(46,'A')"><span class="opt-key">A</span>Only on screens smaller than 768px</div>
+      <div class="opt" id="o46B" onclick="pick(46,'B')"><span class="opt-key">B</span>Only on screens exactly 768px</div>
+      <div class="opt" id="o46C" onclick="pick(46,'C')"><span class="opt-key">C</span>On all screens except 768px</div>
+      <div class="opt" id="o46D" onclick="pick(46,'D')"><span class="opt-key">D</span>On screens 768px wide and larger</div>
+    </div>
+    <div class="feedback" id="fb46"></div>
+  </div>
+
+  <!-- Q47 fill -->
+  <div class="q-card" id="c47">
+    <div class="q-head"><span class="q-num fill">Q47 · FILL</span><p class="q-text">Write the media query for tablet screens from 776px up to (but not including) 1280px:</p></div>
+    <pre class="q-code">@media (<span class="blank">_____</span>: 776px) and (<span class="blank">_____</span>: 1279px) {
+  /* tablet styles */
+}</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">First condition:</span><input class="blank-input" id="b47_0" placeholder="min or max?" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(47)"/></div>
+      <div class="blank-row"><span class="blank-label">Second condition:</span><input class="blank-input" id="b47_1" placeholder="min or max?" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(47)"/></div>
+      <button class="check-btn" id="btn47" onclick="checkFill(47)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb47"></div>
+  </div>
+
+  <!-- Q48 -->
+  <div class="q-card" id="c48">
+    <div class="q-head"><span class="q-num">Q48 · MC</span><p class="q-text">Which <code>background-size</code> value covers the entire container while maintaining aspect ratio (may crop the image)?</p></div>
+    <div class="opts">
+      <div class="opt" id="o48A" onclick="pick(48,'A')"><span class="opt-key">A</span><code>background-size: 100% 100%</code></div>
+      <div class="opt" id="o48B" onclick="pick(48,'B')"><span class="opt-key">B</span><code>background-size: cover</code></div>
+      <div class="opt" id="o48C" onclick="pick(48,'C')"><span class="opt-key">C</span><code>background-size: contain</code></div>
+      <div class="opt" id="o48D" onclick="pick(48,'D')"><span class="opt-key">D</span><code>background-size: fill</code></div>
+    </div>
+    <div class="feedback" id="fb48"></div>
+  </div>
+
+  <!-- Q49 -->
+  <div class="q-card" id="c49">
+    <div class="q-head"><span class="q-num">Q49 · MC</span><p class="q-text">What does <code>flex-direction: column-reverse</code> do?</p></div>
+    <div class="opts">
+      <div class="opt" id="o49A" onclick="pick(49,'A')"><span class="opt-key">A</span>Arranges flex items in a horizontal row from right to left</div>
+      <div class="opt" id="o49B" onclick="pick(49,'B')"><span class="opt-key">B</span>Rotates the flex container 180 degrees</div>
+      <div class="opt" id="o49C" onclick="pick(49,'C')"><span class="opt-key">C</span>Arranges items vertically with the last item appearing at the top</div>
+      <div class="opt" id="o49D" onclick="pick(49,'D')"><span class="opt-key">D</span>Reverses the order of items but keeps them horizontal</div>
+    </div>
+    <div class="feedback" id="fb49"></div>
+  </div>
+
+  <!-- Q50 -->
+  <div class="q-card" id="c50">
+    <div class="q-head"><span class="q-num">Q50 · MC</span><p class="q-text">Which flex property controls how much a flex item will GROW relative to others when there is extra space?</p></div>
+    <div class="opts">
+      <div class="opt" id="o50A" onclick="pick(50,'A')"><span class="opt-key">A</span><code>flex-grow</code></div>
+      <div class="opt" id="o50B" onclick="pick(50,'B')"><span class="opt-key">B</span><code>flex-shrink</code></div>
+      <div class="opt" id="o50C" onclick="pick(50,'C')"><span class="opt-key">C</span><code>flex-order</code></div>
+      <div class="opt" id="o50D" onclick="pick(50,'D')"><span class="opt-key">D</span><code>flex-basis</code></div>
+    </div>
+    <div class="feedback" id="fb50"></div>
+  </div>
+
+  <!-- Q51 -->
+  <div class="q-card" id="c51">
+    <div class="q-head"><span class="q-num">Q51 · MC</span><p class="q-text">What does <code>flex-wrap: wrap</code> do?</p></div>
+    <div class="opts">
+      <div class="opt" id="o51A" onclick="pick(51,'A')"><span class="opt-key">A</span>Allows flex items to break onto multiple lines when they don't fit on one</div>
+      <div class="opt" id="o51B" onclick="pick(51,'B')"><span class="opt-key">B</span>Wraps the flex container in a border</div>
+      <div class="opt" id="o51C" onclick="pick(51,'C')"><span class="opt-key">C</span>Wraps text inside flex items</div>
+      <div class="opt" id="o51D" onclick="pick(51,'D')"><span class="opt-key">D</span>Prevents items from shrinking below their content size</div>
+    </div>
+    <div class="feedback" id="fb51"></div>
+  </div>
+
+  <!-- Q52 fill -->
+  <div class="q-card" id="c52">
+    <div class="q-head"><span class="q-num fill">Q52 · FILL</span><p class="q-text">A flex container needs items centered both horizontally and vertically. Fill in the blanks:</p></div>
+    <pre class="q-code">.center-box {
+  display: flex;
+  <span class="blank">___</span>-content: center;
+  <span class="blank">___</span>-items: center;
+}</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">Horizontal prefix:</span><input class="blank-input" id="b52_0" placeholder="justify or align?" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(52)"/></div>
+      <div class="blank-row"><span class="blank-label">Vertical prefix:</span><input class="blank-input" id="b52_1" placeholder="justify or align?" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(52)"/></div>
+      <button class="check-btn" id="btn52" onclick="checkFill(52)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb52"></div>
+  </div>
+
+  <!-- Q53 -->
+  <div class="q-card" id="c53">
+    <div class="q-head"><span class="q-num">Q53 · MC</span><p class="q-text">What does <code>grid-template-columns: 1fr 1fr 2fr 1fr</code> create?</p></div>
+    <div class="opts">
+      <div class="opt" id="o53A" onclick="pick(53,'A')"><span class="opt-key">A</span>4 equal columns</div>
+      <div class="opt" id="o53B" onclick="pick(53,'B')"><span class="opt-key">B</span>4 columns where the third is twice as wide as the others</div>
+      <div class="opt" id="o53C" onclick="pick(53,'C')"><span class="opt-key">C</span>3 columns with the last being 2px wide</div>
+      <div class="opt" id="o53D" onclick="pick(53,'D')"><span class="opt-key">D</span>2 columns that are 1 and 2 pixels wide</div>
+    </div>
+    <div class="feedback" id="fb53"></div>
+  </div>
+
+  <!-- Q54 fill -->
+  <div class="q-card" id="c54">
+    <div class="q-head"><span class="q-num fill">Q54 · FILL</span><p class="q-text">Complete the CSS for a 3-column equal grid with a 10px gap:</p></div>
+    <pre class="q-code">.container {
+  display: <span class="blank">___</span>;
+  grid-template-columns: <span class="blank">___</span>(3, 1fr);
+  gap: 10px;
+}</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">Display value:</span><input class="blank-input" id="b54_0" placeholder="grid or flex?" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(54)"/></div>
+      <div class="blank-row"><span class="blank-label">Function name:</span><input class="blank-input" id="b54_1" placeholder="function name" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(54)"/></div>
+      <button class="check-btn" id="btn54" onclick="checkFill(54)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb54"></div>
+  </div>
+
+  <!-- Q55 -->
+  <div class="q-card" id="c55">
+    <div class="q-head"><span class="q-num">Q55 · MC</span><p class="q-text">Which property sets the spacing between grid rows AND columns simultaneously?</p></div>
+    <div class="opts">
+      <div class="opt" id="o55A" onclick="pick(55,'A')"><span class="opt-key">A</span><code>grid-spacing</code></div>
+      <div class="opt" id="o55B" onclick="pick(55,'B')"><span class="opt-key">B</span><code>gap</code> (or older <code>grid-gap</code>)</div>
+      <div class="opt" id="o55C" onclick="pick(55,'C')"><span class="opt-key">C</span><code>margin</code></div>
+      <div class="opt" id="o55D" onclick="pick(55,'D')"><span class="opt-key">D</span><code>padding</code></div>
+    </div>
+    <div class="feedback" id="fb55"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ STANDARD 5 ════════════════════════════════════════ -->
+<div id="s5" class="section">
+  <div class="section-title">Standard 5 — JavaScript</div>
+  <div class="section-sub">Classes · inheritance · XHR · storage · events · touch · geolocation · APIs</div>
+
+  <!-- Q56 -->
+  <div class="q-card" id="c56">
+    <div class="q-head"><span class="q-num">Q56 · MC</span><p class="q-text">Fill in the blanks: <code>class Mustang ___ Car { constructor(color,year,hp){ ___(color,year); this.hp=hp; } }</code></p></div>
+    <div class="opts">
+      <div class="opt" id="o56A" onclick="pick(56,'A')"><span class="opt-key">A</span><code>implements</code>, <code>base()</code></div>
+      <div class="opt" id="o56B" onclick="pick(56,'B')"><span class="opt-key">B</span><code>extends</code>, <code>super()</code></div>
+      <div class="opt" id="o56C" onclick="pick(56,'C')"><span class="opt-key">C</span><code>inherits</code>, <code>parent()</code></div>
+      <div class="opt" id="o56D" onclick="pick(56,'D')"><span class="opt-key">D</span><code>extends</code>, <code>this()</code></div>
+    </div>
+    <div class="feedback" id="fb56"></div>
+  </div>
+
+  <!-- Q57 -->
+  <div class="q-card" id="c57">
+    <div class="q-head"><span class="q-num">Q57 · MC</span><p class="q-text">In a JavaScript class, what is a <code>getter</code> method used for?</p></div>
+    <div class="opts">
+      <div class="opt" id="o57A" onclick="pick(57,'A')"><span class="opt-key">A</span>To retrieve the class from a database</div>
+      <div class="opt" id="o57B" onclick="pick(57,'B')"><span class="opt-key">B</span>To set a property value with validation</div>
+      <div class="opt" id="o57C" onclick="pick(57,'C')"><span class="opt-key">C</span>To create a new instance of the class</div>
+      <div class="opt" id="o57D" onclick="pick(57,'D')"><span class="opt-key">D</span>To access a computed property using dot notation (no parentheses) while running logic behind the scenes</div>
+    </div>
+    <div class="feedback" id="fb57"></div>
+  </div>
+
+  <!-- Q58 -->
+  <div class="q-card" id="c58">
+    <div class="q-head"><span class="q-num q-num trap">Q58 · MC ⚠</span><p class="q-text">What TWO values must both be true for a successful XHR response?</p></div>
+    <div class="opts">
+      <div class="opt" id="o58A" onclick="pick(58,'A')"><span class="opt-key">A</span><code>xhr.status === 200</code> and <code>xhr.readyState === 4</code></div>
+      <div class="opt" id="o58B" onclick="pick(58,'B')"><span class="opt-key">B</span><code>xhr.status === 404</code> and <code>xhr.readyState === 1</code></div>
+      <div class="opt" id="o58C" onclick="pick(58,'C')"><span class="opt-key">C</span><code>xhr.status === 200</code> and <code>xhr.readyState === 1</code></div>
+      <div class="opt" id="o58D" onclick="pick(58,'D')"><span class="opt-key">D</span><code>xhr.response === 'OK'</code> and <code>xhr.state === 4</code></div>
+    </div>
+    <div class="feedback" id="fb58"></div>
+  </div>
+
+  <!-- Q59 -->
+  <div class="q-card" id="c59">
+    <div class="q-head"><span class="q-num q-num trap">Q59 · MC ⚠</span><p class="q-text">Which of the following correctly uses localStorage to save and then retrieve an object?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — must use JSON.stringify to save, JSON.parse to retrieve</div>
+    <div class="opts">
+      <div class="opt" id="o59A" onclick="pick(59,'A')"><span class="opt-key">A</span><code>localStorage.setItem("u", user);</code> — stores directly</div>
+      <div class="opt" id="o59B" onclick="pick(59,'B')"><span class="opt-key">B</span><code>localStorage.setItem("u", JSON.stringify(user)); const u = JSON.parse(localStorage.getItem("u"));</code></div>
+      <div class="opt" id="o59C" onclick="pick(59,'C')"><span class="opt-key">C</span><code>localStorage.write(user); const u = localStorage.read("u");</code></div>
+      <div class="opt" id="o59D" onclick="pick(59,'D')"><span class="opt-key">D</span><code>localStorage.setItem("u", user.toString());</code></div>
+    </div>
+    <div class="feedback" id="fb59"></div>
+  </div>
+
+  <!-- Q60 -->
+  <div class="q-card" id="c60">
+    <div class="q-head"><span class="q-num">Q60 · MC</span><p class="q-text">What is the key difference between <code>sessionStorage</code> and <code>localStorage</code>?</p></div>
+    <div class="opts">
+      <div class="opt" id="o60A" onclick="pick(60,'A')"><span class="opt-key">A</span>sessionStorage stores objects; localStorage stores only strings</div>
+      <div class="opt" id="o60B" onclick="pick(60,'B')"><span class="opt-key">B</span>localStorage is limited to 4KB; sessionStorage has no limit</div>
+      <div class="opt" id="o60C" onclick="pick(60,'C')"><span class="opt-key">C</span>sessionStorage is cleared when the tab closes; localStorage persists until explicitly deleted</div>
+      <div class="opt" id="o60D" onclick="pick(60,'D')"><span class="opt-key">D</span>They are identical — just different names for the same API</div>
+    </div>
+    <div class="feedback" id="fb60"></div>
+  </div>
+
+  <!-- Q61 -->
+  <div class="q-card" id="c61">
+    <div class="q-head"><span class="q-num q-num trap">Q61 · MC ⚠</span><p class="q-text">Which of the following are valid TOUCH events?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — touchbegin and touchstop do NOT exist</div>
+    <div class="opts">
+      <div class="opt" id="o61A" onclick="pick(61,'A')"><span class="opt-key">A</span>touchstart, touchmove, touchend, touchcancel</div>
+      <div class="opt" id="o61B" onclick="pick(61,'B')"><span class="opt-key">B</span>touchbegin, touchmove, touchstop, touchcancel</div>
+      <div class="opt" id="o61C" onclick="pick(61,'C')"><span class="opt-key">C</span>click, drag, touchstart, touchhold</div>
+      <div class="opt" id="o61D" onclick="pick(61,'D')"><span class="opt-key">D</span>fingerdown, fingermove, fingerup, fingercancel</div>
+    </div>
+    <div class="feedback" id="fb61"></div>
+  </div>
+
+  <!-- Q62 -->
+  <div class="q-card" id="c62">
+    <div class="q-head"><span class="q-num q-num trap">Q62 · MC ⚠</span><p class="q-text">What is the difference between <code>event.preventDefault()</code> and <code>event.stopPropagation()</code>?</p></div>
+    <div class="trap-box">⚠ EXAM TRAP — these are completely different things</div>
+    <div class="opts">
+      <div class="opt" id="o62A" onclick="pick(62,'A')"><span class="opt-key">A</span>They do the same thing — both stop the event entirely</div>
+      <div class="opt" id="o62B" onclick="pick(62,'B')"><span class="opt-key">B</span>preventDefault stops the browser's default action (e.g. form submit); stopPropagation stops the event from bubbling up to parent elements</div>
+      <div class="opt" id="o62C" onclick="pick(62,'C')"><span class="opt-key">C</span>stopPropagation stops form submission; preventDefault stops bubbling</div>
+      <div class="opt" id="o62D" onclick="pick(62,'D')"><span class="opt-key">D</span>preventDefault only works on links; stopPropagation only works on forms</div>
+    </div>
+    <div class="feedback" id="fb62"></div>
+  </div>
+
+  <!-- Q63 -->
+  <div class="q-card" id="c63">
+    <div class="q-head"><span class="q-num">Q63 · MC</span><p class="q-text">An inner div and outer div both have click listeners. The user clicks the inner div. What happens by default (bubbling)?</p></div>
+    <div class="opts">
+      <div class="opt" id="o63A" onclick="pick(63,'A')"><span class="opt-key">A</span>Only the inner div's listener fires</div>
+      <div class="opt" id="o63B" onclick="pick(63,'B')"><span class="opt-key">B</span>Only the outer div's listener fires</div>
+      <div class="opt" id="o63C" onclick="pick(63,'C')"><span class="opt-key">C</span>Inner fires first, then event bubbles up and outer fires second</div>
+      <div class="opt" id="o63D" onclick="pick(63,'D')"><span class="opt-key">D</span>Both fire simultaneously in no particular order</div>
+    </div>
+    <div class="feedback" id="fb63"></div>
+  </div>
+
+  <!-- Q64 -->
+  <div class="q-card" id="c64">
+    <div class="q-head"><span class="q-num">Q64 · MC</span><p class="q-text">What does the success callback of <code>navigator.geolocation.getCurrentPosition()</code> receive as its argument?</p></div>
+    <div class="opts">
+      <div class="opt" id="o64A" onclick="pick(64,'A')"><span class="opt-key">A</span>A string with latitude and longitude separated by a comma</div>
+      <div class="opt" id="o64B" onclick="pick(64,'B')"><span class="opt-key">B</span>A position object with a coords property containing latitude, longitude, and accuracy</div>
+      <div class="opt" id="o64C" onclick="pick(64,'C')"><span class="opt-key">C</span>An array of [latitude, longitude]</div>
+      <div class="opt" id="o64D" onclick="pick(64,'D')"><span class="opt-key">D</span>A Google Maps URL string</div>
+    </div>
+    <div class="feedback" id="fb64"></div>
+  </div>
+
+  <!-- Q65 -->
+  <div class="q-card" id="c65">
+    <div class="q-head"><span class="q-num">Q65 · MC</span><p class="q-text">What method stops a geolocation <code>watchPosition</code> from continuing to fire?</p></div>
+    <div class="opts">
+      <div class="opt" id="o65A" onclick="pick(65,'A')"><span class="opt-key">A</span><code>navigator.geolocation.stop()</code></div>
+      <div class="opt" id="o65B" onclick="pick(65,'B')"><span class="opt-key">B</span><code>navigator.geolocation.cancel(watchId)</code></div>
+      <div class="opt" id="o65C" onclick="pick(65,'C')"><span class="opt-key">C</span><code>navigator.geolocation.clearWatch(watchId)</code></div>
+      <div class="opt" id="o65D" onclick="pick(65,'D')"><span class="opt-key">D</span><code>watchPosition.stop()</code></div>
+    </div>
+    <div class="feedback" id="fb65"></div>
+  </div>
+
+  <!-- Q66 -->
+  <div class="q-card" id="c66">
+    <div class="q-head"><span class="q-num">Q66 · MC</span><p class="q-text">What does <code>fetch(url)</code> return?</p></div>
+    <div class="opts">
+      <div class="opt" id="o66A" onclick="pick(66,'A')"><span class="opt-key">A</span>The raw response data directly</div>
+      <div class="opt" id="o66B" onclick="pick(66,'B')"><span class="opt-key">B</span>A Promise that resolves to a Response object</div>
+      <div class="opt" id="o66C" onclick="pick(66,'C')"><span class="opt-key">C</span>An XHR object</div>
+      <div class="opt" id="o66D" onclick="pick(66,'D')"><span class="opt-key">D</span>A callback function</div>
+    </div>
+    <div class="feedback" id="fb66"></div>
+  </div>
+
+  <!-- Q67 -->
+  <div class="q-card" id="c67">
+    <div class="q-head"><span class="q-num q-num trap">Q67 · MC ⚠</span><p class="q-text">What is the difference between <code>==</code> and <code>===</code> in JavaScript?</p></div>
+    <div class="opts">
+      <div class="opt" id="o67A" onclick="pick(67,'A')"><span class="opt-key">A</span>They are identical</div>
+      <div class="opt" id="o67B" onclick="pick(67,'B')"><span class="opt-key">B</span><code>==</code> checks value only (loose, allows type coercion); <code>===</code> checks both value AND type (strict, no coercion)</div>
+      <div class="opt" id="o67C" onclick="pick(67,'C')"><span class="opt-key">C</span><code>===</code> checks value only; <code>==</code> checks value and type</div>
+      <div class="opt" id="o67D" onclick="pick(67,'D')"><span class="opt-key">D</span><code>==</code> is used for numbers; <code>===</code> is used for strings</div>
+    </div>
+    <div class="feedback" id="fb67"></div>
+  </div>
+
+  <!-- Q68 -->
+  <div class="q-card" id="c68">
+    <div class="q-head"><span class="q-num">Q68 · MC</span><p class="q-text">Which of these array methods returns a NEW array containing only items that pass a test?</p></div>
+    <div class="opts">
+      <div class="opt" id="o68A" onclick="pick(68,'A')"><span class="opt-key">A</span><code>Array.map()</code></div>
+      <div class="opt" id="o68B" onclick="pick(68,'B')"><span class="opt-key">B</span><code>Array.filter()</code></div>
+      <div class="opt" id="o68C" onclick="pick(68,'C')"><span class="opt-key">C</span><code>Array.find()</code></div>
+      <div class="opt" id="o68D" onclick="pick(68,'D')"><span class="opt-key">D</span><code>Array.forEach()</code></div>
+    </div>
+    <div class="feedback" id="fb68"></div>
+  </div>
+
+  <!-- Q69 fill -->
+  <div class="q-card" id="c69">
+    <div class="q-head"><span class="q-num fill">Q69 · FILL</span><p class="q-text">Complete the async function that fetches JSON data from an API:</p></div>
+    <pre class="q-code"><span class="kw">async function</span> getData(url) {
+  const response = <span class="blank">___</span> fetch(url);
+  const data = <span class="blank">___</span> response.json();
+  return data;
+}</pre>
+    <div class="fill-wrap">
+      <div class="blank-row"><span class="blank-label">First keyword:</span><input class="blank-input" id="b69_0" placeholder="keyword before fetch" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(69)"/></div>
+      <div class="blank-row"><span class="blank-label">Second keyword:</span><input class="blank-input" id="b69_1" placeholder="keyword before .json()" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill(69)"/></div>
+      <button class="check-btn" id="btn69" onclick="checkFill(69)">CHECK ANSWER</button>
+    </div>
+    <div class="feedback" id="fb69"></div>
+  </div>
+
+  <!-- Q70 -->
+  <div class="q-card" id="c70">
+    <div class="q-head"><span class="q-num">Q70 · MC</span><p class="q-text">What does <code>Array.map()</code> return?</p></div>
+    <div class="opts">
+      <div class="opt" id="o70A" onclick="pick(70,'A')"><span class="opt-key">A</span>The first item that matches a condition</div>
+      <div class="opt" id="o70B" onclick="pick(70,'B')"><span class="opt-key">B</span>A new array of the same length with each item transformed by the callback</div>
+      <div class="opt" id="o70C" onclick="pick(70,'C')"><span class="opt-key">C</span>Only items that pass a test</div>
+      <div class="opt" id="o70D" onclick="pick(70,'D')"><span class="opt-key">D</span>Nothing — it modifies the original array in place</div>
+    </div>
+    <div class="feedback" id="fb70"></div>
+  </div>
+
+  <!-- Q71 -->
+  <div class="q-card" id="c71">
+    <div class="q-head"><span class="q-num">Q71 · MC</span><p class="q-text">What is the correct order for saving an object to and retrieving it from <code>localStorage</code>?</p></div>
+    <div class="opts">
+      <div class="opt" id="o71A" onclick="pick(71,'A')"><span class="opt-key">A</span>Store object directly → retrieve with JSON.parse</div>
+      <div class="opt" id="o71B" onclick="pick(71,'B')"><span class="opt-key">B</span>JSON.stringify → setItem → getItem → JSON.parse</div>
+      <div class="opt" id="o71C" onclick="pick(71,'C')"><span class="opt-key">C</span>setItem → stringify → getItem → parse</div>
+      <div class="opt" id="o71D" onclick="pick(71,'D')"><span class="opt-key">D</span>Object.toString → setItem → getItem → JSON.parse</div>
+    </div>
+    <div class="feedback" id="fb71"></div>
+  </div>
+
+  <!-- Q72 -->
+  <div class="q-card" id="c72">
+    <div class="q-head"><span class="q-num">Q72 · MC</span><p class="q-text">Which CSS property controls the visual order of flex items without changing the HTML source order?</p></div>
+    <div class="opts">
+      <div class="opt" id="o72A" onclick="pick(72,'A')"><span class="opt-key">A</span><code>z-index</code></div>
+      <div class="opt" id="o72B" onclick="pick(72,'B')"><span class="opt-key">B</span><code>tabindex</code></div>
+      <div class="opt" id="o72C" onclick="pick(72,'C')"><span class="opt-key">C</span><code>order</code></div>
+      <div class="opt" id="o72D" onclick="pick(72,'D')"><span class="opt-key">D</span><code>flex-index</code></div>
+    </div>
+    <div class="feedback" id="fb72"></div>
+  </div>
+
+  <!-- Q73 -->
+  <div class="q-card" id="c73">
+    <div class="q-head"><span class="q-num">Q73 · MC</span><p class="q-text">What does <code>grid-template-areas</code> allow you to do?</p></div>
+    <div class="opts">
+      <div class="opt" id="o73A" onclick="pick(73,'A')"><span class="opt-key">A</span>Creates a named grid layout where child elements can be placed by area name using <code>grid-area</code></div>
+      <div class="opt" id="o73B" onclick="pick(73,'B')"><span class="opt-key">B</span>Names individual grid cells for use in media queries</div>
+      <div class="opt" id="o73C" onclick="pick(73,'C')"><span class="opt-key">C</span>Sets the column and row sizes of the grid</div>
+      <div class="opt" id="o73D" onclick="pick(73,'D')"><span class="opt-key">D</span>Creates a 3x3 grid with equal cells</div>
+    </div>
+    <div class="feedback" id="fb73"></div>
+  </div>
+
+  <!-- Q74 -->
+  <div class="q-card" id="c74">
+    <div class="q-head"><span class="q-num">Q74 · MC</span><p class="q-text">What does <code>ctx.clearRect(x, y, width, height)</code> do on a canvas?</p></div>
+    <div class="opts">
+      <div class="opt" id="o74A" onclick="pick(74,'A')"><span class="opt-key">A</span>Fills the area with white</div>
+      <div class="opt" id="o74B" onclick="pick(74,'B')"><span class="opt-key">B</span>Erases the specified area to transparent — used to clear canvas between animation frames</div>
+      <div class="opt" id="o74C" onclick="pick(74,'C')"><span class="opt-key">C</span>Resets all canvas styles</div>
+      <div class="opt" id="o74D" onclick="pick(74,'D')"><span class="opt-key">D</span>Removes the canvas element from the DOM</div>
+    </div>
+    <div class="feedback" id="fb74"></div>
+  </div>
+
+  <!-- Q75 -->
+  <div class="q-card" id="c75">
+    <div class="q-head"><span class="q-num">Q75 · MC</span><p class="q-text">What does <code>viewBox</code> on an SVG element control?</p></div>
+    <div class="opts">
+      <div class="opt" id="o75A" onclick="pick(75,'A')"><span class="opt-key">A</span>The background color of the SVG</div>
+      <div class="opt" id="o75B" onclick="pick(75,'B')"><span class="opt-key">B</span>The minimum browser version required to render the SVG</div>
+      <div class="opt" id="o75C" onclick="pick(75,'C')"><span class="opt-key">C</span>Which portion of the SVG's internal coordinate space is visible</div>
+      <div class="opt" id="o75D" onclick="pick(75,'D')"><span class="opt-key">D</span>The aspect ratio lock only</div>
+    </div>
+    <div class="feedback" id="fb75"></div>
+  </div>
+
+  <div class="results-panel" id="results">
+    <div class="results-score" id="r-score">0</div>
+    <div class="results-denom">out of 75</div>
+    <div class="results-bar-wrap"><div class="results-bar" id="r-bar" style="width:0%"></div></div>
+    <div class="results-msg" id="r-msg"></div>
+    <div class="results-sub" id="r-sub"></div>
+    <div class="breakdown" id="r-breakdown"></div>
+    <button class="retry-btn" onclick="retryExam()">RETRY EXAM</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════ REFERENCE ════════════════════════════════════════ -->
+<div id="ref" class="section">
+  <div class="section-title">Quick Reference</div>
+  <div class="section-sub">Cheat sheet for all topics — use alongside practice questions</div>
+
+  <div class="ref-grid">
+    <div class="ref-card">
+      <h3>SVG shape elements</h3>
+      <table class="ref-table">
+        <tr><th>Element</th><th>Key attributes</th></tr>
+        <tr><td>&lt;rect&gt;</td><td>x, y, width, height, rx (corner radius)</td></tr>
+        <tr><td>&lt;circle&gt;</td><td>cx, cy, r (center + radius)</td></tr>
+        <tr><td>&lt;ellipse&gt;</td><td>cx, cy, rx, ry (two radii)</td></tr>
+        <tr><td>&lt;line&gt;</td><td>x1, y1, x2, y2</td></tr>
+        <tr><td>&lt;polyline&gt;</td><td>points="x,y x,y …" (open)</td></tr>
+        <tr><td>&lt;polygon&gt;</td><td>points="x,y x,y …" (closes)</td></tr>
+        <tr><td>&lt;path&gt;</td><td>d="M x y L x y Z …"</td></tr>
+      </table>
+      <div class="ref-tip">⚠ cx/cy = center (circle). x/y = top-left corner (rect). Y increases DOWNWARD.</div>
+    </div>
+
+    <div class="ref-card">
+      <h3>CSS transform functions</h3>
+      <table class="ref-table">
+        <tr><th>Function</th><th>Effect</th></tr>
+        <tr><td>translate(x,y)</td><td>Moves element. No layout shift.</td></tr>
+        <tr><td>scale(x,y)</td><td>Resizes. 1=none, 2=double, 0.5=half</td></tr>
+        <tr><td>rotate(deg)</td><td>Clockwise. Negative = counter-CW</td></tr>
+        <tr><td>skewX(deg)</td><td>Horizontal shear (NOT rotation)</td></tr>
+        <tr><td>rotateY(deg)</td><td>3D flip — needs perspective on parent</td></tr>
+        <tr><td>matrix(a,b,c,d,e,f)</td><td>scaleX, skewY, skewX, scaleY, transX, transY</td></tr>
+      </table>
+      <div class="ref-tip">⚠ zoom is NOT a matrix() arg. 6 args only: scaleX, skewY, skewX, scaleY, translateX, translateY</div>
+    </div>
+
+    <div class="ref-card">
+      <h3>CSS filters</h3>
+      <table class="ref-table">
+        <tr><th>Filter</th><th>Effect</th></tr>
+        <tr><td>grayscale(100%)</td><td>Removes all color → gray</td></tr>
+        <tr><td>sepia(80%)</td><td>Warm brownish vintage effect</td></tr>
+        <tr><td>blur(4px)</td><td>Gaussian blur</td></tr>
+        <tr><td>saturate(0%)</td><td>Visually similar to grayscale</td></tr>
+        <tr><td>opacity(50%)</td><td>50% transparent</td></tr>
+        <tr><td>drop-shadow(x y b c)</td><td>Follows actual shape <span class="trap-chip">≠ box-shadow</span></td></tr>
+        <tr><td>invert(100%)</td><td>Photo negative effect</td></tr>
+      </table>
+      <div class="ref-tip">⚠ drop-shadow() follows shape (great for PNGs). box-shadow always rectangular.</div>
+    </div>
+
+    <div class="ref-card">
+      <h3>Canvas API</h3>
+      <table class="ref-table">
+        <tr><th>Method</th><th>Purpose</th></tr>
+        <tr><td>beginPath()</td><td>MUST call before new shape</td></tr>
+        <tr><td>arc(x,y,r,start,end)</td><td>5 required args, radians</td></tr>
+        <tr><td>fillRect(x,y,w,h)</td><td>Filled rect, no beginPath needed</td></tr>
+        <tr><td>clearRect(x,y,w,h)</td><td>Erase to transparent</td></tr>
+        <tr><td>moveTo(x,y)</td><td>Lift pen to point</td></tr>
+        <tr><td>lineTo(x,y)</td><td>Draw line to point</td></tr>
+        <tr><td>save() / restore()</td><td>Save/restore transform state</td></tr>
+      </table>
+      <div class="ref-tip">⚠ Math.PI * 2 = full circle. Math.PI = semi-circle. Canvas uses RADIANS not degrees.</div>
+    </div>
+
+    <div class="ref-card">
+      <h3>Flexbox</h3>
+      <table class="ref-table">
+        <tr><th>Property</th><th>Effect</th></tr>
+        <tr><td>justify-content</td><td>Main axis (horizontal for row)</td></tr>
+        <tr><td>align-items</td><td>Cross axis (vertical for row)</td></tr>
+        <tr><td>flex-grow</td><td>How much item grows</td></tr>
+        <tr><td>flex-shrink</td><td>How much item compresses</td></tr>
+        <tr><td>flex-wrap: wrap</td><td>Items break to new lines</td></tr>
+        <tr><td>order</td><td>Visual order (not DOM order)</td></tr>
+        <tr><td>column-reverse</td><td>Vertical, last item at top</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-card">
+      <h3>JavaScript key facts</h3>
+      <table class="ref-table">
+        <tr><th>Topic</th><th>Answer</th></tr>
+        <tr><td>XHR success</td><td>status===200 AND readyState===4</td></tr>
+        <tr><td>localStorage object</td><td>JSON.stringify → store → JSON.parse</td></tr>
+        <tr><td>sessionStorage</td><td>Cleared when tab closes</td></tr>
+        <tr><td>Touch events</td><td>touchstart, touchmove, touchend, touchcancel</td></tr>
+        <tr><td>preventDefault()</td><td>Stops browser default (form, link)</td></tr>
+        <tr><td>stopPropagation()</td><td>Stops event bubbling up</td></tr>
+        <tr><td>clearWatch(id)</td><td>Stops watchPosition</td></tr>
+        <tr><td>=== vs ==</td><td>=== strict (no coercion). == loose.</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-card">
+      <h3>Media queries</h3>
+      <table class="ref-table">
+        <tr><th>Syntax</th><th>Meaning</th></tr>
+        <tr><td>min-width: 768px</td><td>768px and LARGER <span class="trap-chip">not smaller</span></td></tr>
+        <tr><td>max-width: 767px</td><td>767px and SMALLER</td></tr>
+        <tr><td>min-width + max-width</td><td>Range (tablet breakpoint)</td></tr>
+        <tr><td>vh</td><td>1% of viewport HEIGHT</td></tr>
+        <tr><td>vw</td><td>1% of viewport WIDTH</td></tr>
+        <tr><td>background-size: cover</td><td>Fills container, may crop</td></tr>
+        <tr><td>background-size: contain</td><td>Fits inside, may letterbox</td></tr>
+      </table>
+    </div>
+
+    <div class="ref-card">
+      <h3>SDLC &amp; error types</h3>
+      <table class="ref-table">
+        <tr><th>Topic</th><th>Detail</th></tr>
+        <tr><td>SDLC order</td><td>Plan → Design → Develop → Test → Deploy → Maintain</td></tr>
+        <tr><td>Plan phase</td><td>Goal setting + delegation of responsibilities</td></tr>
+        <tr><td>QA activities</td><td>Check functionality, find bugs, verify design specs</td></tr>
+        <tr><td>Syntax error</td><td>Prevents code from running at all</td></tr>
+        <tr><td>Runtime error</td><td>Crashes during execution (e.g. undefined function)</td></tr>
+        <tr><td>Logic error</td><td>Runs but produces wrong result</td></tr>
+        <tr><td>Validation error</td><td>Accepts data it shouldn't</td></tr>
+        <tr><td>Breakpoint</td><td>Pauses JS execution at a line in DevTools</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- end exam-body -->
 
 <script>
-// ── ALL QUESTIONS ────────────────────────────────────────────────────────
+/* ═══════════════════════════════════ ANSWER KEY ═══════════════════════════════════ */
+const ANSWERS = {
+  1:{ans:'B',exp:"Plan → Design → Develop → Test → Deploy → Maintain is the standard SDLC order. Design always comes before development — you plan WHAT to build before you BUILD it. Never code before designing."},
+  2:{ans:'B',exp:"The Plan phase answers 'what are we doing and who's doing it?' — goal setting and delegation. Programming and architecture belong to Design/Develop phases. Testing and deployment come later."},
+  3:{ans:'B',exp:"QA checks functionality (does it work?), identifies bugs/defects, and verifies design specs are met. They don't rewrite code — that's the developer's job. They don't market or deploy to production either."},
+  4:{ans:'D',exp:"Input validation error — the form field accepted '12345' which isn't a valid email format. Syntax errors prevent code from running. Runtime errors crash during execution. Logic errors produce wrong results but the form still runs fine."},
+  5:{ans:'B',exp:"Breakpoints pause JS execution at a specific line so you can inspect variable values and step through code line by line. console.log only prints values without pausing. The Network tab shows HTTP requests. Lighthouse audits performance."},
+  6:{ans:'C',exp:"Runtime error — the script started running fine but crashed when it reached the line calling the undefined function. Syntax errors prevent the script from running at all. Runtime errors only appear when that specific line executes."},
+  7:{ans:'A',exp:"ctx.arc() requires exactly 5 arguments: x (center x), y (center y), radius, startAngle, endAngle. The optional 6th is anticlockwise (boolean). ctx.ellipse() takes 7 args and includes rx and ry."},
+  8:{ans:'C',exp:"Math.PI * 2 = 360 degrees in radians = one full circle. Math.PI alone = 180 degrees = semicircle. Canvas ONLY uses radians — passing 360 as a number will draw almost nothing because 360 radians is ~57 full circles."},
+  9:{blanks:['arc',['yellow',"'yellow'",'"yellow"']],exp:"ctx.arc() defines the circular path. fillStyle sets the color — you can use color names, hex, rgb. fill() renders it solid. beginPath() is called first to clear any previous path so the circle doesn't connect to earlier shapes."},
+  10:{ans:'C',exp:"ctx.beginPath() must be called before every new shape. Without it, new paths accumulate on top of old ones and connect with lines you didn't ask for. It's the most common canvas bug beginners make."},
+  11:{ans:'A',exp:"3D transforms like rotateY() need a perspective value to create the illusion of depth. Without it, the browser renders the 3D rotation as a flat 2D projection — it looks like a scale animation, not a flip. Add perspective: 600px on the parent or perspective(600px) first in the transform chain."},
+  12:{ans:'C',exp:"SVG is vector-based (mathematical shapes/paths) so it scales to any resolution without pixelation. PNG and JPEG are raster — fixed pixel grids that blur when enlarged. SVG is also in the DOM so it can be styled with CSS and scripted with JS."},
+  13:{ans:'C',exp:"SVG origin (0,0) is TOP-LEFT. Y increases DOWNWARD — opposite of math graphs. This trips up a lot of students. The further down the canvas you go, the higher the Y value. This is the same for CSS layouts."},
+  14:{ans:'D',exp:"polygon auto-closes the shape by drawing a line from the last point back to the first. polyline connects the points but leaves the shape open (no closing line). This is the most tested SVG distinction."},
+  15:{ans:'C',exp:"On a rect, rx adds rounded corners — it's the corner border-radius equivalent in SVG. It is NOT related to position at all. The position is set by x and y. ry would round corners vertically. rx alone rounds both if ry is not specified."},
+  16:{ans:'B',exp:"cx and cy define the CENTER point of the circle or ellipse. This is different from rect where x and y define the TOP-LEFT CORNER. Mix these up and your shapes will appear in the wrong place."},
+  17:{ans:'B',exp:"ellipse uses rx (horizontal radius) and ry (vertical radius) to create an oval shape. circle uses a single r for both directions. There is no oval element in SVG. width and height are not valid ellipse attributes."},
+  18:{ans:'B',exp:"stroke sets the outline/border color of the shape. fill sets the interior color. stroke-width controls the thickness of the outline. Setting fill='none' with a stroke gives you just an outline shape."},
+  19:{ans:'C',exp:"line uses x1,y1 as the start point and x2,y2 as the end point. rect uses x,y,width,height. ellipse uses cx,cy,rx,ry. Remember: line = two PAIRS of coordinates, one for each endpoint."},
+  20:{ans:'D',exp:"filter='url(#id)' is the SVG reference syntax — the # means 'find an element with this id'. Filters must be defined inside defs first. This same url(#id) pattern works for gradients and clipPaths too. class only works for CSS classes, not SVG filter references."},
+  21:{ans:'D',exp:"zoom is NOT a valid matrix() argument. The 6 matrix args are EXACTLY: scaleX, skewY, skewX, scaleY, translateX, translateY. This is the #1 most tested transform question — memorize those 6 in that order."},
+  22:{ans:'A',exp:"translate() moves the element visually without affecting document layout flow. The space where the element 'was' stays the same — surrounding elements don't move. This is very different from changing margin or position which affects layout."},
+  23:{ans:'B',exp:"scale(2) makes the element 2x larger in BOTH dimensions simultaneously. scale(2, 0.5) would double width but halve height. It does not affect font-size as a separate CSS property."},
+  24:{ans:'A',exp:"skewX() shears the element along the X axis — the top of the element slides horizontally in one direction while the bottom stays, creating a slanted parallelogram effect. This is NOT rotation. Rotation keeps the shape intact; skew distorts it."},
+  25:{blanks:[['0deg','0'],['360deg']],exp:"from sets the start state (0 degrees = no rotation). to sets the end (360 degrees = one full turn). 0 is also valid for the from value since deg are optional when the value is zero. Apply with: animation: spin 2s linear infinite;"},
+  26:{ans:'B',exp:"ease decelerates at the end of each cycle then re-accelerates at the start of the next — you see a visible 'stutter' or 'hiccup' at each loop point. linear maintains constant speed throughout, making infinite rotations perfectly smooth with no stutter."},
+  27:{ans:'A',exp:"filter: drop-shadow() traces the actual visible pixels of the element including transparent areas in a PNG. box-shadow always casts a rectangular shadow around the element's bounding box regardless of the actual shape. For non-rectangular images (like a PNG cutout), drop-shadow looks natural; box-shadow looks wrong."},
+  28:{ans:'B',exp:"sepia() applies a warm brownish tone mimicking old film/photographs. grayscale(100%) and saturate(0%) both remove color but result in neutral gray tones. blur() just blurs without changing color."},
+  29:{ans:'B',exp:"saturate(0%) removes all color saturation — the result looks like a black and white image, visually very similar to grayscale(100%). They work differently mathematically but look almost identical. saturate(200%) would boost colors to super-vibrant."},
+  30:{ans:'C',exp:"drop-shadow() syntax: filter: drop-shadow(offset-x offset-y blur-radius color). NO commas between values inside the parentheses. drop-shadow is a function INSIDE filter — not a standalone CSS property. The colon and semicolon are on the filter property."},
+  31:{ans:'B',exp:"3D transforms need perspective to create depth. perspective: 600px on the parent element tells the browser how far the 'viewer' is from the screen. Without it, rotateY looks like a flat 2D squeeze. transform-style: preserve-3d is needed for nested 3D children, but perspective alone handles the depth illusion."},
+  32:{ans:'C',exp:"fieldset creates the bordered group box around related form fields. legend provides the title that appears in/on the border of the fieldset. This is semantic HTML specifically designed for form grouping. div + h3 works visually but isn't semantic."},
+  33:{ans:'A',exp:"Wire datalist to an input using the list attribute on the input and the id on the datalist: <input list='myList'> + <datalist id='myList'>. Think 'list points to id'. It's NOT the other way around."},
+  34:{ans:'C',exp:"meter displays a scalar measurement within a known range — like disk usage (3GB of 10GB used), a quiz score, or a battery level. progress is for loading/progress operations. meter has min, max, value, low, high, and optimum attributes."},
+  35:{blanks:['for'],exp:"The for attribute on output references the ids of the inputs it's calculated from: for='a b' (space-separated). This creates a semantic relationship between inputs and their computed result, similar to how label's for attribute references an input's id."},
+  36:{ans:'B',exp:"[a-zA-Z0-9] matches any letter (uppercase or lowercase) or digit. {3} means exactly 3. The hyphens between groups are literal characters. Option A is wrong because [a-z] only matches lowercase. Option C is wrong because \\w also matches underscore which isn't alphanumeric only."},
+  37:{ans:'A',exp:"The required attribute (boolean — no value needed) prevents form submission if the field is empty. It shows a browser validation message. required='required' is also valid. validate, nonempty, and mandatory are not valid HTML attributes."},
+  38:{ans:'D',exp:"[A-Z] matches uppercase letters ONLY. 'ab1234' uses lowercase 'a' and 'b' which don't satisfy [A-Z]. Pattern matching is case-sensitive. AB1234, ZZ9999, and AZ0001 all satisfy [A-Z]{2}[0-9]{4}."},
+  39:{ans:'C',exp:"maxlength limits the number of characters that can be typed. size controls the visual width of the input box (in characters). max applies to numeric/date inputs and limits the numeric VALUE, not the character count. limit is not a valid attribute."},
+  40:{ans:'A',exp:"div has display: block by default — it takes up the full available width and starts on a new line. span is inline by default. You must explicitly set display: flex or display: grid to use those layouts."},
+  41:{ans:'A',exp:"overflow: hidden clips content exactly at the container boundary — anything outside is invisible and inaccessible. overflow: scroll always adds scrollbars. overflow: auto adds scrollbars only when needed. overflow: visible (the default) lets content spill out visually."},
+  42:{ans:'D',exp:"float is NOT a CSS position value. The position property values are: static (default), relative, absolute, fixed, sticky. float: left/right moves an element to the side and lets text wrap around it. position: absolute removes the element from normal flow and positions it relative to its nearest positioned ancestor."},
+  43:{ans:'C',exp:"object-fit controls how a replaced element (img, video, iframe) fills its container: cover (fills, may crop), contain (fits entirely, may letterbox), fill (stretches and distorts), none (original size). background-size only works on CSS background images, not img tags."},
+  44:{ans:'C',exp:"overflow: scroll ALWAYS renders scrollbars whether content overflows or not — this can cause layout shifts and looks odd when content fits. overflow: auto is smarter — scrollbars only appear when content actually overflows. Use auto in most cases."},
+  45:{ans:'A',exp:"vh = viewport height unit. 1vh = 1% of the browser window's visible height. 100vh = full screen height regardless of content. vw = viewport width. These are relative to the BROWSER WINDOW, not the parent element (unlike %)."},
+  46:{ans:'D',exp:"min-width: 768px means 'apply this CSS on screens that are AT LEAST 768px wide' — so 768px and larger. max-width: 768px would mean 768px and SMALLER. min-width is used in mobile-first design to ADD features as screens get bigger."},
+  47:{blanks:['min-width','max-width'],exp:"min-width: 776px starts the styles at tablet size. max-width: 1279px stops them just before desktop (1280px). Using 1279px instead of 1280px avoids a 1px overlap where both tablet and desktop styles would apply simultaneously."},
+  48:{ans:'B',exp:"cover scales the image UP to cover the entire container, cropping the parts that don't fit. contain fits the entire image inside the container, potentially leaving empty space (letterboxing). 100% 100% stretches and distorts the image. fill is not a valid CSS value."},
+  49:{ans:'C',exp:"column-reverse stacks items VERTICALLY (column direction) but reverses the order — the last item in the HTML appears first (at the top). row-reverse keeps items horizontal but reverses left-to-right order."},
+  50:{ans:'A',exp:"flex-grow controls how much extra space an item takes when there's room. flex-grow: 2 gets twice as much extra space compared to flex-grow: 1. flex-shrink controls how items compress when space is tight. flex-basis sets the initial size before grow/shrink calculations."},
+  51:{ans:'A',exp:"By default, flex items all try to fit on one line and may shrink to do so (nowrap). flex-wrap: wrap allows items to break onto a new line when they run out of horizontal space. Essential for responsive layouts where item count changes."},
+  52:{blanks:['justify','align'],exp:"justify-content centers items along the MAIN axis (horizontal for flex-direction: row). align-items centers along the CROSS axis (vertical for row). Together they create a perfectly centered container. Remember: justify = main axis, align = cross axis."},
+  53:{ans:'B',exp:"fr is the fractional unit. Total fractions = 1+1+2+1 = 5 parts. Column 3 gets 2/5 of the space; the others get 1/5 each. So column 3 is TWICE as wide as each of the others."},
+  54:{blanks:['grid','repeat'],exp:"display: grid activates grid layout. repeat(3, 1fr) is shorthand for writing 1fr 1fr 1fr — three equal columns. This is the most common grid pattern in responsive design."},
+  55:{ans:'B',exp:"gap (modern) or grid-gap (older) sets the spacing between ALL grid cells — both rows and columns. Use gap: 10px for equal spacing or gap: 10px 20px for different row/column gaps. margin adds space outside the entire container."},
+  56:{ans:'B',exp:"extends declares inheritance from a parent class. super() calls the parent constructor to set up inherited properties. Without calling super() before using 'this' in the child constructor you'll get a ReferenceError. implements, inherits, parent() and this() are not valid JS syntax."},
+  57:{ans:'D',exp:"get myProp() { return this._myProp; } lets you access it as obj.myProp (no parentheses!) while running logic behind the scenes. It reads like a property but acts like a function. The set keyword does the same for assignment operations."},
+  58:{ans:'A',exp:"You need BOTH: status 200 (server responded OK) AND readyState 4 (request fully complete and response received). readyState 4 alone doesn't mean it succeeded — a 404 also has readyState 4. status 200 alone might fire before data is fully received."},
+  59:{ans:'B',exp:"localStorage only stores strings. JSON.stringify(obj) converts the object to a JSON string for storage. JSON.parse() converts it back to an object when retrieved. Option A stores '[object Object]' (useless string). Option C uses methods that don't exist. Option D: user.toString() also produces '[object Object]'."},
+  60:{ans:'C',exp:"sessionStorage is cleared when the browser TAB closes. localStorage persists across sessions — browser restarts, page refreshes — until explicitly cleared with localStorage.removeItem() or localStorage.clear(). Both APIs are ~5MB and use the same setItem/getItem/removeItem methods."},
+  61:{ans:'A',exp:"The 4 valid touch events are: touchstart (finger touches screen), touchmove (finger moves while touching), touchend (finger lifts off), touchcancel (touch is interrupted e.g. by a phone call). touchbegin and touchstop do NOT exist. click is a mouse event."},
+  62:{ans:'B',exp:"preventDefault() stops the BROWSER's default behavior — for a form submit button that means preventing the page reload/form submission, for a link it prevents navigation. stopPropagation() stops the event from BUBBLING UP through parent elements. They are completely separate concerns — you can call both."},
+  63:{ans:'C',exp:"Event bubbling: events fire at the target element FIRST (inner div) then bubble UP through parent elements. So inner fires, then outer fires. Use e.stopPropagation() in the inner handler to prevent the outer from also firing. The third addEventListener argument useCapture=true reverses this to capture (outer first)."},
+  64:{ans:'B',exp:"The success callback receives a GeolocationPosition object. Access coordinates with position.coords.latitude, position.coords.longitude, position.coords.accuracy. The timestamp is at position.timestamp. It is NOT an array and NOT a string."},
+  65:{ans:'C',exp:"clearWatch(id) stops watchPosition from firing. You MUST save the return value of watchPosition() to a variable first — that returned id is what you pass to clearWatch(). getCurrentPosition() fires once and stops automatically — no clearWatch needed."},
+  66:{ans:'B',exp:"fetch() returns a Promise. The Promise resolves to a Response object. You then call response.json() (which also returns a Promise) to parse the body. fetch is NOT XHR — it's modern, Promise-based, and much cleaner to use with async/await."},
+  67:{ans:'B',exp:"== (loose equality) coerces types — so '5' == 5 is true because the string gets converted. === (strict equality) checks both value AND type — '5' === 5 is false. Always prefer === in JavaScript to avoid unexpected type coercion bugs."},
+  68:{ans:'B',exp:"filter() returns a NEW array containing only items where the callback returns true. map() transforms each item and returns a new array of the same length. find() returns the FIRST matching item (not an array). forEach() returns nothing — it's for side effects only."},
+  69:{blanks:['await','await'],exp:"await pauses execution until the Promise resolves. It can only be used inside an async function. await fetch(url) pauses until the HTTP response arrives. await response.json() pauses until the JSON body is fully parsed. Both are needed."},
+  70:{ans:'B',exp:"map() transforms each item using the callback and returns a NEW array of the SAME LENGTH. For example: [1,2,3].map(x => x * 2) returns [2,4,6]. It never modifies the original array. filter() returns a potentially shorter array. find() returns a single value."},
+  71:{ans:'B',exp:"Correct order: JSON.stringify(obj) converts object to string → localStorage.setItem('key', str) stores it → localStorage.getItem('key') retrieves the string → JSON.parse(str) converts back to object. Skip stringify and you store '[object Object]'. Skip parse and you get a string not an object."},
+  72:{ans:'C',exp:"The order property in CSS (works for both flex and grid) changes the VISUAL rendering order without touching the HTML. Default is 0. Lower values appear first. Changing order doesn't affect tab focus order or accessibility — only visual presentation."},
+  73:{ans:'A',exp:"grid-template-areas defines named regions using quoted strings. Each quoted string is a row, each word is a column. Child elements then use grid-area: header (etc.) to place themselves into those named positions. This makes complex layouts very readable."},
+  74:{ans:'B',exp:"clearRect(x, y, width, height) erases the specified rectangular area to fully transparent pixels. It's used at the start of animation frames to clear the previous frame before drawing the new one. It does NOT fill with white — it removes pixels entirely."},
+  75:{ans:'C',exp:"viewBox='minX minY width height' defines which portion of the SVG's coordinate space is shown in the viewport. It controls the visible area and effectively sets the aspect ratio. This is why SVGs exported from Inkscape sometimes appear blank — the coordinate space doesn't match the viewport."},
+};
 
-var ALL_QUESTIONS = [
+const CATS = {
+  1:'1-lifecycle', 2:'1-lifecycle', 3:'1-lifecycle', 4:'1-debug', 5:'1-debug', 6:'1-debug',
+  7:'2-canvas', 8:'2-canvas', 9:'2-canvas', 10:'2-canvas', 11:'2-canvas',
+  12:'2-svg', 13:'2-svg', 14:'2-svg', 15:'2-svg', 16:'2-svg', 17:'2-svg', 18:'2-svg', 19:'2-svg', 20:'2-svg',
+  21:'2-transform', 22:'2-transform', 23:'2-transform', 24:'2-transform', 25:'2-transform', 26:'2-transform',
+  27:'2-filter', 28:'2-filter', 29:'2-filter', 30:'2-filter', 31:'2-transform',
+  32:'3-forms', 33:'3-forms', 34:'3-forms', 35:'3-forms',
+  36:'3-validation', 37:'3-validation', 38:'3-validation', 39:'3-validation',
+  40:'4-layout', 41:'4-layout', 42:'4-layout', 43:'4-layout', 44:'4-layout',
+  45:'4-responsive', 46:'4-responsive', 47:'4-responsive', 48:'4-responsive',
+  49:'4-flexbox', 50:'4-flexbox', 51:'4-flexbox', 52:'4-flexbox',
+  53:'4-grid', 54:'4-grid', 55:'4-grid',
+  56:'5-classes', 57:'5-classes',
+  58:'5-data', 59:'5-data', 60:'5-data',
+  61:'5-events', 62:'5-events', 63:'5-events',
+  64:'5-api', 65:'5-api', 66:'5-api',
+  67:'5-js', 68:'5-js', 69:'5-js', 70:'5-js', 71:'5-js', 72:'5-js', 73:'5-js', 74:'5-js', 75:'5-svg',
+};
 
-// ════ DOMAIN 2 ════
+const CAT_LABELS = {
+  '1-lifecycle':'Lifecycle','1-debug':'Debugging',
+  '2-canvas':'Canvas','2-svg':'SVG Elements','2-transform':'Transforms','2-filter':'Filters',
+  '3-forms':'Forms','3-validation':'Validation',
+  '4-layout':'Layout','4-responsive':'Responsive','4-flexbox':'Flexbox','4-grid':'Grid',
+  '5-classes':'Classes','5-data':'Data/Storage','5-events':'Events','5-api':'APIs','5-js':'JavaScript','5-svg':'SVG/Canvas',
+};
 
-// 2.1 Data Types
-{ domain:2, cat:'2.1 Data Types', type:'mcq',
-  q:'What does <code>typeof "Hello"</code> return?',
-  opts:['"string"','"text"','"word"','"object"'], ans:0,
-  exp:'typeof always returns a lowercase string. "Hello" is a string, so it returns "string".' },
+let correct = 0, answered = 0;
+const catScore = {};
 
-{ domain:2, cat:'2.1 Data Types', type:'mcq',
-  q:'What is the difference between <code>null</code> and <code>undefined</code>?',
-  opts:['They are exactly the same','null = intentionally empty; undefined = declared but never assigned','undefined = intentionally empty; null = never declared','Both mean the variable crashed'],
-  ans:1, exp:'null = you chose to empty it on purpose. undefined = you forgot to give it a value.' },
-
-{ domain:2, cat:'2.1 Data Types', type:'code',
-  q:'What does this expression return?',
-  code:'"Price: " + 5 + 10',
-  opts:['"Price: 15"','"Price: 510"','15','"510"'], ans:1,
-  exp:'String comes first, so everything gets converted to a string. "Price: " + 5 = "Price: 5", then + 10 = "Price: 510".' },
-
-{ domain:2, cat:'2.1 Data Types', type:'code',
-  q:'What does <code>parseInt("7.9")</code> return?',
-  code:'parseInt("7.9")',
-  opts:['8','7.9','7','"7.9"'], ans:2,
-  exp:'parseInt CUTS OFF the decimal — it does NOT round. 7.9 becomes 7, not 8.' },
-
-{ domain:2, cat:'2.1 Data Types', type:'mcq',
-  q:'<code>isNaN("hello")</code> returns:',
-  opts:['false','true','0','undefined'], ans:1,
-  exp:'"hello" cannot be converted to a number, so isNaN returns true.' },
-
-{ domain:2, cat:'2.1 Data Types', type:'mcq',
-  q:'<code>isNaN("42")</code> returns:',
-  opts:['true','false','42','NaN'], ans:1,
-  exp:'The string "42" can be converted to the number 42, so isNaN returns false.' },
-
-{ domain:2, cat:'2.1 Data Types', type:'fill',
-  q:'Complete the method that formats a number to 2 decimal places:',
-  code:'var total = 35.678;\ntotal._____(2);   // returns "35.68"',
-  blank:'toFixed', exp:'.toFixed(2) formats to exactly 2 decimal places and returns a string.' },
-
-// 2.2 Arrays
-{ domain:2, cat:'2.2 Arrays', type:'mcq',
-  q:'Arrays in JavaScript are zero-based. What does <code>fruits[0]</code> return?',
-  opts:['Nothing — index 0 is empty','The second item','The first item','An error'],
-  code:'var fruits = ["apple", "banana", "cherry"];',
-  ans:2, exp:'Arrays start at index 0. fruits[0] = "apple", fruits[1] = "banana", fruits[2] = "cherry".' },
-
-{ domain:2, cat:'2.2 Arrays', type:'mcq',
-  q:'Which method adds an item to the END of an array?',
-  opts:['shift()','unshift()','pop()','push()'], ans:3,
-  exp:'push() adds to the END. pop() removes from the END. unshift() adds to the START. shift() removes from the START.' },
-
-{ domain:2, cat:'2.2 Arrays', type:'mcq',
-  q:'Which method removes the FIRST item from an array?',
-  opts:['pop()','push()','shift()','unshift()'], ans:2,
-  exp:'shift() removes from the BEGINNING. unshift() adds to the BEGINNING.' },
-
-{ domain:2, cat:'2.2 Arrays', type:'code',
-  q:'What does <code>indexOf</code> return if the item is NOT found?',
-  code:'var names = ["Alice", "Bob"];\nnames.indexOf("Charlie");',
-  opts:['0','null','undefined','-1'], ans:3,
-  exp:'indexOf returns -1 when the item is not found. If found, it returns the index position.' },
-
-{ domain:2, cat:'2.2 Arrays', type:'mcq',
-  q:'What does the <code>filter()</code> method return?',
-  opts:['The original array modified','A single value','A new array of items that passed the test','true or false'],
-  ans:2, exp:'filter() creates and returns a NEW array containing only elements where the function returned true.' },
-
-{ domain:2, cat:'2.2 Arrays', type:'code',
-  q:'What does the default <code>sort()</code> produce here?',
-  code:'var nums = [10, 2, 50];\nnums.sort();',
-  opts:['[2, 10, 50]','[10, 2, 50]','[50, 10, 2]','[10, 50, 2]'], ans:3,
-  exp:'Default sort() is alphabetical — treats numbers as strings. "10" < "2" < "50" alphabetically gives [10, 2, 50]. Wait — actually [10, 2, 50] sorts as "10","2","50" → [10, 2, 50] stays same here but numerically wrong. The trap is that sort() is NOT numerical by default.' },
-
-{ domain:2, cat:'2.2 Arrays', type:'mcq',
-  q:'How do you access row 1, column 0 in a multi-dimensional array?',
-  opts:['grid[0][1]','grid[1,0]','grid[1][0]','grid(1)(0)'], ans:2,
-  exp:'Multi-dimensional arrays use two index numbers: grid[row][column]. Row 1, col 0 = grid[1][0].' },
-
-// 2.3 Objects
-{ domain:2, cat:'2.3 Objects', type:'mcq',
-  q:'What does the <code>this</code> keyword refer to inside an object method?',
-  opts:['The window object','The function itself','The object that contains the method','undefined'],
-  ans:2, exp:'Inside an object method, this refers to the object itself. Without this, the property would be undefined.' },
-
-{ domain:2, cat:'2.3 Objects', type:'code',
-  q:'What does this return?',
-  code:'var d = new Date(2017, 9, 2);\nd.getMonth();',
-  opts:['9','10','2','0'], ans:0,
-  exp:'Months in JavaScript Date are zero-based. getMonth() returns the stored value, which is 9 (= October). January=0, December=11.' },
-
-{ domain:2, cat:'2.3 Objects', type:'mcq',
-  q:'Months in <code>new Date()</code> are zero-based. What number is October?',
-  opts:['10','11','9','0'], ans:2,
-  exp:'January=0, February=1 ... October=9, November=10, December=11. October is 9.' },
-
-{ domain:2, cat:'2.3 Objects', type:'fill',
-  q:'Complete the code to add 7 days to a date:',
-  code:'d.setDate(d._____(  ) + 7);',
-  blank:'getDate', exp:'getDate() retrieves the current day number, then +7 adds 7 days, then setDate() saves it back.' },
-
-// 2.4 Math
-{ domain:2, cat:'2.4 Math', type:'mcq',
-  q:'What does <code>Math.floor(4.9)</code> return?',
-  opts:['5','4.9','4','4.5'], ans:2,
-  exp:'Math.floor() ALWAYS rounds DOWN, regardless of the decimal. 4.9 → 4.' },
-
-{ domain:2, cat:'2.4 Math', type:'mcq',
-  q:'What does <code>Math.ceil(4.1)</code> return?',
-  opts:['4','4.1','5','4.5'], ans:2,
-  exp:'Math.ceil() ALWAYS rounds UP. 4.1 → 5.' },
-
-{ domain:2, cat:'2.4 Math', type:'code',
-  q:'What range of whole numbers can this produce?',
-  code:'Math.floor(Math.random() * 2)',
-  opts:['1 or 2','0 to 2','0 or 1','0 to 1.999'], ans:2,
-  exp:'Math.random() gives 0–0.999. ×2 = 0–1.999. Math.floor() cuts to 0 or 1.' },
-
-{ domain:2, cat:'2.4 Math', type:'mcq',
-  q:'What does <code>Math.abs(-7)</code> return?',
-  opts:['-7','0','7','NaN'], ans:2,
-  exp:'Math.abs() returns the absolute value — removes the negative sign. -7 becomes 7.' },
-
-// 2.5 Functions
-{ domain:2, cat:'2.5 Functions', type:'mcq',
-  q:'A variable declared OUTSIDE a function is called:',
-  opts:['Local','Implicit','Private','Global'], ans:3,
-  exp:'Variables declared outside functions are global — accessible anywhere in the script.' },
-
-{ domain:2, cat:'2.5 Functions', type:'mcq',
-  q:'A variable declared inside a function WITHOUT the <code>var</code> keyword becomes:',
-  opts:['Local to the function','A constant','Global (implicit)','Undefined'], ans:2,
-  exp:'Without var, the variable automatically becomes global — called an implicit global. This is dangerous!' },
-
-{ domain:2, cat:'2.5 Functions', type:'mcq',
-  q:'A number is passed into a function and changed inside it. What happens to the original?',
-  opts:['It is changed too','Nothing — numbers are passed by VALUE (a copy is sent)','It becomes undefined','It becomes 0'],
-  ans:1, exp:'Primitives (numbers, strings, booleans) are passed by VALUE. The function gets a copy — original is untouched.' },
-
-{ domain:2, cat:'2.5 Functions', type:'mcq',
-  q:'An object is passed into a function and changed inside it. What happens to the original?',
-  opts:['Nothing — a copy is sent','It is deleted','The original IS changed — objects are passed by REFERENCE','It becomes null'],
-  ans:2, exp:'Objects and arrays are passed by REFERENCE. The function gets the actual object — changes affect the original.' },
-
-// ════ DOMAIN 3 ════
-
-// 3.1 Operators
-{ domain:3, cat:'3.1 Operators', type:'mcq',
-  q:'What is the result of <code>false == 0</code>?',
-  opts:['false','true','undefined','error'], ans:1,
-  exp:'== checks VALUE only. false and 0 have the same value when compared loosely, so it returns true.' },
-
-{ domain:3, cat:'3.1 Operators', type:'mcq',
-  q:'What is the result of <code>false === 0</code>?',
-  opts:['true','false','0','undefined'], ans:1,
-  exp:'=== checks VALUE and TYPE. false is boolean, 0 is number — different types, so it returns false.' },
-
-{ domain:3, cat:'3.1 Operators', type:'mcq',
-  q:'What does <code>&&</code> require to return true?',
-  opts:['At least one side is true','Neither side is true','BOTH sides must be true','Only the left side is true'],
-  ans:2, exp:'&& is AND — both sides must be true for the whole expression to be true.' },
-
-{ domain:3, cat:'3.1 Operators', type:'mcq',
-  q:'What does <code>||</code> require to return true?',
-  opts:['Both sides must be true','At least ONE side is true','Neither side is true','Only the right side'],
-  ans:1, exp:'|| is OR — it returns true if at least one side is true.' },
-
-{ domain:3, cat:'3.1 Operators', type:'code',
-  q:'What does this return?',
-  code:'!false && (5 > 3)',
-  opts:['false','true','undefined','error'], ans:1,
-  exp:'!false = true. 5 > 3 = true. true && true = true. ! runs first, then comparisons, then &&.' },
-
-// 3.2 Decision Statements
-{ domain:3, cat:'3.2 Decisions', type:'mcq',
-  q:'If an <code>if</code> condition is false, what happens to the code block?',
-  opts:['It runs once','It runs with an error','It never runs — it is skipped completely','It runs the else block'],
-  ans:2, exp:'When the condition is false, the if block is skipped entirely. Only else or else if blocks can run instead.' },
-
-{ domain:3, cat:'3.2 Decisions', type:'mcq',
-  q:'What is the most common error when writing a <code>switch</code> statement?',
-  opts:['Using default','Forgetting break — causes fall-through to the next case','Using too many cases','Not using parentheses'],
-  ans:1, exp:'Forgetting break causes fall-through — the code keeps running into the next case even if it does not match.' },
-
-{ domain:3, cat:'3.2 Decisions', type:'mcq',
-  q:'What does the <code>default</code> keyword do in a <code>switch</code> statement?',
-  opts:['Runs first, before all cases','Runs when NO case matches (like else)','Resets the switch value','Is required — switch breaks without it'],
-  ans:1, exp:'default is the fallback — it runs when none of the case values match. It works like the final else.' },
-
-{ domain:3, cat:'3.2 Decisions', type:'code',
-  q:'What value does <code>grade</code> get?',
-  code:'var score = 85;\nvar grade;\nif (score >= 90) {\n    grade = "A";\n} else if (score >= 80) {\n    grade = "B";\n} else {\n    grade = "C";\n}',
-  opts:['"A"','"B"','"C"','undefined'], ans:1,
-  exp:'score is 85. First condition (>=90) is false. Second condition (>=80) is true. grade = "B".' },
-
-// 3.3 Loops
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'How is the <code>while</code> loop defined?',
-  opts:['Runs once, then checks condition','Checks condition BEFORE running — may never run','Always runs at least once','Checks condition in the middle'],
-  ans:1, exp:'"While this condition is true, run this code." The condition is checked BEFORE each run — if false from the start, it never runs.' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'What is unique about the <code>do...while</code> loop?',
-  opts:['It checks the condition first','It never runs more than once','It ALWAYS runs at least once','It only works with arrays'],
-  ans:2, exp:'do...while runs the code first, THEN checks the condition. It always runs at least once no matter what.' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'What does <code>continue</code> do inside a loop?',
-  opts:['Exits the entire loop','Pauses the loop','Skips the current iteration and moves to the next','Restarts the loop from the beginning'],
-  ans:2, exp:'continue skips only the current iteration — the loop keeps going from the next one.' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'What does <code>break</code> do inside a loop?',
-  opts:['Skips one iteration','Exits the entire loop immediately','Pauses until a condition changes','Throws an error'],
-  ans:1, exp:'break exits the entire loop right away — no more iterations happen.' },
-
-{ domain:3, cat:'3.3 Loops', type:'code',
-  q:'What numbers get printed?',
-  code:'for (var i = 1; i <= 5; i++) {\n    if (i % 2 === 0) continue;\n    console.log(i);\n}',
-  opts:['1, 2, 3, 4, 5','2, 4','1, 3, 5','1, 2, 3'],
-  ans:2, exp:'continue skips even numbers (i%2===0). So 2 and 4 are skipped, printing 1, 3, 5.' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'What does <code>for-of</code> iterate over?',
-  opts:['The keys of an object','The indexes of an array','The VALUES in an iterable like an array','Only strings'],
-  ans:2, exp:'for-of gives you the actual VALUES of an iterable (e.g., array items directly).' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'What does <code>for-in</code> iterate over?',
-  opts:['The values of an array','The KEYS (property names) of an object','Only numbers','The indexes only'],
-  ans:1, exp:'for-in iterates over the KEYS (property names) of an object. Use obj[key] inside to get the value.' },
-
-{ domain:3, cat:'3.3 Loops', type:'code',
-  q:'What does this loop print first?',
-  code:'var car = { brand: "Toyota", year: 2020 };\nfor (var key in car) {\n    console.log(key);\n}',
-  opts:['"Toyota"','"brand"','2020','"car"'], ans:1,
-  exp:'for-in gives you KEYS, not values. The keys are "brand" and "year". Values need car[key].' },
-
-{ domain:3, cat:'3.3 Loops', type:'mcq',
-  q:'A <code>for</code> loop has 3 parts. Which is correct?',
-  opts:['start ; condition ; action','var ; check ; update','initialization ; condition ; increment/decrement','begin ; while ; step'],
-  ans:2, exp:'for (initialization; condition; increment). e.g. for(var i=0; i<5; i++)' },
-
-];
-
-// ── GAME STATE ───────────────────────────────────────────────────────────
-var queue = [];
-var current = 0;
-var score = 0;
-var correct = 0;
-var wrong = 0;
-var answered = false;
-var activeDomain = 0;
-
-function shuffle(arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-  }
-  return arr;
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
 }
 
-function startGame(domain) {
-  activeDomain = domain;
-  if (domain === 0) {
-    queue = shuffle(ALL_QUESTIONS.slice());
-  } else {
-    queue = shuffle(ALL_QUESTIONS.filter(function(q){ return q.domain === domain; }));
-  }
-  current = 0; score = 0; correct = 0; wrong = 0;
-  document.getElementById('titleScreen').className = 'hidden';
-  document.getElementById('resultScreen').className = 'hidden';
-  document.getElementById('gameScreen').className = '';
-  showQuestion();
+function pick(qid, letter) {
+  const card = document.getElementById('c' + qid);
+  if (card.dataset.done) return;
+  card.dataset.done = '1';
+
+  const a = ANSWERS[qid];
+  const isOk = letter === a.ans;
+
+  ['A','B','C','D'].forEach(l => {
+    const el = document.getElementById('o' + qid + l);
+    if (!el) return;
+    el.classList.add('locked');
+    el.onclick = null;
+    if (l === a.ans) el.classList.add('correct');
+    else if (l === letter && !isOk) el.classList.add('wrong');
+  });
+
+  showFb(qid, isOk, a.exp);
+  card.classList.add(isOk ? 'state-correct' : 'state-wrong');
+  tally(qid, isOk);
 }
 
-function showQuestion() {
-  answered = false;
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('feedback').style.display = 'none';
-  document.getElementById('feedback').className = '';
+function checkFill(qid) {
+  const card = document.getElementById('c' + qid);
+  if (card.dataset.done) return;
+  card.dataset.done = '1';
 
-  var q = queue[current];
-  document.getElementById('qNum').innerText = 'Question ' + (current+1) + ' of ' + queue.length;
-  document.getElementById('category').innerText = 'Domain ' + q.domain + ' · ' + q.cat;
-  document.getElementById('question').innerHTML = q.q;
+  const a = ANSWERS[qid];
+  let allOk = true;
+  a.blanks.forEach((b, i) => {
+    const inp = document.getElementById('b' + qid + '_' + i);
+    if (!inp) return;
+    const val = inp.value.trim().toLowerCase().replace(/['"]/g,'');
+    const accepts = Array.isArray(b) ? b : [b];
+    const ok = accepts.map(x => x.toLowerCase().replace(/['"]/g,'')).includes(val);
+    inp.classList.add(ok ? 'correct-i' : 'wrong-i');
+    inp.disabled = true;
+    if (!ok) allOk = false;
+  });
 
-  // code block
-  var cb = document.getElementById('codeBlock');
-  if (q.code) {
-    cb.innerHTML = '<pre>' + q.code + '</pre>';
-  } else {
-    cb.innerHTML = '';
-  }
+  const btn = document.getElementById('btn' + qid);
+  if (btn) { btn.disabled = true; }
 
-  // answers
-  var area = document.getElementById('answersArea');
-  area.innerHTML = '';
-
-  if (q.type === 'fill') {
-    area.innerHTML =
-      '<input type="text" id="fill-input" placeholder="Type your answer..." onkeydown="if(event.key===\'Enter\') checkFill()">' +
-      '<button onclick="checkFill()">Submit</button>';
-    setTimeout(function(){ document.getElementById('fill-input').focus(); }, 50);
-  } else {
-    for (var i = 0; i < q.opts.length; i++) {
-      var btn = document.createElement('button');
-      btn.className = 'opt';
-      btn.innerHTML = '<strong>' + ['A','B','C','D'][i] + '.</strong> ' + q.opts[i];
-      btn.setAttribute('data-i', i);
-      btn.onclick = function() { checkMCQ(parseInt(this.getAttribute('data-i'))); };
-      area.appendChild(btn);
-    }
-  }
-
-  updateHUD();
+  showFb(qid, allOk, a.exp);
+  card.classList.add(allOk ? 'state-correct' : 'state-wrong');
+  tally(qid, allOk);
 }
 
-function checkMCQ(chosen) {
-  if (answered) return;
-  answered = true;
-  var q = queue[current];
-  var btns = document.querySelectorAll('.opt');
-  btns[q.ans].classList.add('correct');
-  if (chosen !== q.ans) {
-    btns[chosen].classList.add('wrong');
-    wrong++;
-    showFeedback(false, q.exp);
-  } else {
-    score += 10;
-    correct++;
-    showFeedback(true, q.exp);
-  }
-  for (var i = 0; i < btns.length; i++) btns[i].disabled = true;
-  document.getElementById('nextBtn').style.display = 'inline-block';
-  updateHUD();
+function showFb(qid, isOk, exp) {
+  const fb = document.getElementById('fb' + qid);
+  fb.className = 'feedback show ' + (isOk ? 'fb-correct' : 'fb-wrong');
+  fb.innerHTML = isOk
+    ? '<strong>✓ Correct!</strong> ' + exp
+    : '<strong>✗ Not quite.</strong> ' + exp;
 }
 
-function checkFill() {
-  if (answered) return;
-  var input = document.getElementById('fill-input');
-  if (!input) return;
-  var val = input.value.trim().toLowerCase();
-  var q = queue[current];
-  var correct_ans = q.blank.toLowerCase();
-  answered = true;
-  input.disabled = true;
-  document.querySelector('#answersArea button').disabled = true;
-
-  if (val === correct_ans) {
-    input.style.background = '#c8f5c8';
-    score += 10; correct++;
-    showFeedback(true, 'Correct! ' + q.exp);
-  } else {
-    input.style.background = '#f5c8c8';
-    wrong++;
-    showFeedback(false, 'Answer: <strong>' + q.blank + '</strong>. ' + q.exp);
-  }
-  document.getElementById('nextBtn').style.display = 'inline-block';
-  updateHUD();
+function tally(qid, isOk) {
+  const cat = CATS[qid] || 'other';
+  if (!catScore[cat]) catScore[cat] = {c:0,t:0};
+  catScore[cat].t++;
+  if (isOk) { catScore[cat].c++; correct++; }
+  answered++;
+  updateProgress();
+  if (answered === 75) setTimeout(showResults, 600);
 }
 
-function showFeedback(pass, msg) {
-  var el = document.getElementById('feedback');
-  el.className = pass ? 'pass' : 'fail';
-  el.innerHTML = (pass ? '✅ Correct! ' : '❌ Wrong. ') + msg;
-  el.style.display = 'block';
+function updateProgress() {
+  const pct = answered / 75 * 100;
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('score-tag').textContent = correct + ' / 75';
+  document.getElementById('pct-tag').textContent = Math.round(correct / Math.max(answered,1) * 100) + '%';
 }
 
-function nextQuestion() {
-  current++;
-  if (current >= queue.length) {
-    showResult();
-  } else {
-    showQuestion();
-  }
+function showResults() {
+  const pct = correct / 75;
+  const msgs = [
+    [.9,'Exam-ready!','Strong across all standards. Review any reds below and you\'re set.'],
+    [.75,'Great work!','Solid performance. Tighten up the standards where you dropped points.'],
+    [.6,'Good start — keep going.','Review each explanation on questions you got wrong, then retry.'],
+    [.4,'More practice needed.','Use the explanations carefully and retry. Focus on the traps.'],
+    [0,'Keep studying.','Read every explanation and use the Reference tab as a cheat sheet.'],
+  ];
+  const [,msg,sub] = msgs.find(([min]) => pct >= min);
+
+  document.getElementById('r-score').textContent = correct;
+  document.getElementById('r-msg').textContent = msg;
+  document.getElementById('r-sub').textContent = sub;
+  document.getElementById('r-bar').style.width = (pct * 100) + '%';
+
+  const bd = document.getElementById('r-breakdown');
+  bd.innerHTML = '';
+  Object.entries(catScore).forEach(([cat, {c, t}]) => {
+    const p = Math.round(c/t*100);
+    const col = p >= 80 ? '#4ade9a' : p >= 55 ? '#fbbf24' : '#ff5e6c';
+    const item = document.createElement('div');
+    item.className = 'bd-item';
+    item.innerHTML = `<div class="bd-cat">${CAT_LABELS[cat]||cat}</div><div class="bd-score">${c}/${t} <span style="font-size:.75rem;color:#6b6b88">(${p}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${p}%;background:${col}"></div></div>`;
+    bd.appendChild(item);
+  });
+
+  const panel = document.getElementById('results');
+  panel.classList.add('show');
+  setTimeout(() => panel.scrollIntoView({behavior:'smooth', block:'start'}), 150);
 }
 
-function showResult() {
-  document.getElementById('gameScreen').className = 'hidden';
-  document.getElementById('resultScreen').className = '';
-  var pct = Math.round((correct / queue.length) * 100);
-  var title = pct >= 90 ? '🏆 Excellent!' : pct >= 70 ? '👍 Good job!' : pct >= 50 ? '📚 Keep studying!' : '💪 Keep going!';
-  document.getElementById('resultTitle').innerText = title;
-  document.getElementById('resultScore').innerText = score + ' pts — ' + correct + '/' + queue.length + ' correct (' + pct + '%)';
-  var msg = pct < 70 ? 'Review the study guide and try again. You can do it!' : 'Great work! Try another domain or play again.';
-  document.getElementById('resultMsg').innerText = msg;
-}
+function retryExam() {
+  correct = 0; answered = 0;
+  Object.keys(catScore).forEach(k => delete catScore[k]);
+  updateProgress();
+  document.getElementById('results').classList.remove('show');
 
-function replayGame() {
-  startGame(activeDomain);
-}
-
-function goHome() {
-  document.getElementById('gameScreen').className = 'hidden';
-  document.getElementById('resultScreen').className = 'hidden';
-  document.getElementById('titleScreen').className = '';
-}
-
-function updateHUD() {
-  document.getElementById('scoreDisplay').innerText = score;
-  document.getElementById('correctDisplay').innerText = correct;
-  document.getElementById('wrongDisplay').innerText = wrong;
+  document.querySelectorAll('.q-card').forEach(card => {
+    delete card.dataset.done;
+    card.className = 'q-card';
+  });
+  document.querySelectorAll('.opt').forEach(opt => {
+    opt.className = 'opt';
+    opt.disabled = false;
+    const qid = opt.id.match(/o(\d+)/)?.[1];
+    if(qid) opt.onclick = function(){ pick(parseInt(qid), opt.id.replace('o'+qid,'').charAt(0)); };
+  });
+  document.querySelectorAll('.blank-input').forEach(inp => {
+    inp.className = 'blank-input';
+    inp.value = '';
+    inp.disabled = false;
+  });
+  document.querySelectorAll('.check-btn').forEach(btn => {
+    btn.disabled = false;
+  });
+  document.querySelectorAll('.feedback').forEach(fb => {
+    fb.className = 'feedback';
+    fb.innerHTML = '';
+  });
+  document.getElementById('s1').classList.add('active');
+  document.querySelectorAll('.section').forEach((s,i) => { if(i!==0) s.classList.remove('active'); });
+  document.querySelectorAll('.nav-tab').forEach((t,i) => { t.classList.toggle('active', i===0); });
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 </script>
-
 </body>
 </html>

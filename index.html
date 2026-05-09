@@ -24,6 +24,7 @@
         <a href="#home" class="nav-btn">HOME</a>
         <a href="#work" class="nav-btn">WORK</a>
         <a href="#about" class="nav-btn">ABOUT</a>
+        <a href="#commissions" class="nav-btn">COMMISSIONS</a>
         <a href="#contact" class="nav-btn">CONTACT</a>
     </div>
 
@@ -35,8 +36,6 @@
 
     <nav class="navbar" id="mainNav">
         <canvas id="particle-canvas"></canvas>
-        <img src="imgs/cloud3.png" alt="" class="header-cloud cloud-6">
-        <img src="imgs/cloud1.png" alt="" class="header-cloud cloud-7">
         <img src="imgs/cloud1.png" alt="" class="header-cloud cloud-1">
         <img src="imgs/cloud2.png" alt="" class="header-cloud cloud-2">
         <img src="imgs/cloud3.png" alt="" class="header-cloud cloud-3">
@@ -60,6 +59,7 @@
                 <a href="#home" class="nav-btn">HOME</a>
                 <a href="#work" class="nav-btn">WORK</a>
                 <a href="#about" class="nav-btn">ABOUT</a>
+                <a href="#commissions" class="nav-btn">COMMISSIONS</a>
                 <a href="#contact" class="nav-btn">CONTACT</a>
             </div>
         </div>
@@ -110,6 +110,11 @@
                     <div class="illustration-display"></div>
                     <button class="nav-arrow"><img src="imgs/arrow-right.png" alt="Next"></button>
                 </div>
+                <div class="wip-process-section">
+                    <h3 class="wip-process-title">PROCESS</h3>
+                    <p class="wip-process-subtitle">Works in Progress</p>
+                    <div class="wip-process-grid" id="illusProcessGrid"></div>
+                </div>
             </div>
             <div id="gallery" class="tab-content">
                 <div id="galleryGrid" class="gallery-grid"></div>
@@ -144,6 +149,11 @@
                     <button class="nav-arrow anim-arrow-prev"><img src="imgs/arrow-right.png" alt="Previous"></button>
                     <div class="video-placeholder"></div>
                     <button class="nav-arrow anim-arrow-next"><img src="imgs/arrow-right.png" alt="Next"></button>
+                </div>
+                <div class="wip-process-section">
+                    <h3 class="wip-process-title">PROCESS</h3>
+                    <p class="wip-process-subtitle">Works in Progress</p>
+                    <div class="wip-process-grid" id="animProcessGrid"></div>
                 </div>
             </div>
             <div id="anim-gallery" class="tab-content">
@@ -184,6 +194,125 @@
                     <div class="process-content"></div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <div class="inbetween-star1"><img src="imgs/inbetweenstar1.png" alt=""></div>
+
+    <!-- ===== COMMISSIONS SECTION ===== -->
+    <section id="commissions" class="commissions-section">
+        <h2 class="section-title">COMMISSIONS</h2>
+        <div class="commissions-container">
+            <div class="work-tabs comm-tabs">
+                <button class="tab-btn comm-tab active" onclick="showCommTab('comm-tos')">TERMS OF SERVICE</button>
+                <button class="tab-btn comm-tab" onclick="showCommTab('comm-rights')">RIGHTS</button>
+                <button class="tab-btn comm-tab" onclick="showCommTab('comm-ww')">WILL / WON'T DRAW</button>
+            </div>
+
+            <!-- TERMS OF SERVICE -->
+            <div id="comm-tos" class="tab-content active comm-panel">
+                <div class="comm-tos-grid">
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Payment Method</h4>
+                        <p>All payments through PayPal or Cashapp (USD only). Include your name/username and commission request with payment.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Payment Terms</h4>
+                        <p>50% upfront before I start. Remaining 50% once you approve the low-resolution final. Let me know of any major changes before final payment.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Completion Time</h4>
+                        <p>First come, first serve. I am not a full-time artist — orders may take 1 week to several months. I will keep you updated at every stage. Have a deadline? Let me know!</p>
+                    </div>
+                    <div class="comm-tos-block comm-tos-refunds">
+                        <h4 class="comm-tos-heading">Refunds</h4>
+                        <p>Refunds available before I start. Emergency refunds based on progress stage:</p>
+                        <div class="comm-stages">
+                            <div class="comm-stage"><span class="comm-stage-name">Sketch</span><span class="comm-stage-pct">90% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Lineart</span><span class="comm-stage-pct">70% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Flat Color</span><span class="comm-stage-pct">50% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Shading / Details</span><span class="comm-stage-pct">10% back</span></div>
+                        </div>
+                        <p>Full refund if I cannot complete the commission.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Progress Updates</h4>
+                        <p>Updates at every stage. Major &amp; minor changes free during Sketch. Minor changes free during later stages. Major changes after Sketch = +5% to total price.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Copyright &amp; Credits</h4>
+                        <ul class="comm-rules-list">
+                            <li>Do not claim artwork as your own</li>
+                            <li>Do not run through Generative AI</li>
+                            <li>Do not use as AI training material</li>
+                            <li>Do not sell the commissioned piece</li>
+                            <li>Personal &amp; non-commercial use only</li>
+                        </ul>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Contract</h4>
+                        <p>You will sign my Commission Contract before I begin. Only sign if you agree to these terms. Questions? Reach out first!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHTS -->
+            <div id="comm-rights" class="tab-content comm-panel">
+                <div class="comm-two-col">
+                    <div class="comm-card">
+                        <h4 class="comm-rights-label">Artist Rights</h4>
+                        <ul class="comm-rules-list">
+                            <li>I may use the commissioned piece for my social media and self-promotion.</li>
+                            <li>I may sell the commissioned piece as a product, unless stated otherwise by the customer.</li>
+                            <li>Publication rights are reserved to the artist.</li>
+                        </ul>
+                    </div>
+                    <div class="comm-card">
+                        <h4 class="comm-rights-label">Customer Rights</h4>
+                        <ul class="comm-rules-list">
+                            <li>You may use the commissioned piece for your own personal or non-commercial use.</li>
+                            <li>You may share the commission on your own social media.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WILL / WON'T DRAW -->
+            <div id="comm-ww" class="tab-content comm-panel">
+                <div class="comm-two-col">
+                    <div class="comm-card comm-will-card">
+                        <h4 class="comm-ww-label comm-will-label">✦ Will Draw</h4>
+                        <ul class="comm-rules-list">
+                            <li>Animals / Anthropomorphic Animals</li>
+                            <li>Humans / Humanoid</li>
+                            <li>Creatures</li>
+                            <li>Mech</li>
+                            <li>Architecture</li>
+                            <li>Nature</li>
+                            <li>Space</li>
+                        </ul>
+                    </div>
+                    <div class="comm-card comm-wont-card">
+                        <h4 class="comm-ww-label comm-wont-label">✦ Won't Draw</h4>
+                        <ul class="comm-rules-list">
+                            <li>NSFW / Suggestive / Nude</li>
+                            <li>Offensive / Political / Fetish</li>
+                            <li>Heavy Gore / Violence</li>
+                            <li>Pro-Shipping</li>
+                            <li>Hyper-Realistic</li>
+                            <li>Copyrighted Characters</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="comm-note comm-note-center">Unsure about a request? Feel free to ask — I'll let you know if I can proceed. Keep in mind I draw in a specific style (see my examples).</p>
+            </div>
+
+            <!-- Persistent CTA -->
+            <div class="comm-contact-cta">
+                <p>Ready to commission? Send me a message!</p>
+                <a href="#contact" class="comm-cta-btn">GET IN TOUCH ✦</a>
+            </div>
+
         </div>
     </section>
 
@@ -244,17 +373,16 @@
                         <ul class="award-list">
                             <li>
                                 <span class="award-event">PUSD Film Festival</span>
-                                <span class="award-detail">Best Overall — 2024 &amp; 2025</span>
+                                <span class="award-detail">2024 and 2025</span>
                                 <span class="award-wins"><span class="award-badge">2× Winner</span></span>
                             </li>
                             <li>
-                                <span class="award-event">Rocky Mountain Southwest Chapter Student Production Awards</span>
-                                <span class="award-detail">Highschool Animation/Graphics/Special Effects — 2024 &amp; 2025</span>
+                                <span class="award-event">Rocky Mountain Southwest Chapter Student Production Award</span>
+                                <span class="award-detail">2024 and 2025</span>
                                 <span class="award-wins"><span class="award-badge">2× Winner</span></span>
                             </li>
                             <li>
-                                <span class="award-event">National Academy of Television Arts &amp; Sciences' National Student Production Awards</span>
-                                <span class="award-detail">Highschool Animation/Graphics/Special Effects</span>
+                                <span class="award-event">National Academy of Television Arts &amp; Sciences' National Student Production Award</span>
                                 <span class="award-wins"><span class="award-badge">Winner</span></span>
                             </li>
                             <li>
@@ -328,12 +456,13 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 10px 0;">
 
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
-                                <h5 class="recognition-photo-label">Makers Market</h5>
+                                <h5 class="recognition-photo-label">Makers Market Fall 2025</h5>
                                 <div class="recognition-photo-wrapper" style="width: 100%;">
-                                    <img src="imgs/events.png" alt="Makers Market" class="recognition-photo">
+                                    <img src="imgs/events.png" alt="Makers Market Fall 2025" class="recognition-photo">
                                 </div>
-                                <p class="recognition-photo-caption">Huntington University Arizona Makers Market</p>
+                                <p class="recognition-photo-caption">Huntington University Arizona Makers Market Fall 2025</p>
                             </div>
+
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
                                 <h5 class="recognition-photo-label">Highschool Art Comp</h5>
                                 <div class="recognition-photo-wrapper" style="width: 100%;">
@@ -466,6 +595,22 @@
 
         </div>
     </section>
+
+    <!-- ===== FILM ARTWORK LIGHTBOX ===== -->
+    <div id="filmLightbox" class="film-lightbox" role="dialog" aria-modal="true">
+        <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+        <button class="lightbox-prev" onclick="lightboxPrev()" aria-label="Previous">
+            <img src="imgs/arrow-right.png" alt="">
+        </button>
+        <div class="lightbox-img-wrap">
+            <img id="lightboxImg" src="" alt="Artwork close-up">
+        </div>
+        <button class="lightbox-next" onclick="lightboxNext()" aria-label="Next">
+            <img src="imgs/arrow-right.png" alt="">
+        </button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+    </div>
 
     <button id="backToTop" aria-label="Back to top">
         <img src="imgs/arrow-button.png" alt="Back to top">
