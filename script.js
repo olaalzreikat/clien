@@ -1,3 +1,26 @@
+// ===== EXIT MODAL =====
+let _exitUrl = '#';
+
+function openExitModal(url) {
+    _exitUrl = url;
+    const modal = document.getElementById('exitModal');
+    if (modal) modal.classList.add('active');
+}
+
+function closeExitModal() {
+    const modal = document.getElementById('exitModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function confirmExit() {
+    closeExitModal();
+    window.open(_exitUrl, '_blank');
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeExitModal();
+});
+
 // ===== FILM ARTWORK LIGHTBOX =====
 let lightboxImages = [];
 let lightboxIndex  = 0;
@@ -148,15 +171,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ===== ILLUSTRATIONS =====
 const images = [
-    { src: 'imgs/illustration1.png', title: 'Enchanted Forest', category: 'digital' },
-    { src: 'imgs/illustration2.png', title: 'Dragon Frog', category: 'digital' },
-    { src: 'imgs/illustration3.png', title: 'Sky Islands', category: 'digital' },
-    { src: 'imgs/illustration4.png', title: 'Starfield', category: 'digital' },
-    { src: 'imgs/illustration5.png', title: 'Deep Sea', category: 'digital' },
-    { src: 'imgs/illustration6.png', title: 'Dragon Night', category: 'digital' },
-    { src: 'imgs/illustration7.png', title: 'Forest Scare', category: 'digital' },
-    { src: 'imgs/illustration8.png', title: 'Dragon Night', category: 'digital' },
-    { src: 'imgs/illustration9.png', title: 'Unicorn Dream', category: 'digital' },
+    { src: 'imgs/illustration1.png', title: 'Enchanted Forest', category: 'digital', wip: 'imgs/LEAFDRAGONS_AP2025_wip.png',              mp4: 'imgs/LEAFDRAGONS_AP2025.mp4' },
+    { src: 'imgs/illustration2.png', title: 'Dragon Frog',      category: 'digital', wip: 'imgs/FROG_AP_2025_wip.png',                   mp4: 'imgs/FROG_AP_2025.mp4' },
+    { src: 'imgs/illustration3.png', title: 'Sky Islands',      category: 'digital', wip: 'imgs/GRYFFIN CITY_AP 2025_wip.png',           mp4: 'imgs/GRYFFIN CITY_AP 2025.mp4' },
+    { src: 'imgs/illustration4.png', title: 'Starfield',        category: 'digital', wip: 'imgs/AP_2026_SNOWWOLF_wip1.png',              mp4: 'imgs/AP_2026_SNOWWOLF_wip2.mp4' },
+    { src: 'imgs/illustration5.png', title: 'Deep Sea',         category: 'digital', wip: 'imgs/AQUARIUM_AP_2026_wip.png',               mp4: 'imgs/AQUARIUM_AP_2026.mp4' },
+    { src: 'imgs/illustration6.png', title: 'Dragon Night',     category: 'digital', wip: 'imgs/BOOK OF ADVENTURE_2025_APwip.png',       mp4: 'imgs/BOOK OF ADVENTURE_2025_AP_0.mp4' },
+    { src: 'imgs/illustration7.png', title: 'Forest Scare',     category: 'digital', wip: 'imgs/LIBRARYBOX_AP_2025_wip.png',             mp4: 'imgs/LIBRARYBOX_AP_2025_Wip1.mp4' },
+    { src: 'imgs/illustration8.png', title: 'Roller Dog',       category: 'digital', wip: 'imgs/AP_2025_ROLLERDOG_wip.png',              mp4: 'imgs/AP_2025_ROLLERDOG.mp4' },
+    { src: 'imgs/illustration9.png', title: 'Unicorn Dream',    category: 'digital', wip: 'imgs/UNICORN_AP_2025_wip.png',                mp4: 'imgs/UNICORN_AP_2025_0.mp4' },
     { src: 'imgs/trad1.jpg', title: 'Traditional 1', category: 'traditional' },
     { src: 'imgs/trad2.jpg', title: 'Traditional 2', category: 'traditional' },
     { src: 'imgs/trad3.jpg', title: 'Traditional 3', category: 'traditional' },
@@ -215,6 +238,7 @@ function updateShowcase() {
         preloadAdjacentImages();
     };
     img.src = imageSrc;
+    populateIllusProcess();
 }
 
 function nextImage() { const f = getFilteredImages(); currentImageIndex = (currentImageIndex + 1) % f.length; updateShowcase(); }
@@ -245,6 +269,43 @@ function populateGallery() {
         fragment.appendChild(item);
     });
     galleryGrid.appendChild(fragment);
+}
+
+function populateIllusProcess() {
+    const grid = document.getElementById('illusProcessGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const filtered = getFilteredImages();
+    const current = filtered[currentImageIndex];
+    if (!current || (!current.wip && !current.mp4)) return;
+    if (current.wip) {
+        const item = document.createElement('div');
+        item.className = 'wip-process-item';
+        const el = document.createElement('img');
+        el.src = current.wip;
+        el.alt = current.title + ' sketch';
+        el.loading = 'lazy';
+        const lbl = document.createElement('div');
+        lbl.className = 'wip-item-label';
+        lbl.textContent = current.title + ' · Sketch';
+        item.append(el, lbl);
+        grid.appendChild(item);
+    }
+    if (current.mp4) {
+        const item = document.createElement('div');
+        item.className = 'wip-process-item';
+        const vid = document.createElement('video');
+        vid.src = current.mp4;
+        vid.controls = true;
+        vid.muted = true;
+        vid.setAttribute('playsinline', '');
+        vid.preload = 'none';
+        const lbl = document.createElement('div');
+        lbl.className = 'wip-item-label';
+        lbl.textContent = current.title + ' · Timelapse';
+        item.append(vid, lbl);
+        grid.appendChild(item);
+    }
 }
 
 // ===== SWIPE SUPPORT =====
@@ -408,7 +469,7 @@ const films = [
             { event: '2025 PUSD Film Festival', detail: '"Alice in Wonderland Animation" category', wins: ['Best Overall'] },
             { event: '2024–2025 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://www.youtube.com/watch?v=09NP_b_IOHA&feature=youtu.be', linkLabel: '▶ Watch Ceremony' },
             { event: '2025 National Academy of Television Arts & Sciences\' National Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://theemmys.tv/wp-content/uploads/2025/11/2025-NSPA-WINNERS-.pdf', linkLabel: 'View Winners PDF' },
-            { event: '2026 Arizona Student Film Festival', wins: ['Nominee'] },
+            { event: '2026 Arizona Student Film Festival', wins: ['2nd Place'] },
             { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
         ],
         behindScenesLabel: 'Behind the Scenes',
@@ -427,7 +488,6 @@ const films = [
             { event: '2024 PUSD Film Festival', detail: '"Coming of Age" category', wins: ['Best Sound Design', 'Best Overall'] },
             { event: '2023–2024 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'] },
             { event: '2024 National Academy of Arts and Sciences\' National Student Production Awards', wins: ['Nominee'] },
-            { event: '2026 Arizona Student Film Festival', wins: ['Nominee'] },
             { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
         ],
         behindScenesLabel: 'Behind the Scenes',
@@ -814,8 +874,9 @@ function positionMoonAndSides() {
     const moon = document.querySelector('.right-moon');
     const sides = document.querySelectorAll('.side-decoration-container');
 
-    if (!contact) return;
-    const contactTop = contact.offsetTop;
+    const contactTop = contact
+        ? contact.offsetTop
+        : document.documentElement.scrollHeight - 200;
     let moonTop = contactTop;
 
     if (moon) {
@@ -849,21 +910,21 @@ function positionMoonAndSides() {
 function positionMargins() {
     const contact = document.querySelector('.contact-section');
     const footer = document.querySelector('.footer');
-    if (!contact) return;
-
-    contact.style.marginLeft = '';
-    contact.style.marginRight = '';
-    contact.style.paddingLeft = '';
-    contact.style.paddingRight = '';
 
     const bodyStyle = window.getComputedStyle(document.body);
     const paddingLeft = parseInt(bodyStyle.paddingLeft) || 0;
     const paddingRight = parseInt(bodyStyle.paddingRight) || 0;
 
-    contact.style.marginLeft = '-' + paddingLeft + 'px';
-    contact.style.marginRight = '-' + paddingRight + 'px';
-    contact.style.paddingLeft = (paddingLeft + 30) + 'px';
-    contact.style.paddingRight = (paddingRight + 30) + 'px';
+    if (contact) {
+        contact.style.marginLeft = '';
+        contact.style.marginRight = '';
+        contact.style.paddingLeft = '';
+        contact.style.paddingRight = '';
+        contact.style.marginLeft = '-' + paddingLeft + 'px';
+        contact.style.marginRight = '-' + paddingRight + 'px';
+        contact.style.paddingLeft = (paddingLeft + 30) + 'px';
+        contact.style.paddingRight = (paddingRight + 30) + 'px';
+    }
 
     if (footer) {
         footer.style.marginLeft = '-' + paddingLeft + 'px';
@@ -1209,6 +1270,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateShowcase();
     populateGallery();
+    populateIllusProcess();
 
     const imgArrows = document.querySelectorAll('.illustration-showcase .nav-arrow');
     if (imgArrows.length >= 2) {

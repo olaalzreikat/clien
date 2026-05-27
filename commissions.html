@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanniannart - Commissions</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="imgs/logo.png">
+    <script src="script.js" defer></script>
+</head>
+<body class="subpage">
+
+    <div class="sticky-nav" id="stickyNav">
+        <a href="index.html#home" class="nav-btn">HOME</a>
+        <a href="index.html#work" class="nav-btn">WORK</a>
+        <a href="index.html#about" class="nav-btn">ABOUT</a>
+        <a href="commissions.html" class="nav-btn active">COMMISSIONS</a>
+        <a href="index.html#contact" class="nav-btn">CONTACT</a>
+    </div>
+
+    <img src="imgs/leftsun.png" alt="" class="left-sun">
+    <img src="imgs/rightmoon.png" alt="" class="right-moon">
+
+    <div class="side-decoration-container left"></div>
+    <div class="side-decoration-container right"></div>
+
+    <nav class="navbar" id="mainNav">
+        <canvas id="particle-canvas"></canvas>
+        <img src="imgs/WEBSITECLOUDS_left.png" alt="" class="website-cloud-left">
+        <img src="imgs/WEBSITECLOUDS_right.png" alt="" class="website-cloud-right">
+        <div class="nav-container">
+            <div class="logo-wrapper" id="logoWrapper">
+                <div class="logo-circle-incomplete" id="logoArch">
+                    <a href="index.html">
+                        <img src="imgs/logo.png" alt="VanniannArt Logo" class="logo-img" id="logoImg">
+                    </a>
+                </div>
+            </div>
+            <div class="nav-title-box" id="titleBox">
+                <h1 class="nav-title" id="navTitle">VANNIANNART</h1>
+                <p class="nav-subtitle">
+                    <span class="subtitle-star">✦</span>
+                    <span class="subtitle-text">ANIMATION + ILLUSTRATION</span>
+                    <span class="subtitle-star">✦</span>
+                </p>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-btn">HOME</a>
+                <a href="index.html#work" class="nav-btn">WORK</a>
+                <a href="index.html#about" class="nav-btn">ABOUT</a>
+                <a href="commissions.html" class="nav-btn active">COMMISSIONS</a>
+                <a href="index.html#contact" class="nav-btn">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== COMMISSIONS SECTION ===== -->
+    <section id="commissions" class="commissions-section">
+        <h2 class="section-title">COMMISSIONS</h2>
+        <div class="commissions-container">
+            <div class="work-tabs comm-tabs">
+                <button class="tab-btn comm-tab active" onclick="showCommTab('comm-types')">COMMISSION TYPES</button>
+                <button class="tab-btn comm-tab" onclick="showCommTab('comm-tos')">TERMS OF SERVICE</button>
+                <button class="tab-btn comm-tab" onclick="showCommTab('comm-rights')">RIGHTS</button>
+                <button class="tab-btn comm-tab" onclick="showCommTab('comm-ww')">WILL / WON'T DRAW</button>
+            </div>
+
+            <!-- COMMISSION TYPES -->
+            <div id="comm-types" class="tab-content active comm-panel">
+                <div class="comm-types-grid">
+
+                    <!-- Character Head Shot -->
+                    <div class="comm-type-card">
+                        <div class="comm-type-header">
+                            <h3 class="comm-type-title">Character Head Shot</h3>
+                            <span class="comm-type-price">Starting at $40</span>
+                        </div>
+                        <p class="comm-type-desc">Have a character? Need a headshot of your character for your profile picture, character about me page, or character art collection in general? I will draw your character based on your design.</p>
+                        <p class="comm-type-desc">Please specify what "extras" (ex: symbols, shapes, extra details) you would like and what color/theme you would like the background to be based on my examples.</p>
+                        <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                    </div>
+
+                    <!-- Character Reference Sheet -->
+                    <div class="comm-type-card">
+                        <div class="comm-type-header">
+                            <h3 class="comm-type-title">Character Reference Sheet</h3>
+                            <span class="comm-type-price">Starting at $60</span>
+                        </div>
+                        <p class="comm-type-desc">Do you need a custom illustrated character reference sheet? These could be for your character about me page, character art collection and more! I will draw your character based on your design in 1 fullbody pose and 2 headshot expressions.</p>
+                        <p class="comm-type-desc">Please specify what fullbody pose and expressions you would like. You may also specify what color/theme you would like the background. Please see my illustrated examples!</p>
+                        <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                    </div>
+
+                    <!-- Character Name Tag -->
+                    <div class="comm-type-card">
+                        <div class="comm-type-header">
+                            <h3 class="comm-type-title">Character Name Tag</h3>
+                            <span class="comm-type-price">Starting at $80</span>
+                        </div>
+                        <p class="comm-type-desc">Do you need a custom character name tag? These can be used for a character about me page, character art collection or ready to print for use at conventions! I will draw your character based on your design.</p>
+                        <p class="comm-type-desc">Please specify what "extras" (ex: symbols, shapes, extra details) you would like and what color/theme you would like the background to be based on my examples.</p>
+                        <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TERMS OF SERVICE -->
+            <div id="comm-tos" class="tab-content comm-panel">
+                <div class="comm-tos-grid">
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Payment Method</h4>
+                        <p>All payments through PayPal or Cashapp (USD only). Include your name/username and commission request with payment.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Payment Terms</h4>
+                        <p>50% upfront before I start. Remaining 50% once you approve the low resolution final. Let me know of any major changes before final payment.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Completion Time</h4>
+                        <p>First come, first serve. I am not a full time artist. Orders may take 1 week to several months. I will keep you updated at every stage. Have a deadline? Let me know!</p>
+                    </div>
+                    <div class="comm-tos-block comm-tos-refunds">
+                        <h4 class="comm-tos-heading">Refunds</h4>
+                        <p>Refunds available before I start. Emergency refunds based on progress stage:</p>
+                        <div class="comm-stages">
+                            <div class="comm-stage"><span class="comm-stage-name">Sketch</span><span class="comm-stage-pct">90% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Lineart</span><span class="comm-stage-pct">70% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Flat Color</span><span class="comm-stage-pct">50% back</span></div>
+                            <div class="comm-stage"><span class="comm-stage-name">Shading / Details</span><span class="comm-stage-pct">10% back</span></div>
+                        </div>
+                        <p>Full refund if I cannot complete the commission.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Progress Updates</h4>
+                        <p>Updates at every stage. Major &amp; minor changes free during Sketch. Minor changes free during later stages. Major changes after Sketch = +5% to total price.</p>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Copyright &amp; Credits</h4>
+                        <ul class="comm-rules-list">
+                            <li>Do not claim artwork as your own</li>
+                            <li>Do not run through Generative AI</li>
+                            <li>Do not use as AI training material</li>
+                            <li>Do not sell the commissioned piece</li>
+                            <li>Personal &amp; non commercial use only</li>
+                        </ul>
+                    </div>
+                    <div class="comm-tos-block">
+                        <h4 class="comm-tos-heading">Contract</h4>
+                        <p>You will sign my Commission Contract before I begin. Only sign if you agree to these terms. Questions? Reach out first!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHTS -->
+            <div id="comm-rights" class="tab-content comm-panel">
+                <div class="comm-two-col">
+                    <div class="comm-card">
+                        <h4 class="comm-rights-label">Artist Rights</h4>
+                        <ul class="comm-rules-list">
+                            <li>I may use the commissioned piece for my social media and self promotion.</li>
+                            <li>I may sell the commissioned piece as a product, unless stated otherwise by the customer.</li>
+                            <li>Publication rights are reserved to the artist.</li>
+                        </ul>
+                    </div>
+                    <div class="comm-card">
+                        <h4 class="comm-rights-label">Customer Rights</h4>
+                        <ul class="comm-rules-list">
+                            <li>You may use the commissioned piece for your own personal or non commercial use.</li>
+                            <li>You may share the commission on your own social media.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WILL / WON'T DRAW -->
+            <div id="comm-ww" class="tab-content comm-panel">
+                <div class="comm-two-col">
+                    <div class="comm-card comm-will-card">
+                        <h4 class="comm-ww-label comm-will-label">✦ Will Draw</h4>
+                        <ul class="comm-rules-list">
+                            <li>Animals / Anthropomorphic Animals</li>
+                            <li>Humans / Humanoid</li>
+                            <li>Creatures</li>
+                            <li>Mech</li>
+                            <li>Architecture</li>
+                            <li>Nature</li>
+                            <li>Space</li>
+                        </ul>
+                    </div>
+                    <div class="comm-card comm-wont-card">
+                        <h4 class="comm-ww-label comm-wont-label">✦ Won't Draw</h4>
+                        <ul class="comm-rules-list">
+                            <li>NSFW / Suggestive / Nude</li>
+                            <li>Offensive / Political / Fetish</li>
+                            <li>Heavy Gore / Violence</li>
+                            <li>Pro-Shipping</li>
+                            <li>Hyper-Realistic</li>
+                            <li>Copyrighted Characters</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="comm-note comm-note-center">Unsure about a request? Feel free to ask and I'll let you know if I can proceed. Keep in mind I draw in a specific style (see my examples).</p>
+            </div>
+
+            <!-- Shop Links -->
+            <div class="comm-shop-section">
+                <h3 class="comm-shop-title">✦ Shop ✦</h3>
+                <div class="comm-shop-btns">
+                    <button class="comm-shop-btn" onclick="openExitModal('https://acggoods.com/store/vanniannart?from=share')">Product Shop</button>
+                </div>
+            </div>
+
+            <!-- Persistent CTA -->
+            <div class="comm-contact-cta">
+                <p>Ready to commission? Send me a message!</p>
+                <a href="index.html#contact" class="comm-cta-btn">GET IN TOUCH ✦</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- EXIT MODAL -->
+    <div id="exitModal" class="exit-modal-overlay" role="dialog" aria-modal="true">
+        <div class="exit-modal-box">
+            <p class="exit-modal-text">You are exiting the Vanniannart website.</p>
+            <p class="exit-modal-sub">Continue?</p>
+            <div class="exit-modal-btns">
+                <button class="exit-modal-cancel" onclick="closeExitModal()">Stay</button>
+                <button class="exit-modal-go" onclick="confirmExit()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="backToTop" aria-label="Back to top">
+        <img src="imgs/arrow-button.png" alt="Back to top">
+    </button>
+
+    <footer class="footer">
+        <p>© 2026 Vanniannart • All Rights Reserved</p>
+        <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 8px;">Designed &amp; Coded by Ola Alzreikat</p>
+    </footer>
+
+</body>
+</html>

@@ -24,7 +24,7 @@
         <a href="#home" class="nav-btn">HOME</a>
         <a href="#work" class="nav-btn">WORK</a>
         <a href="#about" class="nav-btn">ABOUT</a>
-        <a href="#commissions" class="nav-btn">COMMISSIONS</a>
+        <a href="commissions.html" class="nav-btn">COMMISSIONS</a>
         <a href="#contact" class="nav-btn">CONTACT</a>
     </div>
 
@@ -36,11 +36,8 @@
 
     <nav class="navbar" id="mainNav">
         <canvas id="particle-canvas"></canvas>
-        <img src="imgs/cloud1.png" alt="" class="header-cloud cloud-1">
-        <img src="imgs/cloud2.png" alt="" class="header-cloud cloud-2">
-        <img src="imgs/cloud3.png" alt="" class="header-cloud cloud-3">
-        <img src="imgs/cloud1.png" alt="" class="header-cloud cloud-4">
-        <img src="imgs/cloud2.png" alt="" class="header-cloud cloud-5">
+        <img src="imgs/WEBSITECLOUDS_left.png" alt="" class="website-cloud-left">
+        <img src="imgs/WEBSITECLOUDS_right.png" alt="" class="website-cloud-right">
         <div class="nav-container">
             <div class="logo-wrapper" id="logoWrapper">
                 <div class="logo-circle-incomplete" id="logoArch">
@@ -59,7 +56,7 @@
                 <a href="#home" class="nav-btn">HOME</a>
                 <a href="#work" class="nav-btn">WORK</a>
                 <a href="#about" class="nav-btn">ABOUT</a>
-                <a href="#commissions" class="nav-btn">COMMISSIONS</a>
+                <a href="commissions.html" class="nav-btn">COMMISSIONS</a>
                 <a href="#contact" class="nav-btn">CONTACT</a>
             </div>
         </div>
@@ -72,9 +69,9 @@
                     <span class="hero-letter">H</span><span class="hero-letter">A</span><span class="hero-letter">N</span><span class="hero-letter">A</span><span class="hero-letter">&nbsp;</span><span class="hero-letter">T</span><span class="hero-letter">A</span><span class="hero-letter">Y</span><span class="hero-letter">L</span><span class="hero-letter">O</span><span class="hero-letter">R</span>
                 </h1>
                 <div class="hero-roles">
-                    <span class="role-item">ILLUSTRATOR</span>
-                    <span class="role-item">ANIMATOR</span>
-                    <span class="role-item">FILMMAKER</span>
+                    <a href="#work" class="role-item">ILLUSTRATOR</a>
+                    <a href="#animations" class="role-item">ANIMATOR</a>
+                    <a href="#films" class="role-item">FILMMAKER</a>
                 </div>
                 <div class="work-btn-wrapper">
                     <a href="#work" class="work-button">VIEW WORK <img src="imgs/arrow-button.png" alt="↓" class="work-btn-arrow"></a>
@@ -150,11 +147,6 @@
                     <div class="video-placeholder"></div>
                     <button class="nav-arrow anim-arrow-next"><img src="imgs/arrow-right.png" alt="Next"></button>
                 </div>
-                <div class="wip-process-section">
-                    <h3 class="wip-process-title">PROCESS</h3>
-                    <p class="wip-process-subtitle">Works in Progress</p>
-                    <div class="wip-process-grid" id="animProcessGrid"></div>
-                </div>
             </div>
             <div id="anim-gallery" class="tab-content">
                 <div id="animGalleryGrid" class="anim-gallery-container"></div>
@@ -199,120 +191,12 @@
 
     <div class="inbetween-star1"><img src="imgs/inbetweenstar1.png" alt=""></div>
 
-    <!-- ===== COMMISSIONS SECTION ===== -->
-    <section id="commissions" class="commissions-section">
-        <h2 class="section-title">COMMISSIONS</h2>
-        <div class="commissions-container">
-            <div class="work-tabs comm-tabs">
-                <button class="tab-btn comm-tab active" onclick="showCommTab('comm-tos')">TERMS OF SERVICE</button>
-                <button class="tab-btn comm-tab" onclick="showCommTab('comm-rights')">RIGHTS</button>
-                <button class="tab-btn comm-tab" onclick="showCommTab('comm-ww')">WILL / WON'T DRAW</button>
-            </div>
-
-            <!-- TERMS OF SERVICE -->
-            <div id="comm-tos" class="tab-content active comm-panel">
-                <div class="comm-tos-grid">
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Payment Method</h4>
-                        <p>All payments through PayPal or Cashapp (USD only). Include your name/username and commission request with payment.</p>
-                    </div>
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Payment Terms</h4>
-                        <p>50% upfront before I start. Remaining 50% once you approve the low-resolution final. Let me know of any major changes before final payment.</p>
-                    </div>
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Completion Time</h4>
-                        <p>First come, first serve. I am not a full-time artist — orders may take 1 week to several months. I will keep you updated at every stage. Have a deadline? Let me know!</p>
-                    </div>
-                    <div class="comm-tos-block comm-tos-refunds">
-                        <h4 class="comm-tos-heading">Refunds</h4>
-                        <p>Refunds available before I start. Emergency refunds based on progress stage:</p>
-                        <div class="comm-stages">
-                            <div class="comm-stage"><span class="comm-stage-name">Sketch</span><span class="comm-stage-pct">90% back</span></div>
-                            <div class="comm-stage"><span class="comm-stage-name">Lineart</span><span class="comm-stage-pct">70% back</span></div>
-                            <div class="comm-stage"><span class="comm-stage-name">Flat Color</span><span class="comm-stage-pct">50% back</span></div>
-                            <div class="comm-stage"><span class="comm-stage-name">Shading / Details</span><span class="comm-stage-pct">10% back</span></div>
-                        </div>
-                        <p>Full refund if I cannot complete the commission.</p>
-                    </div>
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Progress Updates</h4>
-                        <p>Updates at every stage. Major &amp; minor changes free during Sketch. Minor changes free during later stages. Major changes after Sketch = +5% to total price.</p>
-                    </div>
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Copyright &amp; Credits</h4>
-                        <ul class="comm-rules-list">
-                            <li>Do not claim artwork as your own</li>
-                            <li>Do not run through Generative AI</li>
-                            <li>Do not use as AI training material</li>
-                            <li>Do not sell the commissioned piece</li>
-                            <li>Personal &amp; non-commercial use only</li>
-                        </ul>
-                    </div>
-                    <div class="comm-tos-block">
-                        <h4 class="comm-tos-heading">Contract</h4>
-                        <p>You will sign my Commission Contract before I begin. Only sign if you agree to these terms. Questions? Reach out first!</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHTS -->
-            <div id="comm-rights" class="tab-content comm-panel">
-                <div class="comm-two-col">
-                    <div class="comm-card">
-                        <h4 class="comm-rights-label">Artist Rights</h4>
-                        <ul class="comm-rules-list">
-                            <li>I may use the commissioned piece for my social media and self-promotion.</li>
-                            <li>I may sell the commissioned piece as a product, unless stated otherwise by the customer.</li>
-                            <li>Publication rights are reserved to the artist.</li>
-                        </ul>
-                    </div>
-                    <div class="comm-card">
-                        <h4 class="comm-rights-label">Customer Rights</h4>
-                        <ul class="comm-rules-list">
-                            <li>You may use the commissioned piece for your own personal or non-commercial use.</li>
-                            <li>You may share the commission on your own social media.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WILL / WON'T DRAW -->
-            <div id="comm-ww" class="tab-content comm-panel">
-                <div class="comm-two-col">
-                    <div class="comm-card comm-will-card">
-                        <h4 class="comm-ww-label comm-will-label">✦ Will Draw</h4>
-                        <ul class="comm-rules-list">
-                            <li>Animals / Anthropomorphic Animals</li>
-                            <li>Humans / Humanoid</li>
-                            <li>Creatures</li>
-                            <li>Mech</li>
-                            <li>Architecture</li>
-                            <li>Nature</li>
-                            <li>Space</li>
-                        </ul>
-                    </div>
-                    <div class="comm-card comm-wont-card">
-                        <h4 class="comm-ww-label comm-wont-label">✦ Won't Draw</h4>
-                        <ul class="comm-rules-list">
-                            <li>NSFW / Suggestive / Nude</li>
-                            <li>Offensive / Political / Fetish</li>
-                            <li>Heavy Gore / Violence</li>
-                            <li>Pro-Shipping</li>
-                            <li>Hyper-Realistic</li>
-                            <li>Copyrighted Characters</li>
-                        </ul>
-                    </div>
-                </div>
-                <p class="comm-note comm-note-center">Unsure about a request? Feel free to ask — I'll let you know if I can proceed. Keep in mind I draw in a specific style (see my examples).</p>
-            </div>
-
-            <!-- Persistent CTA -->
-            <div class="comm-contact-cta">
-                <p>Ready to commission? Send me a message!</p>
-                <a href="#contact" class="comm-cta-btn">GET IN TOUCH ✦</a>
-            </div>
-
+    <!-- ===== COMMISSIONS TEASER ===== -->
+    <section class="comm-teaser-section">
+        <div class="comm-teaser-inner">
+            <h2 class="comm-teaser-title">COMMISSIONS</h2>
+            <p class="comm-teaser-sub">Interested in custom artwork? Check out my commission sheet for pricing, terms, and what I draw.</p>
+            <a href="commissions.html" class="comm-cta-btn">VIEW COMMISSION SHEET ✦</a>
         </div>
     </section>
 
@@ -390,11 +274,6 @@
                                 <span class="award-detail">2025</span>
                                 <span class="award-wins"><span class="award-badge">3rd Place</span></span>
                             </li>
-                            <li>
-                                <span class="award-event">Mosaic Art Gallery at ASU West</span>
-                                <span class="award-detail">2026</span>
-                                <span class="award-wins"><span class="award-badge">2nd Place</span></span>
-                            </li>
                         </ul>
 
                         <div class="award-film-divider"></div>
@@ -408,7 +287,7 @@
                                 <div class="recognition-photo-wrapper" style="width: 100%;">
                                     <img src="imgs/recognition.PNG" alt="Recognition" class="recognition-photo">
                                 </div>
-                                <p class="recognition-photo-caption">NATAS Rocky Mountain Student Production Awards</p>
+                                <p class="recognition-photo-caption">Rocky Mountain Southwest Chapter Student Production Awards</p>
                             </div>
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
                                 <h5 class="recognition-photo-label">NATAS Award Ceremony</h5>
@@ -416,10 +295,6 @@
                                     <img src="imgs/NATAS-logo-horizontal-left.jpg" alt="NATAS Logo" class="recognition-photo">
                                 </div>
                                 <p class="recognition-photo-caption">NATAS National Student Production Awards Ceremony</p>
-                                <div class="recognition-photo-wrapper" style="width: 100%; margin-top: 12px;">
-                                    <img src="imgs/mqdefault.jpg" alt="Rocky Mountain Southwest Student Production Awards" class="recognition-photo">
-                                </div>
-                                <p class="recognition-photo-caption">Rocky Mountain Southwest Student Production Awards</p>
                             </div>
 
                             <!-- Row 2: Mosaic pair under one shared label -->
@@ -526,13 +401,16 @@
                                 <a href="https://pin.it/1HgVMjTBZ" target="_blank" aria-label="Pinterest">
                                     <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
                                 </a>
+                                <a href="mailto:vanniannart@gmail.com" aria-label="Email">
+                                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="pc-rule"></div>
                     <div class="pc-right">
                         <div class="pc-form-title">Send a Message</div>
-                        <form id="contact-form" action="https://formspree.io/f/mlgwldbe" method="POST">
+                        <form id="contact-form" action="https://formspree.io/vanniannart@gmail.com" method="POST">
                             <div class="pc-field">
                                 <label>Name</label>
                                 <input type="text" name="name" placeholder="Your name" required>
@@ -567,7 +445,7 @@
             <div class="mobile-contact-card">
                 <div class="contact-logo"><img src="imgs/logocontact.png" alt="Logo"></div>
                 <div class="postcard-form-area">
-                    <form id="contact-form-mobile" action="https://formspree.io/f/mlgwldbe" method="POST">
+                    <form id="contact-form-mobile" action="https://formspree.io/vanniannart@gmail.com" method="POST">
                         <input type="text" name="name" placeholder="Name (required)" required>
                         <input type="email" name="email" placeholder="Email (required)" required>
                         <textarea name="message" placeholder="Message (required)" required></textarea>
