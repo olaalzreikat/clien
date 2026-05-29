@@ -3006,9 +3006,18 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
   pointer-events: none;
 }
 
+/* ── Side-by-side socials + ko-fi layout ── */
+.connect-groups {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
 /* ── Ko-Fi section inside postcard ── */
 .pc-kofi-section {
-  margin-top: 12px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
