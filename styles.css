@@ -4951,3 +4951,105 @@ body.subpage .commissions-section {
     .wip-process-title { font-size: 1.6rem; }
     .comm-types-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== TABLET (769px – 1024px) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  /* Sticky nav — tighter spacing so all 6 links fit */
+  .sticky-nav {
+    gap: 5px;
+    padding: 8px 10px;
+  }
+
+  .sticky-nav .nav-btn {
+    padding: 7px 12px;
+    font-size: 0.75rem;
+  }
+
+  /* Social icon row — smaller icons so 7 + Ko-Fi fit */
+  .pc-socials {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .pc-socials a {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+  }
+
+  .pc-socials svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .pc-kofi-btn {
+    font-size: 0.68rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+
+  /* Recognition / events scroll box */
+  .recognition-scroll-box {
+    padding: 24px 20px;
+  }
+
+  /* Gallery grid — 2 columns on tablet */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Animation gallery — 2 columns */
+  .anim-gallery-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Commissions — single column cards below 900px already handled,
+     but ensure shop + CTA sections have breathing room */
+  .comm-shop-section {
+    margin-top: 30px;
+  }
+}
+
+/* ===== NARROW TABLET (769px – 860px): stack postcard body ===== */
+@media (min-width: 769px) and (max-width: 860px) {
+
+  /* Stack left/right columns vertically */
+  .pc-body {
+    flex-direction: column;
+  }
+
+  .pc-left {
+    flex: none;
+    width: 100%;
+    padding: 14px 20px 10px;
+  }
+
+  .pc-rule {
+    width: calc(100% - 40px);
+    height: 2px;
+    margin: 0 20px;
+    border: none;
+    background: rgba(0,0,0,0.12);
+  }
+
+  .pc-right {
+    padding: 14px 20px 24px;
+  }
+
+  .pc-character {
+    width: 70px;
+  }
+
+  /* About section at narrow tablet */
+  .about-container {
+    grid-template-columns: 1fr;
+    padding: 30px 24px;
+  }
+
+  .profile-placeholder {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
