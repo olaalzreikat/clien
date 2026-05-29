@@ -3259,6 +3259,24 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     width: 380px;
   }
 
+  /* Constrain profile pic wrapper to match grid column */
+  .profile-pic-wrapper {
+    width: 380px;
+  }
+
+  /* Sticky nav — fit all 6 buttons on one row */
+  .sticky-nav {
+    gap: 10px;
+    flex-wrap: nowrap;
+    padding: 10px 16px;
+  }
+
+  .sticky-nav .nav-btn {
+    padding: 9px 18px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+
   /* Postcard goes full width, draggable stamps hidden */
   .postcard-built {
     flex: none;
