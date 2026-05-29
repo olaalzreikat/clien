@@ -768,8 +768,9 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     transform: scaleX(-1) rotate(3deg);
 }
 
-/* ===== WEBSITE CLOUDS ===== */
+/* ===== WEBSITE CLOUDS (desktop only) ===== */
 .website-cloud-left {
+    display: none;
     position: absolute;
     left: 95px;
     top: 0;
@@ -780,6 +781,7 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
 }
 
 .website-cloud-right {
+    display: none;
     position: absolute;
     right: 100px;
     top: 0;
@@ -787,6 +789,13 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     max-width: 420px;
     z-index: 4;
     pointer-events: none;
+}
+
+@media (min-width: 1025px) {
+    .website-cloud-left,
+    .website-cloud-right {
+        display: block;
+    }
 }
 
 /* ===== FLOATING MAGICAL ORBS ===== */
@@ -3583,12 +3592,6 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
 
   .anim-gallery-container {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Hide nav clouds on tablet and below */
-  .website-cloud-left,
-  .website-cloud-right {
-    display: none;
   }
 
   /* Footer: counter body padding so it spans full width */
