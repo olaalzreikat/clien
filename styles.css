@@ -3395,14 +3395,6 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     padding-right: 110px;
   }
 
-  /* Push clouds to outer edges */
-  .website-cloud-left {
-    left: 0;
-  }
-
-  .website-cloud-right {
-    right: 0;
-  }
 }
 
 /* ===== DESKTOP (>1200px): stamp/carousel logic + postcard fix ===== */
@@ -3593,13 +3585,10 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Push clouds to outer edges so they don't crowd the logo */
-  .website-cloud-left {
-    left: 0;
-  }
-
+  /* Hide nav clouds on tablet and below */
+  .website-cloud-left,
   .website-cloud-right {
-    right: 0;
+    display: none;
   }
 
   /* Footer: counter body padding so it spans full width */
