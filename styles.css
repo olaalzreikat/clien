@@ -3386,6 +3386,23 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     border-color: white;
     transform: scale(1.15);
   }
+
+  /* Footer: counter body 80px padding so it spans full width */
+  .footer {
+    margin-left: -80px;
+    margin-right: -80px;
+    padding-left: 110px;
+    padding-right: 110px;
+  }
+
+  /* Push clouds to outer edges */
+  .website-cloud-left {
+    left: 0;
+  }
+
+  .website-cloud-right {
+    right: 0;
+  }
 }
 
 /* ===== DESKTOP (>1200px): stamp/carousel logic + postcard fix ===== */
@@ -3574,6 +3591,23 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
 
   .anim-gallery-container {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Push clouds to outer edges so they don't crowd the logo */
+  .website-cloud-left {
+    left: 0;
+  }
+
+  .website-cloud-right {
+    right: 0;
+  }
+
+  /* Footer: counter body padding so it spans full width */
+  .footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
 
