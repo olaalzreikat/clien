@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanniannart - Shop</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="imgs/logo.png">
+    <script src="script.js" defer></script>
+</head>
+<body class="subpage">
+
+    <div class="sticky-nav" id="stickyNav">
+        <a href="index.html#home" class="nav-btn">HOME</a>
+        <a href="index.html#work" class="nav-btn">WORK</a>
+        <a href="index.html#about" class="nav-btn">ABOUT</a>
+        <a href="commissions.html" class="nav-btn">COMMISSIONS</a>
+        <a href="shop.html" class="nav-btn active">SHOP</a>
+        <a href="index.html#contact" class="nav-btn">CONTACT</a>
+    </div>
+
+    <img src="imgs/leftsun.png" alt="" class="left-sun">
+    <img src="imgs/rightmoon.png" alt="" class="right-moon">
+
+    <div class="side-decoration-container left"></div>
+    <div class="side-decoration-container right"></div>
+
+    <nav class="navbar" id="mainNav">
+        <canvas id="particle-canvas"></canvas>
+        <img src="imgs/WEBSITECLOUDS_left.png" alt="" class="website-cloud-left">
+        <img src="imgs/WEBSITECLOUDS_right.png" alt="" class="website-cloud-right">
+        <div class="nav-container">
+            <div class="logo-wrapper" id="logoWrapper">
+                <div class="logo-circle-incomplete" id="logoArch">
+                    <a href="index.html">
+                        <img src="imgs/logo.png" alt="VanniannArt Logo" class="logo-img" id="logoImg">
+                    </a>
+                </div>
+            </div>
+            <div class="nav-title-box" id="titleBox">
+                <h1 class="nav-title" id="navTitle">VANNIANNART</h1>
+                <p class="nav-subtitle">
+                    <span class="subtitle-star">✦</span>
+                    <span class="subtitle-text">ANIMATION + ILLUSTRATION</span>
+                    <span class="subtitle-star">✦</span>
+                </p>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#home" class="nav-btn">HOME</a>
+                <a href="index.html#work" class="nav-btn">WORK</a>
+                <a href="index.html#about" class="nav-btn">ABOUT</a>
+                <a href="commissions.html" class="nav-btn">COMMISSIONS</a>
+                <a href="shop.html" class="nav-btn active">SHOP</a>
+                <a href="index.html#contact" class="nav-btn">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== SHOP SECTION ===== -->
+    <section id="shop" class="commissions-section">
+        <h2 class="section-title">SHOP</h2>
+        <div class="commissions-container">
+
+            <div class="comm-shop-section" style="margin-top: 40px;">
+                <h3 class="comm-shop-title">✦ Vanniannart Shop ✦</h3>
+                <p style="text-align:center; font-family:'Poppins',sans-serif; color:#fff; margin-bottom: 28px; max-width: 540px; margin-left:auto; margin-right:auto;">Browse my products: prints, stickers, and more. All items are made with love!</p>
+                <div class="comm-shop-btns">
+                    <button class="comm-shop-btn" onclick="openExitModal('https://acggoods.com/store/vanniannart?from=share')">Visit Shop ✦</button>
+                </div>
+            </div>
+
+            <div class="comm-contact-cta" style="margin-top: 60px;">
+                <p>Want a custom commission instead?</p>
+                <a href="commissions.html" class="comm-cta-btn">VIEW COMMISSIONS ✦</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- EXIT MODAL -->
+    <div id="exitModal" class="exit-modal-overlay" role="dialog" aria-modal="true">
+        <div class="exit-modal-box">
+            <p class="exit-modal-text">You are exiting the Vanniannart website.</p>
+            <p class="exit-modal-sub">Continue?</p>
+            <div class="exit-modal-btns">
+                <button class="exit-modal-cancel" onclick="closeExitModal()">Stay</button>
+                <button class="exit-modal-go" onclick="confirmExit()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="backToTop" aria-label="Back to top">
+        <img src="imgs/arrow-button.png" alt="Back to top">
+    </button>
+
+    <footer class="footer">
+        <p>© 2026 Vanniannart • All Rights Reserved</p>
+        <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 8px;">Designed &amp; Coded by Ola Alzreikat</p>
+    </footer>
+
+</body>
+</html>

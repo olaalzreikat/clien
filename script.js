@@ -171,15 +171,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 // ===== ILLUSTRATIONS =====
 const images = [
-    { src: 'imgs/illustration1.png', title: 'Enchanted Forest', category: 'digital', wip: 'imgs/LEAFDRAGONS_AP2025_wip.png',              mp4: 'imgs/LEAFDRAGONS_AP2025.mp4' },
-    { src: 'imgs/illustration2.png', title: 'Dragon Frog',      category: 'digital', wip: 'imgs/FROG_AP_2025_wip.png',                   mp4: 'imgs/FROG_AP_2025.mp4' },
-    { src: 'imgs/illustration3.png', title: 'Sky Islands',      category: 'digital', wip: 'imgs/GRYFFIN CITY_AP 2025_wip.png',           mp4: 'imgs/GRYFFIN CITY_AP 2025.mp4' },
-    { src: 'imgs/illustration4.png', title: 'Starfield',        category: 'digital', wip: 'imgs/AP_2026_SNOWWOLF_wip1.png',              mp4: 'imgs/AP_2026_SNOWWOLF_wip2.mp4' },
-    { src: 'imgs/illustration5.png', title: 'Deep Sea',         category: 'digital', wip: 'imgs/AQUARIUM_AP_2026_wip.png',               mp4: 'imgs/AQUARIUM_AP_2026.mp4' },
-    { src: 'imgs/illustration6.png', title: 'Dragon Night',     category: 'digital', wip: 'imgs/BOOK OF ADVENTURE_2025_APwip.png',       mp4: 'imgs/BOOK OF ADVENTURE_2025_AP_0.mp4' },
-    { src: 'imgs/illustration7.png', title: 'Forest Scare',     category: 'digital', wip: 'imgs/LIBRARYBOX_AP_2025_wip.png',             mp4: 'imgs/LIBRARYBOX_AP_2025_Wip1.mp4' },
-    { src: 'imgs/illustration8.png', title: 'Roller Dog',       category: 'digital', wip: 'imgs/AP_2025_ROLLERDOG_wip.png',              mp4: 'imgs/AP_2025_ROLLERDOG.mp4' },
-    { src: 'imgs/illustration9.png', title: 'Unicorn Dream',    category: 'digital', wip: 'imgs/UNICORN_AP_2025_wip.png',                mp4: 'imgs/UNICORN_AP_2025_0.mp4' },
+    { src: 'imgs/illustration1.png',  title: 'Enchanted Forest',   category: 'digital', wip: 'imgs/LIBRARYBOX_AP_2025_wip.png',          mp4: 'imgs/LIBRARYBOX_AP_2025_Wip1.mp4' },
+    { src: 'imgs/illustration2.png',  title: 'Dragon Frog',        category: 'digital', wip: 'imgs/FROG_AP_2025_wip.png',               mp4: 'imgs/FROG_AP_2025.mp4' },
+    { src: 'imgs/illustration3.png',  title: 'Sky Islands',        category: 'digital', wip: 'imgs/GRYFFIN CITY_AP 2025_wip.png',       mp4: 'imgs/GRYFFIN CITY_AP 2025.mp4' },
+    { src: 'imgs/illustration4.png',  title: 'Starfield',          category: 'digital', wip: 'imgs/AP_2026_SNOWWOLF_wip1.png',          mp4: 'imgs/AP_2026_SNOWWOLF_wip2.mp4' },
+    { src: 'imgs/illustration5.png',  title: 'Deep Sea',           category: 'digital', wip: 'imgs/AQUARIUM_AP_2026_wip.png',           mp4: 'imgs/AQUARIUM_AP_2026.mp4' },
+    { src: 'imgs/illustration6.png',  title: 'Dragon Night',       category: 'digital', wip: 'imgs/BOOK OF ADVENTURE_2025_APwip.png',   mp4: 'imgs/BOOK OF ADVENTURE_2025_AP_0.mp4' },
+    { src: 'imgs/illustration7.png',  title: 'Forest Scare',       category: 'digital', wip: 'imgs/LEAFDRAGONS_AP2025_wip.png',         mp4: 'imgs/LEAFDRAGONS_AP2025.mp4' },
+    { src: 'imgs/illustration8.png',  title: 'Space Dragon',       category: 'digital',                                                  mp4: 'imgs/SPACEDRAGON_AP_2025.mp4' },
+    { src: 'imgs/illustration9.png',  title: 'Unicorn Dream',      category: 'digital', wip: 'imgs/UNICORN_AP_2025_wip.png',            mp4: 'imgs/UNICORN_AP_2025_0.mp4' },
+    { src: 'imgs/illustration10.png', title: 'Roller Dog',         category: 'digital', wip: 'imgs/AP_2025_ROLLERDOG_wip.png',          mp4: 'imgs/AP_2025_ROLLERDOG.mp4' },
     { src: 'imgs/trad1.jpg', title: 'Traditional 1', category: 'traditional' },
     { src: 'imgs/trad2.jpg', title: 'Traditional 2', category: 'traditional' },
     { src: 'imgs/trad3.jpg', title: 'Traditional 3', category: 'traditional' },
@@ -278,6 +279,7 @@ function populateIllusProcess() {
     const filtered = getFilteredImages();
     const current = filtered[currentImageIndex];
     if (!current || (!current.wip && !current.mp4)) return;
+
     if (current.wip) {
         const item = document.createElement('div');
         item.className = 'wip-process-item';
@@ -285,21 +287,29 @@ function populateIllusProcess() {
         el.src = current.wip;
         el.alt = current.title + ' sketch';
         el.loading = 'lazy';
+        el.className = 'artwork-img-zoomable';
+        el.style.cursor = 'zoom-in';
+        el.addEventListener('click', () => openLightbox([current.wip], 0));
         const lbl = document.createElement('div');
         lbl.className = 'wip-item-label';
         lbl.textContent = current.title + ' · Sketch';
-        item.append(el, lbl);
+        item.append(createWatermarkWrapper(el), lbl);
         grid.appendChild(item);
     }
     if (current.mp4) {
         const item = document.createElement('div');
         item.className = 'wip-process-item';
         const vid = document.createElement('video');
-        vid.src = current.mp4;
-        vid.controls = true;
         vid.muted = true;
-        vid.setAttribute('playsinline', '');
-        vid.preload = 'none';
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.controls = true;
+        vid.autoplay = true;
+        const source = document.createElement('source');
+        source.src = current.mp4;
+        source.type = 'video/mp4';
+        vid.appendChild(source);
+        videoObserver.observe(vid);
         const lbl = document.createElement('div');
         lbl.className = 'wip-item-label';
         lbl.textContent = current.title + ' · Timelapse';
@@ -467,7 +477,7 @@ const films = [
         imdb: 'https://m.imdb.com/title/tt36786195/?ref_=ext_shr_lnk',
         awards: [
             { event: '2025 PUSD Film Festival', detail: '"Alice in Wonderland Animation" category', wins: ['Best Overall'] },
-            { event: '2024–2025 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://www.youtube.com/watch?v=09NP_b_IOHA&feature=youtu.be', linkLabel: '▶ Watch Ceremony' },
+            { event: '2024/2025 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://www.youtube.com/watch?v=09NP_b_IOHA&feature=youtu.be', linkLabel: '▶ Watch Ceremony' },
             { event: '2025 National Academy of Television Arts & Sciences\' National Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'], link: 'https://theemmys.tv/wp-content/uploads/2025/11/2025-NSPA-WINNERS-.pdf', linkLabel: 'View Winners PDF' },
             { event: '2026 Arizona Student Film Festival', wins: ['2nd Place'] },
             { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
@@ -486,7 +496,7 @@ const films = [
         imdb: 'https://m.imdb.com/title/tt36587391/?ref_=ext_shr_lnk',
         awards: [
             { event: '2024 PUSD Film Festival', detail: '"Coming of Age" category', wins: ['Best Sound Design', 'Best Overall'] },
-            { event: '2023–2024 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'] },
+            { event: '2023/2024 Rocky Mountain Southwest Chapter Student Production Awards', detail: '"Highschool Animation/Graphics/Special Effects"', wins: ['Best Overall'] },
             { event: '2024 National Academy of Arts and Sciences\' National Student Production Awards', wins: ['Nominee'] },
             { event: '2026 69th San Francisco International Film Festival, YouthWorks section', wins: ['Nominee'] },
         ],

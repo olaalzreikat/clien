@@ -15,6 +15,7 @@
         <a href="index.html#work" class="nav-btn">WORK</a>
         <a href="index.html#about" class="nav-btn">ABOUT</a>
         <a href="commissions.html" class="nav-btn active">COMMISSIONS</a>
+        <a href="shop.html" class="nav-btn">SHOP</a>
         <a href="index.html#contact" class="nav-btn">CONTACT</a>
     </div>
 
@@ -49,6 +50,7 @@
                 <a href="index.html#work" class="nav-btn">WORK</a>
                 <a href="index.html#about" class="nav-btn">ABOUT</a>
                 <a href="commissions.html" class="nav-btn active">COMMISSIONS</a>
+                <a href="shop.html" class="nav-btn">SHOP</a>
                 <a href="index.html#contact" class="nav-btn">CONTACT</a>
             </div>
         </div>
@@ -78,6 +80,17 @@
                         <p class="comm-type-desc">Have a character? Need a headshot of your character for your profile picture, character about me page, or character art collection in general? I will draw your character based on your design.</p>
                         <p class="comm-type-desc">Please specify what "extras" (ex: symbols, shapes, extra details) you would like and what color/theme you would like the background to be based on my examples.</p>
                         <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                        <div class="comm-examples">
+                            <h4 class="comm-examples-label">Examples</h4>
+                            <div class="comm-examples-grid">
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission1.png" alt="Head Shot Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission1.png','imgs/commission4.png'], 0)">
+                                </div>
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission4.png" alt="Head Shot Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission1.png','imgs/commission4.png'], 1)">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Character Reference Sheet -->
@@ -89,6 +102,17 @@
                         <p class="comm-type-desc">Do you need a custom illustrated character reference sheet? These could be for your character about me page, character art collection and more! I will draw your character based on your design in 1 fullbody pose and 2 headshot expressions.</p>
                         <p class="comm-type-desc">Please specify what fullbody pose and expressions you would like. You may also specify what color/theme you would like the background. Please see my illustrated examples!</p>
                         <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                        <div class="comm-examples">
+                            <h4 class="comm-examples-label">Examples</h4>
+                            <div class="comm-examples-grid">
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission2.png" alt="Reference Sheet Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission2.png','imgs/commission3.png'], 0)">
+                                </div>
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission3.png" alt="Reference Sheet Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission2.png','imgs/commission3.png'], 1)">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Character Name Tag -->
@@ -100,6 +124,17 @@
                         <p class="comm-type-desc">Do you need a custom character name tag? These can be used for a character about me page, character art collection or ready to print for use at conventions! I will draw your character based on your design.</p>
                         <p class="comm-type-desc">Please specify what "extras" (ex: symbols, shapes, extra details) you would like and what color/theme you would like the background to be based on my examples.</p>
                         <p class="comm-type-note">Please read my TOS for information about additional charges.</p>
+                        <div class="comm-examples">
+                            <h4 class="comm-examples-label">Examples</h4>
+                            <div class="comm-examples-grid">
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission5.png" alt="Name Tag Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission5.png','imgs/commission6.png'], 0)">
+                                </div>
+                                <div class="artwork-img-wrapper">
+                                    <img src="imgs/commission6.png" alt="Name Tag Example" class="artwork-img artwork-img-zoomable comm-example-img" onclick="openLightbox(['imgs/commission5.png','imgs/commission6.png'], 1)">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -194,8 +229,8 @@
                             <li>NSFW / Suggestive / Nude</li>
                             <li>Offensive / Political / Fetish</li>
                             <li>Heavy Gore / Violence</li>
-                            <li>Pro-Shipping</li>
-                            <li>Hyper-Realistic</li>
+                            <li>Pro Shipping</li>
+                            <li>Hyper Realistic</li>
                             <li>Copyrighted Characters</li>
                         </ul>
                     </div>
@@ -219,6 +254,22 @@
 
         </div>
     </section>
+
+    <!-- ===== LIGHTBOX ===== -->
+    <div id="filmLightbox" class="film-lightbox" role="dialog" aria-modal="true">
+        <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">✕</button>
+        <button class="lightbox-prev" onclick="lightboxPrev()" aria-label="Previous">
+            <img src="imgs/arrow-right.png" alt="">
+        </button>
+        <div class="lightbox-img-wrap">
+            <img id="lightboxImg" src="" alt="Commission example">
+        </div>
+        <button class="lightbox-next" onclick="lightboxNext()" aria-label="Next">
+            <img src="imgs/arrow-right.png" alt="">
+        </button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+    </div>
 
     <!-- EXIT MODAL -->
     <div id="exitModal" class="exit-modal-overlay" role="dialog" aria-modal="true">
