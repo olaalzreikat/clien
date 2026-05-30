@@ -8,6 +8,12 @@
       "mp4": "https://vannianart.vercel.app/imgs/AP_2025_ROLLERDOG.mp4"
     }
   ],
-  "animations": [],
+  "animations": [
+    {
+      "title": "girl",
+      "section": "Locomotion",
+      "src": "https://i.imgur.com/JlRascj.gif"
+    }
+  ],
   "films": []
 }
