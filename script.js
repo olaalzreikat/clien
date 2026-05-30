@@ -1354,6 +1354,8 @@ document.addEventListener('DOMContentLoaded', function () {
         else moonImg.addEventListener('load', positionElements);
     }
     positionElements();
+
+    loadGitHubContent();
 });
 
 window.addEventListener('load', positionElements);
@@ -1362,3 +1364,49 @@ window.addEventListener('resize', debounce(positionElements, 150));
 // ===== STICKY NAV ON SCROLL =====
 const stickyNav = document.getElementById('stickyNav');
 const mainNav = document.querySelector('.navbar');
+
+// ===== GITHUB CONTENT LOADER =====
+async function loadGitHubContent() {
+    if (typeof GITHUB_OWNER === 'undefined') return;
+    try {
+        const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${DATA_FILE}?t=${Date.now()}`;
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        let changed = false;
+
+        (data.illustrations || []).forEach(d => {
+            const entry = { src: d.src, title: d.title, category: d.category };
+            if (d.wip) entry.wip = d.wip;
+            if (d.mp4) entry.mp4 = d.mp4;
+            images.push(entry);
+            changed = true;
+        });
+
+        (data.animations || []).forEach(d => {
+            const cat = animationCategories.find(c => c.section === d.section);
+            if (cat) { cat.videos.push({ src: d.src, title: d.title }); changed = true; }
+        });
+
+        (data.films || []).forEach(d => {
+            films.push({
+                url: d.url, title: d.title, description: d.description || '',
+                year: d.year || '', genre: d.genre || 'Animation',
+                duration: d.duration || '', roles: d.roles || '', imdb: d.imdb || '',
+                awards: d.awards || [],
+                artworkCategories: d.artworkCategories && d.artworkCategories.length ? d.artworkCategories : undefined,
+            });
+            changed = true;
+        });
+
+        if (changed) {
+            updateShowcase();
+            populateGallery();
+            const animGallery = document.getElementById('anim-gallery');
+            if (animGallery && animGallery.classList.contains('active')) populateAnimGallery();
+        }
+    } catch (e) {
+        console.warn('GitHub content load failed:', e);
+    }
+}

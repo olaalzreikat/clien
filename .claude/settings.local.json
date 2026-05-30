@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" status)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" diff --stat)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" add index.html styles.css)",
+      "Bash(git -C 'c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA' commit -m ' *)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" add index.html)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" push origin main)",
+      "Bash(git -C \"c:\\\\Users\\\\oalzr\\\\OneDrive\\\\Documents\\\\HANA\" add styles.css)"
+    ]
+  }
+}

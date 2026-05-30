@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — VanniannArt</title>
+    <link rel="icon" type="image/png" href="imgs/logo.png">
+    <link rel="stylesheet" href="admin.css">
+    <script src="site-config.js"></script>
+</head>
+<body>
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <img src="imgs/logo.png" alt="Logo" class="login-logo">
+            <h1>VANNIANNART</h1>
+            <p class="login-subtitle">Admin Panel</p>
+            <div class="form-group">
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="gh-token" placeholder="github_pat_..." autocomplete="off">
+                <p class="url-hint" style="margin-top:8px">
+                    Get one at <strong>github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens</strong>.
+                    Give it <strong>Contents: Read and Write</strong> on this repo.
+                </p>
+            </div>
+            <button class="btn-primary" onclick="login()">Login</button>
+            <p id="loginError" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboard" style="display:none">
+
+        <header class="admin-header">
+            <div class="header-left">
+                <img src="imgs/logo.png" alt="Logo" class="header-logo">
+                <span class="header-title">VanniannArt Admin</span>
+            </div>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="showTab('illustrations', this)">Illustrations</button>
+            <button class="tab-btn" onclick="showTab('animations', this)">Animations</button>
+            <button class="tab-btn" onclick="showTab('films', this)">Short Films</button>
+        </div>
+
+        <!-- ===== ILLUSTRATIONS ===== -->
+        <div id="tab-illustrations" class="panel active">
+            <div class="panel-inner">
+                <div class="add-form card">
+                    <h2>Add Illustration</h2>
+                    <p class="url-hint">Upload images to <a href="https://imgur.com/upload" target="_blank">Imgur</a> (free, no account needed) → right-click the image → Copy image address.</p>
+                    <form id="illusForm" onsubmit="addIllustration(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="illus-title" placeholder="e.g. Dragon Frog" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="illus-category">
+                                    <option value="digital">Digital</option>
+                                    <option value="traditional">Traditional</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Illustration Image URL</label>
+                            <input type="url" id="illus-src" placeholder="https://i.imgur.com/..." required oninput="previewUrl('illus-src','illus-src-preview')">
+                            <div id="illus-src-preview" class="url-preview"></div>
+                        </div>
+                        <div class="subsection">
+                            <h3>Process <span class="optional">(optional)</span></h3>
+                            <div class="form-group">
+                                <label>WIP Sketch Image URL</label>
+                                <input type="url" id="illus-wip" placeholder="https://i.imgur.com/..." oninput="previewUrl('illus-wip','illus-wip-preview')">
+                                <div id="illus-wip-preview" class="url-preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Timelapse Video URL <span class="optional">(direct .mp4 link)</span></label>
+                                <input type="url" id="illus-mp4" placeholder="https://...mp4">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" id="illus-submit">Add Illustration</button>
+                        <p id="illus-status" class="status-msg"></p>
+                    </form>
+                </div>
+                <div class="items-section card">
+                    <h2>Added via Admin</h2>
+                    <div id="illus-list" class="items-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ANIMATIONS ===== -->
+        <div id="tab-animations" class="panel">
+            <div class="panel-inner">
+                <div class="add-form card">
+                    <h2>Add Animation</h2>
+                    <p class="url-hint">Upload GIFs to <a href="https://imgur.com/upload" target="_blank">Imgur</a>. For MP4 videos use Google Drive: Share → Anyone with link → copy the link.</p>
+                    <form id="animForm" onsubmit="addAnimation(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="anim-title" placeholder="e.g. Cat Walk Cycle" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category</label>
+                                <select id="anim-section">
+                                    <option value="Locomotion">Locomotion</option>
+                                    <option value="Motion Graphics">Motion Graphics</option>
+                                    <option value="Character Acting">Character Acting</option>
+                                    <option value="Stop Motion">Stop Motion</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Video / GIF URL</label>
+                            <input type="url" id="anim-src" placeholder="https://i.imgur.com/....gif" required oninput="previewUrl('anim-src','anim-src-preview')">
+                            <div id="anim-src-preview" class="url-preview"></div>
+                        </div>
+                        <button type="submit" class="btn-primary" id="anim-submit">Add Animation</button>
+                        <p id="anim-status" class="status-msg"></p>
+                    </form>
+                </div>
+                <div class="items-section card">
+                    <h2>Added via Admin</h2>
+                    <div id="anim-list" class="items-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FILMS ===== -->
+        <div id="tab-films" class="panel">
+            <div class="panel-inner wide">
+                <div class="add-form card">
+                    <h2>Add Short Film</h2>
+                    <form id="filmForm" onsubmit="addFilm(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="film-title" placeholder="e.g. FISHBOWL" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Year</label>
+                                <input type="text" id="film-year" placeholder="2025">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube URL</label>
+                            <input type="url" id="film-url" placeholder="https://www.youtube.com/watch?v=..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="film-description" rows="3" placeholder="A short description..." required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Genre</label>
+                                <input type="text" id="film-genre" value="Animation">
+                            </div>
+                            <div class="form-group">
+                                <label>Duration</label>
+                                <input type="text" id="film-duration" placeholder="e.g. 7 min">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Your Role(s)</label>
+                                <input type="text" id="film-roles" placeholder="e.g. Director, Animator">
+                            </div>
+                            <div class="form-group">
+                                <label>IMDB URL <span class="optional">(optional)</span></label>
+                                <input type="url" id="film-imdb">
+                            </div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-header">
+                                <h3>Awards <span class="optional">(optional)</span></h3>
+                                <button type="button" class="btn-add" onclick="addAwardField()">+ Add Award</button>
+                            </div>
+                            <div id="awards-container"></div>
+                        </div>
+
+                        <div class="subsection">
+                            <div class="subsection-header">
+                                <h3>Behind the Scenes <span class="optional">(optional)</span></h3>
+                                <button type="button" class="btn-add" onclick="addBtsCategory()">+ Add Category</button>
+                            </div>
+                            <p class="url-hint" style="margin-bottom:10px">Each category (e.g. "Concept Art") holds multiple image URLs, one per line.</p>
+                            <div id="bts-container"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="film-submit">Add Film</button>
+                        <p id="film-status" class="status-msg"></p>
+                    </form>
+                </div>
+                <div class="items-section card">
+                    <h2>Added via Admin</h2>
+                    <div id="film-list" class="items-list"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
