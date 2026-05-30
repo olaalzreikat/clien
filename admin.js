@@ -15,8 +15,7 @@ async function getFileData(token) {
     return { sha: file.sha, data: content };
 }
 
-async function saveData(newData, token) {
-    const { sha } = await getFileData(token);
+async function saveData(newData, token, sha) {
     const res = await fetch(API_BASE, {
         method: 'PUT',
         headers: {
@@ -144,10 +143,10 @@ async function addIllustration(e) {
     if (mp4) entry.mp4 = mp4;
 
     try {
-        const { data } = await getFileData(githubToken);
+        const { data, sha } = await getFileData(githubToken);
         data.illustrations = data.illustrations || [];
         data.illustrations.push(entry);
-        await saveData(data, githubToken);
+        await saveData(data, githubToken, sha);
         portfolioData = data;
         setStatus('illus-status', '✓ Illustration added! Changes live in ~1 min.', 'success');
         document.getElementById('illusForm').reset();
@@ -171,10 +170,10 @@ async function addAnimation(e) {
     setStatus('anim-status', 'Saving...', '');
 
     try {
-        const { data } = await getFileData(githubToken);
+        const { data, sha } = await getFileData(githubToken);
         data.animations = data.animations || [];
         data.animations.push({ title, section, src });
-        await saveData(data, githubToken);
+        await saveData(data, githubToken, sha);
         portfolioData = data;
         setStatus('anim-status', '✓ Animation added! Changes live in ~1 min.', 'success');
         document.getElementById('animForm').reset();
@@ -276,10 +275,10 @@ async function addFilm(e) {
     setStatus('film-status', 'Saving...', '');
 
     try {
-        const { data } = await getFileData(githubToken);
+        const { data, sha } = await getFileData(githubToken);
         data.films = data.films || [];
         data.films.push(filmEntry);
-        await saveData(data, githubToken);
+        await saveData(data, githubToken, sha);
         portfolioData = data;
         setStatus('film-status', '✓ Film added! Changes live in ~1 min.', 'success');
         document.getElementById('filmForm').reset();
@@ -295,9 +294,9 @@ async function addFilm(e) {
 async function deleteItem(type, index) {
     if (!confirm('Delete this item? This cannot be undone.')) return;
     try {
-        const { data } = await getFileData(githubToken);
+        const { data, sha } = await getFileData(githubToken);
         data[type].splice(index, 1);
-        await saveData(data, githubToken);
+        await saveData(data, githubToken, sha);
         portfolioData = data;
         if (type === 'illustrations') renderIllustrations();
         else if (type === 'animations') renderAnimations();
