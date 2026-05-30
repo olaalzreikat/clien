@@ -180,7 +180,6 @@ const images = [
     { src: 'imgs/illustration7.png',  title: 'Forest Scare',       category: 'digital', wip: 'imgs/LEAFDRAGONS_AP2025_wip.png',         mp4: 'imgs/LEAFDRAGONS_AP2025.mp4' },
     { src: 'imgs/illustration8.png',  title: 'Space Dragon',       category: 'digital',                                                  mp4: 'imgs/SPACEDRAGON_AP_2025.mp4' },
     { src: 'imgs/illustration9.png',  title: 'Unicorn Dream',      category: 'digital', wip: 'imgs/UNICORN_AP_2025_wip.png',            mp4: 'imgs/UNICORN_AP_2025_0.mp4' },
-    { src: 'imgs/illustration10.png', title: 'Roller Dog',         category: 'digital', wip: 'imgs/AP_2025_ROLLERDOG_wip.png',          mp4: 'imgs/AP_2025_ROLLERDOG.mp4' },
     { src: 'imgs/trad1.jpg', title: 'Traditional 1', category: 'traditional' },
     { src: 'imgs/trad2.jpg', title: 'Traditional 2', category: 'traditional' },
     { src: 'imgs/trad3.jpg', title: 'Traditional 3', category: 'traditional' },
