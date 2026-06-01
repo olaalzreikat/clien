@@ -114,7 +114,7 @@ function previewUrl(inputId, previewId) {
     } else {
         const img = document.createElement('img');
         img.src = url;
-        img.onerror = () => { preview.innerHTML = '<span class="preview-error">Could not load — check URL</span>'; };
+        img.onerror = () => { preview.innerHTML = '<span class="preview-error">Could not load - check URL</span>'; };
         preview.appendChild(img);
     }
 }
