@@ -1,13 +1,5 @@
 {
-  "illustrations": [
-    {
-      "title": "Roller Dog",
-      "category": "digital",
-      "src": "https://vannianart.vercel.app/imgs/illustration10.png",
-      "wip": "https://vannianart.vercel.app/imgs/AP_2025_ROLLERDOG_wip.png",
-      "mp4": "https://vannianart.vercel.app/imgs/AP_2025_ROLLERDOG.mp4"
-    }
-  ],
+  "illustrations": [],
   "animations": [],
   "films": []
 }
