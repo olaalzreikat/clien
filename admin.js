@@ -10,7 +10,6 @@ async function getFileData(token) {
         headers: {
             Authorization: `Bearer ${token}`,
             Accept: 'application/vnd.github+json',
-            'Cache-Control': 'no-cache',
         }
     });
     if (!res.ok) throw new Error('Could not read data. Check your token and repo settings.');
