@@ -297,15 +297,21 @@ async function addFilm(e) {
 // ===== DELETE =====
 async function deleteItem(type, index) {
     if (!confirm('Delete this item? This cannot be undone.')) return;
-    try {
-        const { data, sha } = await getFileData(githubToken);
-        data[type].splice(index, 1);
-        await saveData(data, githubToken, sha);
-        portfolioData = data;
-        if (type === 'illustrations') renderIllustrations();
-        else if (type === 'animations') renderAnimations();
-        else renderFilms();
-    } catch (err) { alert('Delete failed: ' + err.message); }
+    for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+            const { data, sha } = await getFileData(githubToken);
+            if (!data[type] || index >= data[type].length) break;
+            data[type].splice(index, 1);
+            await saveData(data, githubToken, sha);
+            portfolioData = data;
+            if (type === 'illustrations') renderIllustrations();
+            else if (type === 'animations') renderAnimations();
+            else renderFilms();
+            return;
+        } catch (err) {
+            if (attempt === 2) alert('Delete failed: ' + err.message);
+        }
+    }
 }
 
 // ===== RENDER LISTS =====
