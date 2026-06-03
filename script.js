@@ -186,7 +186,7 @@ const images = [
     { src: 'imgs/trad4.jpg', title: 'Traditional 4', category: 'traditional' },
     { src: 'imgs/trad5.jpg', title: 'Traditional 5', category: 'traditional' },
     { src: 'imgs/trad6.jpg', title: 'Traditional 6', category: 'traditional' },
-    { src: 'imgs/trad7.jpg', title: 'Traditional 7', category: 'traditional' },
+    { src: 'imgs/trad7.png', title: 'Traditional 7', category: 'traditional' },
     { src: 'imgs/trad8.jpg', title: 'Traditional 8', category: 'traditional' },
 ];
 let currentImageIndex = 0;
