@@ -273,8 +273,14 @@ function populateGallery() {
 
 function populateIllusProcess() {
     const grid = document.getElementById('illusProcessGrid');
+    const section = document.querySelector('.wip-process-section');
     if (!grid) return;
     grid.innerHTML = '';
+    if (currentCategory === 'traditional') {
+        if (section) section.style.display = 'none';
+        return;
+    }
+    if (section) section.style.display = '';
     const filtered = getFilteredImages();
     const current = filtered[currentImageIndex];
     if (!current || (!current.wip && !current.mp4)) return;
