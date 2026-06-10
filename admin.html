@@ -51,7 +51,6 @@
             <div class="panel-inner">
                 <div class="add-form card">
                     <h2>Add Illustration</h2>
-                    <p class="url-hint">Upload images to <a href="https://imgur.com/upload" target="_blank">Imgur</a> (free, no account needed) → right-click the image → Copy image address.</p>
                     <form id="illusForm" onsubmit="addIllustration(event)">
                         <div class="form-row">
                             <div class="form-group">
@@ -67,15 +66,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Illustration Image URL</label>
-                            <input type="url" id="illus-src" placeholder="https://i.imgur.com/..." required oninput="previewUrl('illus-src','illus-src-preview')">
+                            <label>Illustration Image</label>
+                            <input type="file" id="illus-src" accept="image/*" required onchange="previewFile('illus-src','illus-src-preview')">
                             <div id="illus-src-preview" class="url-preview"></div>
                         </div>
                         <div class="subsection">
                             <h3>Process <span class="optional">(optional)</span></h3>
                             <div class="form-group">
-                                <label>WIP Sketch Image URL</label>
-                                <input type="url" id="illus-wip" placeholder="https://i.imgur.com/..." oninput="previewUrl('illus-wip','illus-wip-preview')">
+                                <label>WIP Sketch Image</label>
+                                <input type="file" id="illus-wip" accept="image/*" onchange="previewFile('illus-wip','illus-wip-preview')">
                                 <div id="illus-wip-preview" class="url-preview"></div>
                             </div>
                             <div class="form-group">

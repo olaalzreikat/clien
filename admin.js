@@ -100,6 +100,52 @@ function showTab(name, btn) {
     if (btn) btn.classList.add('active');
 }
 
+// ===== FILE UPLOAD TO GITHUB =====
+async function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function uploadFileToGitHub(file, token) {
+    const base64 = await fileToBase64(file);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = `${Date.now()}_${safeName}`;
+    const path = `uploads/${filename}`;
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message: `Upload ${filename}`,
+            content: base64,
+            branch: GITHUB_BRANCH,
+        })
+    });
+    if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || 'Upload failed');
+    }
+    return `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`;
+}
+
+// ===== FILE PREVIEW =====
+function previewFile(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = '';
+    if (!input.files || !input.files[0]) return;
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(input.files[0]);
+    preview.appendChild(img);
+}
+
 // ===== URL PREVIEW =====
 function previewUrl(inputId, previewId) {
     const url     = document.getElementById(inputId).value.trim();
@@ -132,20 +178,29 @@ async function addIllustration(e) {
     e.preventDefault();
     const title    = document.getElementById('illus-title').value.trim();
     const category = document.getElementById('illus-category').value;
-    const src      = document.getElementById('illus-src').value.trim();
-    const wip      = document.getElementById('illus-wip').value.trim();
+    const srcFile  = document.getElementById('illus-src').files[0];
+    const wipFile  = document.getElementById('illus-wip').files[0];
     const mp4      = document.getElementById('illus-mp4').value.trim();
-    if (!title || !src) return;
+    if (!title || !srcFile) return;
 
     const btn = document.getElementById('illus-submit');
     btn.disabled = true;
-    setStatus('illus-status', 'Saving...', '');
-
-    const entry = { title, category, src };
-    if (wip) entry.wip = wip;
-    if (mp4) entry.mp4 = mp4;
 
     try {
+        setStatus('illus-status', 'Uploading image...', '');
+        const src = await uploadFileToGitHub(srcFile, githubToken);
+
+        let wip;
+        if (wipFile) {
+            setStatus('illus-status', 'Uploading WIP sketch...', '');
+            wip = await uploadFileToGitHub(wipFile, githubToken);
+        }
+
+        setStatus('illus-status', 'Saving...', '');
+        const entry = { title, category, src };
+        if (wip) entry.wip = wip;
+        if (mp4) entry.mp4 = mp4;
+
         const { data, sha } = await getFileData(githubToken);
         data.illustrations = data.illustrations || [];
         data.illustrations.push(entry);
