@@ -1116,6 +1116,14 @@ a, button, .nav-btn, .tab-btn, .nav-arrow, .gallery-item, .anim-gallery-item,
     box-shadow: none;
 }
 
+.year-badge {
+    font-size: 0.6em;
+    vertical-align: super;
+    opacity: 0.75;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
 /* ===== TAB BUTTONS ===== */
 .tab-btn {
     border: var(--border-width) solid rgb(195, 163, 204);
