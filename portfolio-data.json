@@ -29,5 +29,71 @@
     }
   ],
   "animations": [],
-  "films": []
+  "films": [
+    {
+      "title": "Igor Comics: The Zipline | An Animated Short",
+      "url": "https://youtu.be/MtNkdX7R4ss",
+      "description": "Script + Storyboard: Rowan Hunt\nMusic: Ty Hunt\n\nIgor and his friends discover a zipline in the forest... what will happen next?!",
+      "year": "2025",
+      "genre": "Animation",
+      "duration": "29 sec",
+      "roles": "Background Illustrator, Animator, Compositor",
+      "imdb": "",
+      "awards": [],
+      "artworkCategories": [
+        {
+          "label": "Concept Art",
+          "images": [
+            "https://i.imgur.com/DiyKRUk.png",
+            "https://i.imgur.com/0tjjcEv.png",
+            "https://i.imgur.com/JULxgjY.png"
+          ]
+        },
+        {
+          "label": "Layout Art",
+          "images": [
+            "https://i.imgur.com/r4AnpT4.png",
+            "https://i.imgur.com/1UxJVqp.png",
+            "https://i.imgur.com/JBCmWrc.png",
+            "https://i.imgur.com/Lk1CyZg.png"
+          ]
+        },
+        {
+          "label": "Rough Animation",
+          "images": [
+            "https://i.imgur.com/7yA0Ryd.gif",
+            "https://i.imgur.com/M1kl8vu.gif",
+            "https://i.imgur.com/6onOOrU.gif",
+            "https://i.imgur.com/wcy0Rcv.gif",
+            "https://i.imgur.com/ovObYo8.gif",
+            "https://i.imgur.com/PBbzXL9.gif"
+          ]
+        },
+        {
+          "label": "Colored Animation",
+          "images": [
+            "https://i.imgur.com/gAH5OWf.gif",
+            "https://i.imgur.com/m5zO386.gif",
+            "https://i.imgur.com/Mryy2VO.gif",
+            "https://i.imgur.com/p0FqWm9.gif",
+            "https://i.imgur.com/0PBqnON.gif",
+            "https://i.imgur.com/5b5I38y.gif"
+          ]
+        },
+        {
+          "label": "Backgrounds",
+          "images": [
+            "https://i.imgur.com/1bTn0Hc.png",
+            "https://i.imgur.com/vM31Vk6.png",
+            "https://i.imgur.com/7X84FSX.png",
+            "https://i.imgur.com/qOKDyk3.png",
+            "https://i.imgur.com/kH1gCFW.png",
+            "https://i.imgur.com/BeYxpBm.png",
+            "https://i.imgur.com/Ss9s0y0.png",
+            "https://i.imgur.com/Sg7kGgl.png"
+          ]
+        }
+      ]
+    }
+  ]
 }
